@@ -64,15 +64,6 @@
             .catch(err => console.error('Send failed:', err));
         });
 
-        // Optional: Enable Laravel Echo if you're using Pusher
-        if (window.Echo) {
-            Echo.channel('chat')
-                .listen('MessageSent', (e) => {
-                    const div = document.createElement('div');
-                    div.textContent = e.message.content;
-                    messages.appendChild(div);
-                });
-        }
         
         
     </script>

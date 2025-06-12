@@ -9,6 +9,10 @@ class HomeController extends Controller
 {
     public function index()
     {
-        return view('dashboard'); // default view for guests
+        if (Auth::check()) {
+            return view('dashboard'); // view for logged-in users
+        }
+
+        return view('welcome'); // default view for guests
     }
 }
