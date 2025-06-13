@@ -45,6 +45,13 @@ class User extends Authenticatable
         ];
     }
 
+    public function getProfilePhotoUrlAttribute()
+    {
+        return $this->profile_photo_path 
+            ? asset('storage/' . $this->profile_photo_path)
+            : 'https://ui-avatars.com/api/?name=' . urlencode($this->name);
+    }
+
     public function messages()
     {
         return $this->hasMany(Message::class);

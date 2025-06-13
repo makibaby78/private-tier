@@ -15,6 +15,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/settings', [SetttingsController::class, 'edit'])->name('settings.edit');
     Route::patch('/settings', [SetttingsController::class, 'update'])->name('settings.update');
     Route::delete('/settings', [SetttingsController::class, 'destroy'])->name('settings.destroy');
+    Route::post('/settings/upload-photo', [SetttingsController::class, 'upload'])->name('settings.upload-photo');
 
     Route::prefix('profile')->name('profile.')->group(function () {
 
@@ -22,25 +23,6 @@ Route::middleware('auth')->group(function () {
             return view('profile.index');
         })->name('index');
     });
-
-    // Route::get('/send-test', function () {
-    //     return view('send-test');
-    // });
-
-    // Route::get('/test-broadcast', function () {
-    //     broadcast(new MessageSent('Hello from Laravel + Pusher!'));
-    //     return 'Broadcasted!';
-    // });
-
-    // Route::get('/trigger-broadcast', function () {
-    //     broadcast(new MessageSent('Hello from Laravel!'));
-    //     return 'Message broadcasted';
-    // });
-
-    // Route::get('/chat', [ChatController::class, 'index'])->name('chat');
-    // Route::post('/messages', [ChatController::class, 'store']);
-    // Route::get('/messages', [ChatController::class, 'fetch']);
-    // Route::post('/send-message', [ChatController::class, 'send']);
 
     Route::get('/chat/{user}', function ($userId) {
         $messages = Message::where(function ($q) use ($userId) {

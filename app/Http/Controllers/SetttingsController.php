@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\View\View;
+use CloudinaryLabs\CloudinaryLaravel\Facades\Cloudinary;
 
 class SetttingsController extends Controller
 {
@@ -57,4 +58,26 @@ class SetttingsController extends Controller
 
         return Redirect::to('/');
     }
+
+    public function upload(Request $request)
+    {
+        $request->validate([
+            'photo' => 'required|image|max:2048', // 2MB max
+        ]);
+
+        $user = $request->user();
+
+        // Delete old photo if exists
+        if ($user->profile_photo_path) {
+            \Storage::disk('public')->delete($user->profile_photo_path);
+        }
+
+        $path = $request->file('photo')->store('profile-photos', 'public');
+
+        $user->profile_photo_path = $path;
+        $user->save();
+
+        return back()->with('success', 'Profile photo updated!');
+    }
+
 }
