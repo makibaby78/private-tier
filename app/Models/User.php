@@ -17,7 +17,9 @@ class User extends Authenticatable
      * @var array<int, string>
      */
     protected $fillable = [
-        'name',
+        'firstname',
+        'lastname',
+        'username',
         'email',
         'password',
     ];
@@ -43,6 +45,11 @@ class User extends Authenticatable
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
         ];
+    }
+
+    public function getNameAttribute()
+    {
+        return "{$this->firstname} {$this->lastname}";
     }
 
     public function getProfilePhotoUrlAttribute()
