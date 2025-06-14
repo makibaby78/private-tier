@@ -1,4 +1,4 @@
-<x-profile-layout>
+<x-app-layout>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
             {{ __('Profile') }}
@@ -18,44 +18,15 @@
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
-                
-            @auth
-                @if($isOwnProfile)
-                    <p>This is your profile.</p>
-                    <a href="{{ route('settings.edit') }}">Edit Profile</a>
-                @else
-                    <p>This is {{ $user->firstname }}'s public profile.</p>
+                <div class="p-6 text-gray-900 dark:text-gray-100 flex justify-between items-center">
+                    <div class="flex gap-x-4 items-baseline">
+                        <img src="{{ $user->profile_photo_url }}" alt="Profile Photo" width="100">
+                        <h1 class="mb-4 text-xl font-extrabold leading-none tracking-tight text-gray-900 md:text-3xl lg:text-4xl dark:text-white">{{ $user->name }}</h1>
+                    </div>
 
-                    @php
-                        $authUser = auth()->user();
-                    @endphp
-                    
-                    @if ($authUser->isFriendsWith($user))
-                        <p>You are friends</p>
-                    
-                    @elseif ($authUser->hasSentFriendRequestTo($user))
-                        <p>Friend request sent</p>
-                        <form action="{{ route('friend.cancel', $user->id) }}" method="POST">
-                            @csrf
-                            <button type="submit">Cancel Request</button>
-                        </form>
-                    
-                    @elseif ($authUser->hasReceivedFriendRequestFrom($user))
-                        <form action="{{ route('friend.accept', $user->id) }}" method="POST">
-                            @csrf
-                            <button type="submit">Accept Friend Request</button>
-                        </form>
-                    
-                    @elseif ($authUser->id !== $user->id)
-                        <!-- You cannot add yourself -->
-                        <form action="{{ route('friend.send', $user->id) }}" method="POST">
-                            @csrf
-                            <button type="submit">Add Friend</button>
-                        </form>
-                    @endif
-                
-                @endif
-            @endauth
+                    <livewire:friendship-button :targetUser="$user" />
+                </div>
+
                 <!-- Send friend request -->
                 {{-- <form action="{{ route('friend.send', $user->id) }}" method="POST">
                     @csrf
@@ -83,4 +54,4 @@
         </div>
     </div>
 
-</x-profile-layout>
+</x-app-layout>

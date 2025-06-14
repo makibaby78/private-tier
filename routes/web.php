@@ -11,10 +11,6 @@ use App\Models\Message;
 
 Route::get('/', [HomeController::class, 'index'])->name('home');
 
-Route::get('/{username}', [UserController::class, 'showByUsername'])
-->where('username', '^(?!login$|register$|admin$|dashboard$)[a-zA-Z0-9_]+$')
-->name('profile.index');
-
 Route::middleware('auth')->group(function () {
     Route::get('/settings', [SetttingsController::class, 'edit'])->name('settings.edit');
     Route::patch('/settings', [SetttingsController::class, 'update'])->name('settings.update');
@@ -53,5 +49,9 @@ Route::middleware('auth')->group(function () {
     Route::delete('/friend/remove/{id}', [FriendshipController::class, 'unfriend'])->name('friend.remove');
 
 });
+
+Route::get('/{username}', [UserController::class, 'showByUsername'])
+->where('username', '^(?!login$|register$|admin$|dashboard$)[a-zA-Z0-9_]+$')
+->name('profile.index');
 
 require __DIR__.'/auth.php';
