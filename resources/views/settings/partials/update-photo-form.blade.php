@@ -1,3 +1,5 @@
+
+
 <form method="POST" action="{{ route('settings.upload-photo') }}" enctype="multipart/form-data">
     @csrf
     <div>
@@ -8,5 +10,5 @@
 </form>
 
 @if (auth()->user()->profile_photo_url)
-    <img src="{{ auth()->user()->profile_photo_url }}" alt="Profile Photo" width="100">
+    <x-cloudinary::image public-id="{{ $user->profile_photo_path }}" width="50" height="50" class="rounded" alt="Profile Photo" />
 @endif
