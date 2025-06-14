@@ -3,26 +3,23 @@
 use App\Http\Controllers\SetttingsController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;
-use App\Http\Controllers\ChatController;
+use App\Http\Controllers\FriendshipController;
+use App\Http\Controllers\UserController;
 use Illuminate\Http\Request;
 use App\Models\Message;
-use App\Events\MessageSent;
 
 
 Route::get('/', [HomeController::class, 'index'])->name('home');
+
+Route::get('/{username}', [UserController::class, 'showByUsername'])
+->where('username', '^(?!login$|register$|admin$|dashboard$)[a-zA-Z0-9_]+$')
+->name('profile.index');
 
 Route::middleware('auth')->group(function () {
     Route::get('/settings', [SetttingsController::class, 'edit'])->name('settings.edit');
     Route::patch('/settings', [SetttingsController::class, 'update'])->name('settings.update');
     Route::delete('/settings', [SetttingsController::class, 'destroy'])->name('settings.destroy');
     Route::post('/settings/upload-photo', [SetttingsController::class, 'upload'])->name('settings.upload-photo');
-
-    Route::prefix('profile')->name('profile.')->group(function () {
-
-        Route::get('/', function () {
-            return view('profile.index');
-        })->name('index');
-    });
 
     Route::get('/chat/{user}', function ($userId) {
         $messages = Message::where(function ($q) use ($userId) {
@@ -49,6 +46,11 @@ Route::middleware('auth')->group(function () {
     
         return ['status' => 'sent'];
     });
+
+    Route::post('/friend-request/send/{id}', [FriendshipController::class, 'sendRequest'])->name('friend.send');
+    Route::post('/friend-request/accept/{id}', [FriendshipController::class, 'acceptRequest'])->name('friend.accept');
+    Route::post('/friend-request/cancel/{id}', [FriendshipController::class, 'cancelRequest'])->name('friend.cancel');
+    Route::delete('/friend/remove/{id}', [FriendshipController::class, 'unfriend'])->name('friend.remove');
 
 });
 

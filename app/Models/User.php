@@ -63,4 +63,55 @@ class User extends Authenticatable
     {
         return $this->hasMany(Message::class);
     }
+
+    // Requests sent by this user
+    public function friendsOfMine()
+    {
+        return $this->belongsToMany(User::class, 'friendships', 'user_id', 'friend_id')
+                    ->withPivot('status')
+                    ->withTimestamps();
+    }
+
+    // Requests received by this user
+    public function friendOf()
+    {
+        return $this->belongsToMany(User::class, 'friendships', 'friend_id', 'user_id')
+                    ->withPivot('status')
+                    ->withTimestamps();
+    }
+
+    // All confirmed friends (merged)
+    public function friends()
+    {
+        return $this->friendsOfMine()->wherePivot('status', 'accepted')
+            ->get()->merge(
+                $this->friendOf()->wherePivot('status', 'accepted')->get()
+            );
+    }
+
+    // Check if a friend request is sent to another user
+    public function hasSentFriendRequestTo(User $user)
+    {
+        return $this->friendsOfMine()
+            ->where('friend_id', $user->id)
+            ->where('status', 'pending')
+            ->exists();
+    }
+
+    // Check if a friend request was received from another user
+    public function hasReceivedFriendRequestFrom(User $user)
+    {
+        return $this->friendOf()
+            ->where('user_id', $user->id)
+            ->where('status', 'pending')
+            ->exists();
+    }
+
+    // Check if already friends
+    public function isFriendsWith(User $user)
+    {
+        return $this->friends()
+            ->contains($user);
+    }
+
 }
