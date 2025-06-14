@@ -1,6 +1,8 @@
 <div>
     @auth
-        @if (auth()->id() !== $targetUser->id)
+        @if (auth()->id() === $targetUser->id)
+            <a href="{{ route('settings.edit') }}" class="bg-gray-700 text-white px-4 py-2 rounded inline-block">Edit Profile</a>
+        @else
             @if ($status === 'friends')
                 <button wire:click="unfriend" class="bg-red-500 text-white px-4 py-1 rounded">Unfriend</button>
             @elseif ($status === 'sent')
