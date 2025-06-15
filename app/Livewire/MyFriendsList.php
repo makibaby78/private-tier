@@ -20,9 +20,11 @@ class MyFriendsList extends Component
         $this->filter = $filter;
     }
 
-    public function render()
+    public function render()    
     {
-        $friends = $this->user->friends();
+        $friends = $this->user->friends()->take(9);
+
+        $count = $this->user->friends()->count();
 
         if ($this->filter !== 'all') {
             $friends = $friends->filter(function ($friend) {
@@ -32,6 +34,7 @@ class MyFriendsList extends Component
 
         return view('livewire.my-friends-list', [
             'friends' => $friends,
+            'count' => $count,
         ]);
     }
 

@@ -11,12 +11,20 @@
 
                     <div class="flex items-center gap-x-4">
                         
-                        <x-cloudinary::image public-id="{{ $user->profile_photo_path }}" width="50" height="50" class="rounded object-cover w-32 h-32" alt="Profile Photo" />
-                        
+                        <x-profile-photo 
+                            :path="$user->profile_photo_path" 
+                            :alt="$user->name" 
+                            class="rounded object-cover w-32 h-32" 
+                            width="50" 
+                            height="50" 
+                        />
+
                         <h1 class="text-xl font-extrabold leading-none tracking-tight text-gray-900 md:text-3xl lg:text-4xl dark:text-white">{{ $user->name }}</h1>
 
                     </div>
 
+                    <livewire:friendship-button :targetUser="$user" />
+                    
             </div>
         </div>
     </div>
@@ -24,7 +32,6 @@
     <div class="pb-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="p-6 bg-white dark:bg-gray-800 shadow-sm sm:rounded-lg">
-                <h1 class="text-2xl font-bold mb-6">My Friends</h1>
                 <livewire:my-friends-list :user="$user" />
             </div>
         </div>
