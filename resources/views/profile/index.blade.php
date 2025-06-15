@@ -8,6 +8,7 @@
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="p-6 bg-white dark:bg-gray-800 shadow-sm sm:rounded-lg flex items-center justify-between">
+
                     <div class="flex items-center gap-x-4">
                         
                         <x-cloudinary::image public-id="{{ $user->profile_photo_path }}" width="50" height="50" class="rounded object-cover w-32 h-32" alt="Profile Photo" />
@@ -16,9 +17,16 @@
 
                     </div>
 
-                    <livewire:friendship-button :targetUser="$user" />
             </div>
         </div>
     </div>
 
+    <div class="pb-12">
+        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+            <div class="p-6 bg-white dark:bg-gray-800 shadow-sm sm:rounded-lg">
+                <h1 class="text-2xl font-bold mb-6">My Friends</h1>
+                <livewire:my-friends-list :user="$user" />
+            </div>
+        </div>
+    </div>
 </x-app-layout>
