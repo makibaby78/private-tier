@@ -20,7 +20,7 @@ class DatabaseSeeder extends Seeder
             'lastname' => 'Baisac',
             'username' => 'maxloued',
             'email' => 'max.baisac@gmail.com',
-            'password' => Hash::make('123456'), // 👈 your desired password
+            'password' => Hash::make('123456'),
         ]);
 
         User::factory()->create([
@@ -28,7 +28,23 @@ class DatabaseSeeder extends Seeder
             'lastname' => 'Montera',
             'username' => 'stephanie',
             'email' => 'stephanie@gmail.com',
-            'password' => Hash::make('123456'), // 👈 your desired password
+            'password' => Hash::make('123456'),
+        ]);
+
+        User::factory()->create([
+            'firstname' => 'Christian',
+            'lastname' => 'Mahusay',
+            'username' => 'christian',
+            'email' => 'christian@gmail.com',
+            'password' => Hash::make('123456'),
+        ]);
+
+        User::factory()->create([
+            'firstname' => 'Jaymar',
+            'lastname' => 'Cena',
+            'username' => 'jaymar',
+            'email' => 'jaymar@gmail.com',
+            'password' => Hash::make('123456'),
         ]);
 
 
