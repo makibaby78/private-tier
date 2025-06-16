@@ -1,4 +1,4 @@
-<div>
+<div class="p-6 bg-white dark:bg-gray-800 shadow-sm sm:rounded-lg">
     <div class="mb-4 space-x-2">
         Friends ({{ $count }})
     </div>
