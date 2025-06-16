@@ -21,21 +21,23 @@
         <div class="absolute z-10 mt-2 w-full bg-white border rounded shadow max-h-60 overflow-y-auto">
             @if($users->count())
                 @foreach ($users as $user)
-                    <div class="px-4 py-2 hover:bg-gray-100 flex gap-x-2">
-                        <div>
-                            <x-profile-photo 
-                                :path="Auth::user()->profile_photo_path" 
-                                :alt="Auth::user()->name" 
-                                class="rounded-full object-cover w-10 h-10" 
-                                width="30" 
-                                height="30" 
-                            />
+                    <a href="{{ route('profile.index', ['username' => $user->username]) }}">
+                        <div class="px-4 py-2 hover:bg-gray-100 flex gap-x-2">
+                            <div>
+                                <x-profile-photo 
+                                    :path="$user->profile_photo_path" 
+                                    :alt="$user->name" 
+                                    class="rounded-full object-cover w-10 h-10" 
+                                    width="30" 
+                                    height="30" 
+                                />
+                            </div>
+                            <div>
+                                <strong class="text-base">{{ $user->name }}</strong>
+                                <p class="text-sm text-gray-500">Person</p>
+                            </div>
                         </div>
-                        <div>
-                            <strong class="text-base">{{ $user->name }}</strong>
-                            <p class="text-sm text-gray-500">Person</p>
-                        </div>
-                    </div>
+                    </a>
                 @endforeach
             @endif
 
