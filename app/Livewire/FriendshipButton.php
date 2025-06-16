@@ -39,7 +39,6 @@ class FriendshipButton extends Component
         $user->friendsOfMine()->detach($this->targetUser->id);
         $user->friendOf()->detach($this->targetUser->id);
     }
-    
 
     public function render()
     {

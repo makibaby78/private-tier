@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\FriendshipController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\SearchController;
 use Illuminate\Http\Request;
 use App\Models\Message;
 
@@ -47,6 +48,8 @@ Route::middleware('auth')->group(function () {
     Route::post('/friend-request/accept/{id}', [FriendshipController::class, 'acceptRequest'])->name('friend.accept');
     Route::post('/friend-request/cancel/{id}', [FriendshipController::class, 'cancelRequest'])->name('friend.cancel');
     Route::delete('/friend/remove/{id}', [FriendshipController::class, 'unfriend'])->name('friend.remove');
+
+    Route::get('/search', [SearchController::class, 'index'])->name('search.results');
 
 });
 
