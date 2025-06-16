@@ -99,8 +99,12 @@
                 </div>
 
                 <div class="mt-3 space-y-1">
-                    <x-responsive-nav-link :href="route('settings.edit')">
+                    <x-responsive-nav-link :href="route('profile.index', ['username' => Auth::user()->username])" :active="request()->routeIs('profile.index')">
                         {{ __('Profile') }}
+                    </x-responsive-nav-link>
+
+                    <x-responsive-nav-link :href="route('settings.edit')" :active="request()->routeIs('settings.edit')">
+                        {{ __('Settings') }}
                     </x-responsive-nav-link>
 
                     <!-- Authentication -->

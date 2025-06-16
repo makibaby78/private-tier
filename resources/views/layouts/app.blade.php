@@ -33,7 +33,9 @@
 
             <!-- Page Content -->
             <main>
-                {{ $slot }}
+                <div class="p-2">
+                    {{ $slot }}
+                </div>
             </main>
         </div>
         @livewireScripts
