@@ -22,8 +22,10 @@
 
                 </div>
 
-                <livewire:friendship-button :targetUser="$user" />
+                <livewire:friendship-button :targetUser="$user" />        
                 
+                
+                <livewire:chat-manager />
         </div>
     </div>
 
