@@ -2,17 +2,22 @@
 
 namespace App\Livewire;
 
-use Livewire\Attributes\On;
 use Livewire\Component;
 
 class ChatManager extends Component
 {
-    #[On('send-message')]
-    public function handleSendEvent($id)
-    {
+    public $logMessage = 'Waiting...';
 
-        dd($id);
-        logger("Event received with ID: $id");
+    public int $userId;
+
+    public function mount($userId = null)
+    {
+        $this->userId = $userId;
+    }
+
+    public function openChat()
+    {
+        $this->logMessage = "Received openChat for user ID: $this->userId";
     }
 
     public function render()
@@ -20,3 +25,5 @@ class ChatManager extends Component
         return view('livewire.chat-manager');
     }
 }
+
+

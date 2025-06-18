@@ -1,6 +1,3 @@
-<button 
-    x-data 
-    @click="$wire.$dispatch('send-message', { id: 123 })"
->
-    Send Event to Livewire
-</button>
+<div wire:open-chat.window="openChat" class="p-4 bg-gray-100 rounded">
+    <p>{{ $logMessage }}</p>
+</div>
