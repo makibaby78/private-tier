@@ -24,12 +24,15 @@
 
                 <livewire:friendship-button :targetUser="$user" />        
                 
-                
-                <livewire:chat-manager :user-id="$user->id" />
-
-                <button x-data @click="$dispatch('open-chat')">
-                    Open Chat with ID 123
+                <button 
+                    x-data 
+                    @click="window.chatManager.call('openChat', 3)"
+                    class="px-4 py-2 bg-blue-600 text-white rounded"
+                >
+                    Toggle Chat with User 3
                 </button>
+
+
 
         </div>
     </div>

@@ -3,21 +3,31 @@
 namespace App\Livewire;
 
 use Livewire\Component;
+use Livewire\Attributes\On;
 
 class ChatManager extends Component
 {
-    public $logMessage = 'Waiting...';
+    public array $openChats = [];
 
-    public int $userId;
-
-    public function mount($userId = null)
+    #[On('open-chat')]
+    public function openChat(int $userId)
     {
-        $this->userId = $userId;
-    }
+        
 
-    public function openChat()
-    {
-        $this->logMessage = "Received openChat for user ID: $this->userId";
+        // If already open and status is 'open', minimize it
+        if (isset($this->openChats[$userId]) && $this->openChats[$userId]['status'] === 'open') {
+            $this->openChats[$userId]['status'] = 'minimized';
+        }
+        // If already minimized, open it
+        elseif (isset($this->openChats[$userId]) && $this->openChats[$userId]['status'] === 'minimized') {
+            $this->openChats[$userId]['status'] = 'open';
+        }
+        // If not in list, open new chat
+        else {
+            $this->openChats[$userId] = ['status' => 'open'];
+        }
+
+        dd($this->openChats);
     }
 
     public function render()
@@ -25,5 +35,3 @@ class ChatManager extends Component
         return view('livewire.chat-manager');
     }
 }
-
-
