@@ -20,8 +20,9 @@
             <p>{{ $post->body }}</p>
 
             @if ($post->image)
-                <img src="{{ asset('storage/' . $post->image) }}" class="w-full max-w-sm rounded shadow">
+                <img src="{{ $post->image }}" class="w-full max-w-sm rounded shadow">
             @endif
+
 
         </div>
     @empty
