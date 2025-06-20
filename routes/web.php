@@ -7,8 +7,6 @@ use App\Http\Controllers\FriendshipController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\SearchController;
 use Illuminate\Http\Request;
-use App\Models\Message;
-use App\Events\MessageSent;
 
 
 Route::get('/', [HomeController::class, 'index'])->name('home');
@@ -18,32 +16,6 @@ Route::middleware('auth')->group(function () {
     Route::patch('/settings', [SetttingsController::class, 'update'])->name('settings.update');
     Route::delete('/settings', [SetttingsController::class, 'destroy'])->name('settings.destroy');
     Route::post('/settings/upload-photo', [SetttingsController::class, 'upload'])->name('settings.upload-photo');
-
-    Route::get('/chat/{user}', function ($userId) {
-        $messages = Message::where(function ($q) use ($userId) {
-            $q->where('sender_id', auth()->id())
-              ->where('receiver_id', $userId);
-        })->orWhere(function ($q) use ($userId) {
-            $q->where('sender_id', $userId)
-              ->where('receiver_id', auth()->id());
-        })->with('sender')->get();
-
-        $receiver = \App\Models\User::findOrFail($userId);
-
-        return view('chat', compact('messages', 'receiver'));
-    });
-
-    Route::post('/chat/send', function (Request $request) {
-        $message = \App\Models\Message::create([
-            'sender_id' => auth()->id(),
-            'receiver_id' => $request->receiver_id,
-            'message' => $request->message,
-        ]);
-    
-        broadcast(new MessageSent($message))->toOthers();
-    
-        return ['status' => 'sent'];
-    });
 
     Route::post('/friend-request/send/{id}', [FriendshipController::class, 'sendRequest'])->name('friend.send');
     Route::post('/friend-request/accept/{id}', [FriendshipController::class, 'acceptRequest'])->name('friend.accept');

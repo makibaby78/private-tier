@@ -4,7 +4,14 @@
             <a href="{{ route('settings.edit') }}" class="bg-gray-700 text-white px-4 py-2 rounded inline-block">Edit Profile</a>
         @else
             @if ($status === 'friends')
-                <button wire:click="unfriend" class="bg-red-500 text-white px-4 py-1 rounded">Unfriend</button>
+                <x-dropdown>
+                    <x-slot name="trigger">
+                        <button class="bg-gray-300 text-black px-4 py-1 rounded">Friends</button>
+                    </x-slot>
+                    <x-slot name="content">
+                        <button wire:click="unfriend" class="bg-white w-full">Unfriend</button>
+                    </x-slot>
+                </x-dropdown>
             @elseif ($status === 'sent')
                 <button wire:click="cancelRequest" class="bg-yellow-500 text-white px-4 py-1 rounded">Cancel Request</button>
             @elseif ($status === 'received')
