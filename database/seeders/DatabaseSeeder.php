@@ -107,5 +107,9 @@ class DatabaseSeeder extends Seeder
             FriendshipSeeder::class,
         ]);
 
+        $this->call([
+            PostSeeder::class,
+        ]);
+
     }
 }

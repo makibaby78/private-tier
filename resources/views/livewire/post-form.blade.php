@@ -1,4 +1,4 @@
-<div class="space-y-4 mb-4 first-letter:sm:px-6 p-6 bg-white dark:bg-gray-800 shadow-sm sm:rounded-lg">
+<div class="space-y-4 mb-4 bg-white p-6 dark:bg-gray-800 shadow-sm sm:rounded-lg">
     @if (session()->has('message'))
         <div class="bg-green-200 text-green-800 p-2 rounded">
             {{ session('message') }}

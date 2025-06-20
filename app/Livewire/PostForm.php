@@ -7,6 +7,7 @@ use Livewire\Component;
 use Livewire\WithFileUploads;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
+use Livewire\Attributes\On;
 
 class PostForm extends Component
 {
@@ -40,8 +41,10 @@ class PostForm extends Component
         ]);
 
         $this->reset();
+
+        $this->dispatch('refresh-posts');
+
         session()->flash('message', 'Post created successfully.');
-        $this->dispatch('post-created');
     }
 
     public function render()

@@ -34,9 +34,9 @@
         </div>
 
         <div class="profile-right w-full md:w-3/5">
-            @auth
+            @if (auth()->id() === $user->id)
                 <livewire:post-form />
-            @endauth
+            @endif
             
             <livewire:post-list :user="$user" />
 
