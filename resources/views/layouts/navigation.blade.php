@@ -16,19 +16,29 @@
                 <livewire:global-search />
             </div>
             <!-- Settings Dropdown -->
-            <div class="hidden sm:flex sm:items-center sm:ms-6">
+            <div class="flex items-center gap-x-2">
                 <x-dropdown align="right" width="48">
                     <x-slot name="trigger">
-                        <button class="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-gray-500 dark:text-gray-400 bg-white dark:bg-gray-800 hover:text-gray-700 dark:hover:text-gray-300 focus:outline-none transition ease-in-out duration-150">                            
+                        <div class="h-10 w-10 bg-gray-200 rounded-full flex items-center justify-center">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="black" viewBox="0 0 512 512">
+                                <path d="M256 0C114.62 0 0 110.18 0 246.06c0 77.47 37.25 146.12 95.69 191.43V512l88.06-48.25c22.56 6.19 46.51 9.63 72.25 9.63 141.38 0 256-110.18 256-246.06S397.38 0 256 0zm29.75 314.94-57.94-62.13-122.5 62.13 142.25-151.31 59.31 62.13 119.06-62.13-140.18 151.31z"/>
+                            </svg>
+                        </div>
+                    </x-slot>
+                    <x-slot name="content">
+                    </x-slot>
+            </x-dropdown>
+                <x-dropdown align="right" width="48">
+                    <x-slot name="trigger">
+                        <button class="inline-flex items-center border border-transparent text-sm leading-4 font-medium rounded-md text-gray-500 dark:text-gray-400 bg-white dark:bg-gray-800 hover:text-gray-700 dark:hover:text-gray-300 focus:outline-none transition ease-in-out duration-150">                            
 
                             <x-profile-photo 
                                 :path="Auth::user()->profile_photo_path" 
                                 :alt="Auth::user()->name" 
-                                class="rounded-full object-cover w-10 h-10" 
+                                class="rounded-full object-cover w-10 h-10 max-w-none" 
                                 width="50" 
                                 height="50" 
                             />
-                            
                             <div class="ms-1">
                                 <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
                                     <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
@@ -60,57 +70,8 @@
                 </x-dropdown>
             </div>
 
-            <!-- Hamburger -->
-            <div class="-me-2 flex items-center sm:hidden">
-                <button @click="open = ! open" class="inline-flex items-center justify-center p-2 rounded-md text-gray-400 dark:text-gray-500 hover:text-gray-500 dark:hover:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-900 focus:outline-none focus:bg-gray-100 dark:focus:bg-gray-900 focus:text-gray-500 dark:focus:text-gray-400 transition duration-150 ease-in-out">
-                    <svg class="h-6 w-6" stroke="currentColor" fill="none" viewBox="0 0 24 24">
-                        <path :class="{'hidden': open, 'inline-flex': ! open }" class="inline-flex" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
-                        <path :class="{'hidden': ! open, 'inline-flex': open }" class="hidden" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-                    </svg>
-                </button>
-            </div>
         @endauth
         
         </div>
     </div>
-
-    @auth
-        <!-- Responsive Navigation Menu -->
-        <div :class="{'block': open, 'hidden': ! open}" class="hidden sm:hidden">
-            <div class="pt-2 pb-3 space-y-1">
-                <x-responsive-nav-link :href="route('home')" :active="request()->routeIs('home')">
-                    {{ __('Dashboard') }}
-                </x-responsive-nav-link>
-            </div>
-
-            <!-- Responsive Settings Options -->
-            <div class="pt-4 pb-1 border-t border-gray-200 dark:border-gray-600">
-                <div class="px-4">
-                    <div class="font-medium text-base text-gray-800 dark:text-gray-200">{{ Auth::user()->name }}</div>
-                    <div class="font-medium text-sm text-gray-500">{{ Auth::user()->email }}</div>
-                </div>
-
-                <div class="mt-3 space-y-1">
-                    <x-responsive-nav-link :href="route('profile.index', ['username' => Auth::user()->username])" :active="request()->routeIs('profile.index')">
-                        {{ __('Profile') }}
-                    </x-responsive-nav-link>
-
-                    <x-responsive-nav-link :href="route('settings.edit')" :active="request()->routeIs('settings.edit')">
-                        {{ __('Settings') }}
-                    </x-responsive-nav-link>
-
-                    <!-- Authentication -->
-                    <form method="POST" action="{{ route('logout') }}">
-                        @csrf
-
-                        <x-responsive-nav-link :href="route('logout')"
-                                onclick="event.preventDefault();
-                                            this.closest('form').submit();">
-                            {{ __('Log Out') }}
-                        </x-responsive-nav-link>
-                    </form>
-                </div>
-            </div>
-        </div>
-    @endauth
 </nav>
