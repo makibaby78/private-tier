@@ -22,7 +22,7 @@
 
             <button 
                 x-data 
-                @click="window.chatManager.call('openChat', {{ auth()->id() }})"
+                @click="window.chatManager.call('openChat', {{ $targetUser->id }})"
                 class="bg-blue-600 text-white px-4 py-1 rounded"
             >
                 Message
