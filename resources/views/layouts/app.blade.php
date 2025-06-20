@@ -36,7 +36,7 @@
                 <div class="p-2">
                     {{ $slot }}
                     
-                    <livewire:chat-manager wire:key="chat-manager" wire:ref="chatManager" />
+                    <livewire:chat-manager />
                 </div>
             </main>
         </div>

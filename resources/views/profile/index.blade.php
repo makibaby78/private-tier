@@ -32,10 +32,6 @@
                         Message
                     </button>
                 </div>
-                
-
-
-
         </div>
     </div>
 
