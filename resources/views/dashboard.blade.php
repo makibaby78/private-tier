@@ -4,14 +4,11 @@
             {{ __('Home') }}
         </h2>
     </x-slot>
-
-    <div class="py-12">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-            <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
-                <div class="p-6 text-gray-900 dark:text-gray-100">
-                    {{ __("You're logged in!") }}
-                </div>
-            </div>
+    <div>
+        <div class="right"></div>
+        <div class="middle max-w-3xl mx-auto">
+            <livewire:post-form />
         </div>
+        <div class="left"></div>
     </div>
 </x-app-layout>

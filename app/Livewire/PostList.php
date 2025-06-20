@@ -7,12 +7,19 @@ use App\Models\User;
 use App\Models\Post;
 use Illuminate\Support\Facades\Auth;
 use Livewire\Attributes\On;
+use Livewire\WithFileUploads;
+use Illuminate\Support\Facades\Storage;
 
 
 class PostList extends Component
 {
+    use WithFileUploads;
+
     public User $user;
     public $posts = [];
+    public $editingPost;
+    public $editingBody;
+    public $newImage;
 
     public function mount(User $user)
     {
@@ -26,15 +33,40 @@ class PostList extends Component
         $this->loadPosts();
     }
 
-    public function editPost($postId)
+    public function openEditModal($postId)
     {
-        $post = Post::findOrFail($postId);
+        $this->editingPost = Post::findOrFail($postId);
+        $this->editingBody = $this->editingPost->body;
+        $this->newImage = null;
 
-        if ($post->user_id !== Auth::id()) {
-            abort(403, 'Unauthorized action.');
+        $this->dispatch('open-modal', name: 'edit-post-modal');
+    }
+
+    public function savePost()
+    {
+        $this->editingPost->body = $this->editingBody;
+
+        if ($this->editingPost->image && $this->newImage) {
+            // 🗑 Delete the old Cloudinary image using the stored public ID
+            if ($this->editingPost->image_public_id) {
+                Storage::disk('cloudinary')->delete($this->editingPost->image);
+            }
+
+            // ☁️ Upload new image and get the path
+            $uploadedPath = Storage::disk('cloudinary')->putFile('posts', $this->newImage);
+
+            // 🔗 Save new image URL and public_id
+            $this->editingPost->image = Storage::disk('cloudinary')->url($uploadedPath);
+            $this->editingPost->image_public_id = $uploadedPath;
         }
 
-        $this->dispatch('openEditModal', post: $post);
+        $this->editingPost->save();
+
+        $this->dispatch('close-modal', name: 'edit-post-modal');
+
+        $this->refreshPosts();
+
+        session()->flash('message', 'Post Updated.');
     }
 
     public function trashPost($postId)
