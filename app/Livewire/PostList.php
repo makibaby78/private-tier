@@ -77,6 +77,12 @@ class PostList extends Component
             abort(403, 'Unauthorized action.');
         }
 
+        // ✅ Delete media from Cloudinary if public_id exists
+        if ($post->public_id) {
+            Storage::disk('cloudinary')->delete($post->public_id);
+        }
+
+        // ✅ Then delete the post from DB
         $post->delete();
 
         $this->refreshPosts();

@@ -59,6 +59,14 @@
                 <img src="{{ $post->image }}" class="w-full max-w-sm rounded shadow">
             @endif
 
+            @if ($post->video)
+                <video class="w-full max-w-sm rounded shadow" controls>
+                    <source src="{{ $post->video }}" type="video/mp4">
+                    Your browser does not support the video tag.
+                </video>
+            @elseif ($post->image)
+                <img src="{{ $post->image }}" class="w-full max-w-sm rounded shadow" alt="{{ $post->body }}">
+            @endif
 
         </div>
     @empty

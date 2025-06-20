@@ -7,7 +7,7 @@ use Livewire\Component;
 use Livewire\WithFileUploads;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
-use Livewire\Attributes\On;
+use Illuminate\Support\Str;
 
 class PostForm extends Component
 {
@@ -15,29 +15,42 @@ class PostForm extends Component
 
     public $title = '';
     public $body = '';
-    public $image;
+    public $media;
 
     public function save()
     {
         $this->validate([
             'body' => 'required|string',
-            'image' => 'nullable|image|max:2048', // 2MB max
+            'media' => 'nullable|file|mimetypes:image/*,video/*|max:102400',
         ]);
 
-        $imageUrl = null;
+        $mediaUrl = null;
+        $mediaType = null;
+        $publicId = null;
 
-        if ($this->image) {
-            // Upload to Cloudinary via Laravel filesystem driver
-            $publicId = Storage::disk('cloudinary')->putFile('posts', $this->image);
+        if ($this->media) {
 
-            // Generate the full URL to the uploaded asset
-            $imageUrl = Storage::disk('cloudinary')->url($publicId);
+            $mimeType = $this->media->getMimeType();
+
+            // Upload to Cloudinary
+            $path = Storage::disk('cloudinary')->putFile('posts', $this->media);
+            $mediaUrl = Storage::disk('cloudinary')->url($path);
+
+            $publicId = $path; // Save this in DB
+
+            if (Str::startsWith($mimeType, 'image/')) {
+                $mediaType = 'image';
+            } elseif (Str::startsWith($mimeType, 'video/')) {
+                $mediaType = 'video';
+            }
         }
 
         Post::create([
             'user_id' => Auth::id(),
             'body' => $this->body,
-            'image' => $imageUrl,
+            'public_id' => $publicId,
+            'image' => $mediaType === 'image' ? $mediaUrl : null,
+            'video' => $mediaType === 'video' ? $mediaUrl : null,
         ]);
 
         $this->reset();
