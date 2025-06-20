@@ -21,17 +21,8 @@
                     <h1 class="text-xl font-extrabold leading-none tracking-tight text-gray-900 md:text-3xl lg:text-4xl dark:text-white">{{ $user->name }}</h1>
 
                 </div>
-                <div class="flex gap-x-2">
-                    <livewire:friendship-button :targetUser="$user" />        
-                    
-                    <button 
-                        x-data 
-                        @click="window.chatManager.call('openChat', {{ $user->id }})"
-                        class="bg-blue-600 text-white px-4 py-1 rounded"
-                    >
-                        Message
-                    </button>
-                </div>
+                
+                <livewire:friendship-button :targetUser="$user" />
         </div>
     </div>
 

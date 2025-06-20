@@ -1,4 +1,4 @@
-<div>
+<div class="flex gap-x-2">
     @auth
         @if (auth()->id() === $targetUser->id)
             <a href="{{ route('settings.edit') }}" class="bg-gray-700 text-white px-4 py-2 rounded inline-block">Edit Profile</a>
@@ -19,6 +19,14 @@
             @else
                 <button wire:click="sendRequest" class="bg-blue-500 text-white px-4 py-1 rounded">Add Friend</button>
             @endif
+
+            <button 
+                x-data 
+                @click="window.chatManager.call('openChat', {{ auth()->id() }})"
+                class="bg-blue-600 text-white px-4 py-1 rounded"
+            >
+                Message
+            </button>
         @endif
     @else
         <a href="{{ route('login') }}" class="text-blue-600">Log in to add friends</a>
