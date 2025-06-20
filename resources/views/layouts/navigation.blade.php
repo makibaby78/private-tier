@@ -9,17 +9,10 @@
                         <x-application-logo class="block h-9 w-auto fill-current text-gray-800 dark:text-gray-200" />
                     </a>
                 </div>
-
-                <!-- Navigation Links -->
-                <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
-                    <x-nav-link :href="route('home')" :active="request()->routeIs('home')">
-                        {{ __('Dashboard') }}
-                    </x-nav-link>
-                </div>
             </div>
         
         @auth
-            <div class="flex items-center max-w-md w-full">
+            <div class="flex items-center justify-center max-w-md w-full">
                 <livewire:global-search />
             </div>
             <!-- Settings Dropdown -->

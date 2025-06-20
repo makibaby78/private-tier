@@ -15,11 +15,23 @@
             }"
             x-init="scrollToBottom()"
             @scroll-chat.window="if ($event.detail.userId === {{ $userId }}) scrollToBottom()"
-            class="w-72 bg-white shadow-lg rounded-t-lg border border-gray-300"
+            class="w-80 bg-white shadow-lg rounded-t-lg border border-gray-300"
         >
             {{-- Header --}}
-            <div class="flex items-center justify-between bg-blue-600 text-white px-3 py-2 rounded-t-lg">
-                <span class="text-sm font-semibold">Chat with User {{ $userId }}</span>
+            <div class="flex items-center gap-x-2 justify-between bg-blue-600 text-white px-3 py-2 rounded-t-lg">
+                <div class="flex items-center gap-x-2">
+
+                    <x-profile-photo 
+                        :path="$chat['profile_photo_path']" 
+                        :alt="$chat['name']" 
+                        class="rounded-full object-cover w-6 h-6" 
+                        width="30" 
+                        height="30" 
+                    />
+
+                    <span class="text-sm font-semibold">{{ $chat['name'] }}</span>
+                    
+                </div>
                 <div class="flex gap-2 items-center">
                     <button wire:click="openChat({{ $userId }})" class="hover:text-gray-200" title="Minimize">–</button>
                     <button wire:click="closeChat({{ $userId }})" class="hover:text-red-200" title="Close">×</button>
@@ -31,7 +43,7 @@
                 <div class="p-2">
                     <div 
                         x-ref="chatBody{{ $userId }}" 
-                        class="h-40 overflow-y-auto border rounded mb-2 p-1 text-sm text-gray-700 space-y-1"
+                        class="h-80 overflow-y-auto border rounded mb-2 p-1 text-sm text-gray-700 space-y-1"
                         id="messages"
                     >
                         @foreach ($messages[$userId] ?? [] as $msg)

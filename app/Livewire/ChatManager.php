@@ -5,6 +5,7 @@ namespace App\Livewire;
 use App\Models\Message;
 use Livewire\Component;
 use Livewire\Attributes\On;
+use App\Models\User;
 
 class ChatManager extends Component
 {
@@ -20,7 +21,14 @@ class ChatManager extends Component
             $this->openChats[$userId]['status'] = $this->openChats[$userId]['status'] === 'open' ? 'minimized' : 'open';
         } else {
             // First time open
-            $this->openChats[$userId] = ['status' => 'open'];
+            $user = User::findOrFail($userId);
+            
+            $this->openChats[$userId] = [
+                'status' => 'open',
+                'name' => $user->name,
+                'profile_photo_path' => $user->profile_photo_path,
+            ];
+
             $this->messageInputs[$userId] = '';
 
             $this->messages[$userId] = Message::where(function ($q) use ($userId) {
