@@ -4,18 +4,20 @@
     </div>
 
     @if ($friends->count())
-        <div class="grid grid-cols-2 md:grid-cols-3 gap-4" style="width: fit-content">
+        <div class="grid grid-cols-3 gap-4 w-full">
             @foreach ($friends as $friend)
                 <div>
-                    <a href="{{ route('profile.index', ['username' => $friend->username]) }}">
-                        <x-profile-photo 
-                            :path="$friend->profile_photo_path" 
-                            :alt="$friend->name" 
-                            class="rounded object-cover w-32 h-32" 
-                            width="50" 
-                            height="50" 
-                        />
-                    </a>
+                    <div class="w-full sm:max-w-xs md:max-w-sm lg:max-w-md aspect-square rounded overflow-hidden">
+                        <a href="{{ route('profile.index', ['username' => $friend->username]) }}">
+                            <x-profile-photo 
+                                :path="$friend->profile_photo_path" 
+                                :alt="$friend->name" 
+                                class="object-cover w-full h-full" 
+                                width="100" 
+                                height="100" 
+                            />
+                        </a>
+                    </div>
                     <a href="{{ route('profile.index', ['username' => $friend->username]) }}"
                        class="text-sm font-semibold">{{ $friend->name }}</a>
                 </div>

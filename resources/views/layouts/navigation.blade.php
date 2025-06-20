@@ -19,11 +19,15 @@
             <div class="flex items-center gap-x-2">
                 <x-dropdown align="right" width="80">
                     <x-slot name="trigger">
-                        <div class="h-10 w-10 bg-gray-200 rounded-full flex items-center justify-center">
+                        <button
+                            x-data
+                            @click="window.Livewire.dispatch('refresh-chat-list')"
+                            class="h-10 w-10 bg-gray-200 rounded-full flex items-center justify-center"
+                        >
                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="black" viewBox="0 0 512 512">
                                 <path d="M256 0C114.62 0 0 110.18 0 246.06c0 77.47 37.25 146.12 95.69 191.43V512l88.06-48.25c22.56 6.19 46.51 9.63 72.25 9.63 141.38 0 256-110.18 256-246.06S397.38 0 256 0zm29.75 314.94-57.94-62.13-122.5 62.13 142.25-151.31 59.31 62.13 119.06-62.13-140.18 151.31z"/>
                             </svg>
-                        </div>
+                        </button>
                     </x-slot>
                     <x-slot name="content">
                         <livewire:chat-list />

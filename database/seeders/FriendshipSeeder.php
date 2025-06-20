@@ -85,6 +85,13 @@ class FriendshipSeeder extends Seeder
                 'created_at' => Carbon::now(),
                 'updated_at' => Carbon::now(),
             ],
+            [
+                'user_id'    => 1,
+                'friend_id'  => 11,
+                'status'     => 'accepted',
+                'created_at' => Carbon::now(),
+                'updated_at' => Carbon::now(),
+            ],
         ]);
     }
 }

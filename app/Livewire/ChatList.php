@@ -5,6 +5,7 @@ namespace App\Livewire;
 use Livewire\Component;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Message;
+use Livewire\Attributes\On;
 
 class ChatList extends Component
 {
@@ -12,10 +13,20 @@ class ChatList extends Component
 
     public function mount()
     {
+        $this->loadFriendsWithLastMessage();
+    }
+
+    #[On('refresh-chat-list')]
+    public function refreshChatList()
+    {
+        $this->loadFriendsWithLastMessage();
+    }
+
+    private function loadFriendsWithLastMessage()
+    {
         $user = Auth::user();
         $friends = $user->friends();
 
-        // Loop through each friend and get last message between the two
         $this->friendsWithLastMessage = $friends->map(function ($friend) use ($user) {
             $lastMessage = Message::where(function ($query) use ($user, $friend) {
                     $query->where('sender_id', $user->id)

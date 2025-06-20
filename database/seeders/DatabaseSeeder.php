@@ -95,6 +95,14 @@ class DatabaseSeeder extends Seeder
             'password' => Hash::make('123456'),
         ]);
 
+        User::factory()->create([
+            'firstname' => 'Potcholo',
+            'lastname' => 'Galenzoga',
+            'username' => 'potcholo',
+            'email' => 'potcholo@gmail.com',
+            'password' => Hash::make('123456'),
+        ]);
+
         $this->call([
             FriendshipSeeder::class,
         ]);

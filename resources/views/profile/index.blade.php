@@ -27,13 +27,13 @@
     </div>
 
     <div class="profile-l-r max-w-7xl mx-auto sm:px-6 lg:px-8 flex flex-col lg:flex-row gap-4">
-        <div class="profile-left w-full lg:w-2/5">
+        <div class="profile-left w-full md:w-2/5">
 
             <livewire:my-friends-list :user="$user" />
 
         </div>
 
-        <div class="profile-right w-full lg:w-3/5">
+        <div class="profile-right w-full md:w-3/5">
             @auth
                 <livewire:post-form />
             @endauth

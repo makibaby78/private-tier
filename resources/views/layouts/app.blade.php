@@ -35,7 +35,7 @@
             <main>
                 <div class="p-2">
                     {{ $slot }}
-                    
+
                     <livewire:chat-manager />
                 </div>
             </main>
