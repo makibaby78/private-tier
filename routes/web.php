@@ -8,6 +8,7 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\SearchController;
 use Illuminate\Http\Request;
 use App\Models\Message;
+use App\Events\MessageSent;
 
 
 Route::get('/', [HomeController::class, 'index'])->name('home');
@@ -39,7 +40,7 @@ Route::middleware('auth')->group(function () {
             'message' => $request->message,
         ]);
     
-        broadcast(new \App\Events\MessageSent($message))->toOthers();
+        broadcast(new MessageSent($message))->toOthers();
     
         return ['status' => 'sent'];
     });

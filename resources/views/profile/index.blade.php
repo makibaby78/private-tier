@@ -26,11 +26,12 @@
                 
                 <button 
                     x-data 
-                    @click="window.chatManager.call('openChat', 3)"
+                    @click="window.chatManager.call('openChat', {{ $user->id }})"
                     class="px-4 py-2 bg-blue-600 text-white rounded"
                 >
-                    Toggle Chat with User 3
+                    Toggle Chat with User {{ $user->id }}
                 </button>
+                
 
 
 

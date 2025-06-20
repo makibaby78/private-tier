@@ -25,8 +25,19 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 const messages = document.getElementById('messages');
                 const msg = document.createElement('p');
-                msg.innerHTML = `<strong>${e.sender_name}:</strong> ${e.message}`;
+                msg.innerHTML = `<div class="text-left">
+                    <div class="inline-block px-2 py-1 rounded bg-gray-100">
+                        <span class="block text-xs text-gray-500">
+                            Test
+                        </span>
+                        <span>${e.message}</span>
+                    </div>
+                </div>`;
                 messages.appendChild(msg);
+
+                window.dispatchEvent(new CustomEvent('scroll-chat', {
+                    detail: { userId: e.sender_id } // or e.receiver_id if needed
+                }));
             });
 
     }
