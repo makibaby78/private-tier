@@ -17,7 +17,7 @@
             </div>
             <!-- Settings Dropdown -->
             <div class="flex items-center gap-x-2">
-                <x-dropdown align="right" width="48">
+                <x-dropdown align="right" width="80">
                     <x-slot name="trigger">
                         <div class="h-10 w-10 bg-gray-200 rounded-full flex items-center justify-center">
                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="black" viewBox="0 0 512 512">
@@ -26,9 +26,10 @@
                         </div>
                     </x-slot>
                     <x-slot name="content">
+                        <livewire:chat-list />
                     </x-slot>
             </x-dropdown>
-                <x-dropdown align="right" width="48">
+                <x-dropdown align="right" width="40">
                     <x-slot name="trigger">
                         <button class="inline-flex items-center border border-transparent text-sm leading-4 font-medium rounded-md text-gray-500 dark:text-gray-400 bg-white dark:bg-gray-800 hover:text-gray-700 dark:hover:text-gray-300 focus:outline-none transition ease-in-out duration-150">                            
 

@@ -30,7 +30,7 @@
                     />
 
                     <span class="text-sm font-semibold">{{ $chat['name'] }}</span>
-                    
+
                 </div>
                 <div class="flex gap-2 items-center">
                     <button wire:click="openChat({{ $userId }})" class="hover:text-gray-200" title="Minimize">–</button>
@@ -49,7 +49,6 @@
                         @foreach ($messages[$userId] ?? [] as $msg)
                             <div class="{{ $msg['sender_id'] === auth()->id() ? 'text-right' : 'text-left' }}">
                                 <div class="inline-block px-2 py-1 rounded {{ $msg['sender_id'] === auth()->id() ? 'bg-blue-100' : 'bg-gray-100' }}">
-                                    <span class="block text-xs text-gray-500">{{ $msg['sender']['name'] ?? 'User' }}</span>
                                     <span>{{ $msg['message'] }}</span>
                                 </div>
                             </div>

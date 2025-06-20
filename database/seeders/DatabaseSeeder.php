@@ -32,6 +32,14 @@ class DatabaseSeeder extends Seeder
         ]);
 
         User::factory()->create([
+            'firstname' => 'Albert',
+            'lastname' => 'Pogado',
+            'username' => 'albert',
+            'email' => 'albert@gmail.com',
+            'password' => Hash::make('123456'),
+        ]);
+
+        User::factory()->create([
             'firstname' => 'Christian',
             'lastname' => 'Mahusay',
             'username' => 'christian',
@@ -47,6 +55,49 @@ class DatabaseSeeder extends Seeder
             'password' => Hash::make('123456'),
         ]);
 
+        User::factory()->create([
+            'firstname' => 'Alfie',
+            'lastname' => 'Pogado',
+            'username' => 'alfie',
+            'email' => 'alfie@gmail.com',
+            'password' => Hash::make('123456'),
+        ]);
+
+        User::factory()->create([
+            'firstname' => 'Myla Mae',
+            'lastname' => 'Amistad',
+            'username' => 'mylamae',
+            'email' => 'mylamae@gmail.com',
+            'password' => Hash::make('123456'),
+        ]);
+
+        User::factory()->create([
+            'firstname' => 'Edrich',
+            'lastname' => 'Enriquez',
+            'username' => 'edrich',
+            'email' => 'edrich@gmail.com',
+            'password' => Hash::make('123456'),
+        ]);
+
+        User::factory()->create([
+            'firstname' => 'John',
+            'lastname' => 'Togonon',
+            'username' => 'john',
+            'email' => 'john@gmail.com',
+            'password' => Hash::make('123456'),
+        ]);
+
+        User::factory()->create([
+            'firstname' => 'Paul Micheal',
+            'lastname' => 'Rivas',
+            'username' => 'paulmicheal',
+            'email' => 'paulmicheal@gmail.com',
+            'password' => Hash::make('123456'),
+        ]);
+
+        $this->call([
+            FriendshipSeeder::class,
+        ]);
 
     }
 }
