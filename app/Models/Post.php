@@ -28,4 +28,19 @@ class Post extends Model
         $this->posts = $this->user->posts()->with('user')->latest()->get();
     }
 
+    public function relevanceScore(): float
+    {
+        $ageInMinutes = now()->diffInMinutes($this->created_at) + 1;
+
+        $typeWeight = match($this->type) {
+            'video' => 3,
+            'image' => 2,
+            default => 1
+        };
+
+        $priorityWeight = $this->is_pinned ? 100 : 1;
+
+        return ($typeWeight * $priorityWeight) / $ageInMinutes;
+    }
+
 }

@@ -8,6 +8,7 @@
         <div class="right"></div>
         <div class="middle max-w-3xl mx-auto">
             <livewire:post-form />
+            <livewire:feed />
         </div>
         <div class="left"></div>
     </div>

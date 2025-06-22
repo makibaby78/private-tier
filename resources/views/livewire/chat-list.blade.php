@@ -8,8 +8,13 @@
             class="w-full"
         >
             <div class="p-2 flex items-center space-x-3 rounded hover:bg-gray-100">
-                <img src="{{ $friend['photo'] }}" alt="{{ $friend['name'] }}"
-                    class="w-10 h-10 rounded-full object-cover">
+                <x-profile-photo 
+                    :path="$friend['profile_photo_path']" 
+                    :alt="$friend['name']" 
+                    class="rounded-full object-cover w-6 h-6" 
+                    width="30" 
+                    height="30" 
+                />
 
                 <div class="flex-1">
                     <div class="text-left font-semibold">{{ $friend['name'] }}</div>
