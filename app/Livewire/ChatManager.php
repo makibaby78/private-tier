@@ -42,6 +42,23 @@ class ChatManager extends Component
         $this->dispatch('scroll-chat', userId: $userId);
     }
 
+    #[On('message-received')]
+    public function addIncomingMessage(string $message, int $sender_id, string $sender_name)
+    {
+        if (!isset($this->messages[$sender_id])) {
+            $this->messages[$sender_id] = [];
+        }
+
+        $this->messages[$sender_id][] = [
+            'message' => $message,
+            'sender_id' => $sender_id,
+            'sender_name' => $sender_name,
+            'created_at' => now()->toDateTimeString(),
+        ];
+
+        $this->dispatch('scroll-chat', userId: $sender_id);
+    }
+
     public function sendMessage($userId)
     {
         $text = trim($this->messageInputs[$userId] ?? '');

@@ -17,26 +17,19 @@ document.addEventListener('DOMContentLoaded', () => {
     const userId = document.querySelector('meta[name="user-id"]')?.content;
 
     if (userId) {
-        console.log(`Listening on: chat.${userId}`);
 
         window.Echo.private(`chat.${userId}`)
             .listen('.MessageSent', (e) => {
-                console.log('[DEBUG] Received MessageSent event:', e);
+                // ✅ Call Livewire to update the UI reactively
+                Livewire.dispatch('message-received', {
+                    message: e.message,
+                    sender_id: e.sender_id,
+                    sender_name: e.sender_name,
+                });
 
-                const messages = document.getElementById('messages');
-                const msg = document.createElement('p');
-                msg.innerHTML = `<div class="text-left">
-                    <div class="inline-block px-2 py-1 rounded bg-gray-100">
-                        <span class="block text-xs text-gray-500">
-                            Test
-                        </span>
-                        <span>${e.message}</span>
-                    </div>
-                </div>`;
-                messages.appendChild(msg);
-
+                // Optional scroll
                 window.dispatchEvent(new CustomEvent('scroll-chat', {
-                    detail: { userId: e.sender_id } // or e.receiver_id if needed
+                    detail: { userId: e.sender_id }
                 }));
             });
 
