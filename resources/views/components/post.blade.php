@@ -3,15 +3,19 @@
 <div class="p-4 bg-white border rounded-md space-y-2">
     <div class="flex items-center justify-between">
         <div class="flex gap-2">
-            <x-profile-photo 
-                :path="$post->user->profile_photo_path" 
-                :alt="$post->user->name" 
-                class="rounded-full object-cover w-10 h-10" 
-                width="50" 
-                height="50" 
-            />
+            <a href="{{ route('profile.index', $post->user->username) }}">
+                <x-profile-photo 
+                    :path="$post->user->profile_photo_path" 
+                    :alt="$post->user->name" 
+                    class="rounded-full object-cover w-10 h-10" 
+                    width="50" 
+                    height="50" 
+                />
+            </a>
             <div>
-                <h5 class="text-base font-semibold">{{ $post->user->name }}</h5>
+                <a href="{{ route('profile.index', $post->user->username) }}">
+                    <h5 class="text-base font-semibold">{{ $post->user->name }}</h5>
+                </a>
                 <small class="text-gray-500">
                     {{ $post->created_at->diffForHumans() }}
                 </small>
@@ -20,7 +24,7 @@
 
         @auth
             @if ($post->user_id === auth()->id())
-                <x-dropdown align="right" width="40">
+                <x-dropdown align="right" width="32">
                     <x-slot name="trigger">
                         <button class="p-2 rounded-full hover:bg-gray-100 transition-colors duration-150">
                             <svg viewBox="0 0 20 20" width="20" height="20" fill="currentColor">
@@ -35,7 +39,7 @@
                         <div>
                             <button 
                                 wire:click="openEditModal({{ $post->id }})"
-                                class="hover:text-blue-600 p-2 hover:bg-gray-100 w-full text-left"
+                                class="hover:text-blue-600 p-2 hover:bg-gray-100 w-full text-left text-sm"
                             >
                                 ✏️ Edit
                             </button>
@@ -43,7 +47,7 @@
                         <div>
                             <button 
                                 wire:click="trashPost({{ $post->id }})" 
-                                class="hover:text-red-600 p-2 hover:bg-gray-100 w-full text-left"
+                                class="hover:text-red-600 p-2 hover:bg-gray-100 w-full text-left text-sm"
                             >
                                 🗑️ Move to Trash
                             </button>

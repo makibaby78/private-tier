@@ -17,6 +17,10 @@ class PostList extends Component
 
     public User $user;
     public $posts = [];
+    public $page = 1;
+    public $perPage = 10;
+    public $hasMore = true;
+
     public $editingPost;
     public $editingBody;
     public $newImage;
@@ -30,6 +34,8 @@ class PostList extends Component
     #[On('refresh-posts')]
     public function refreshPosts()
     {
+        $this->posts = [];
+        $this->page = 1;
         $this->loadPosts();
     }
 
@@ -93,7 +99,26 @@ class PostList extends Component
 
     public function loadPosts()
     {
-        $this->posts = $this->user->posts()->latest()->get();
+        $sliced = $this->user->posts()
+            ->latest()
+            ->skip(($this->page - 1) * $this->perPage)
+            ->take($this->perPage)
+            ->get();
+
+        $this->posts = [...$this->posts, ...$sliced];
+
+        $this->hasMore = $sliced->count() === $this->perPage;
+    }
+
+    public function loadMore()
+    {
+        $this->page++;
+        $this->loadPosts();
+    }
+
+    public function postsCount()
+    {
+        return count($this->posts);
     }
 
     public function render()

@@ -1,16 +1,43 @@
-<div class="space-y-4">
+<div 
+    x-data="{
+        init() {
+            window.addEventListener('scroll', () => {
+                const nearBottom = window.innerHeight + window.scrollY >= document.body.offsetHeight - 100;
+                if (nearBottom && @js($hasMore)) {
+                    $wire.loadMore();
+                }
+            });
+        }
+    }"
+    x-init="init"
+    class="space-y-4"
+>
+    {{-- Flash Message --}}
     @if (session()->has('message'))
         <div class="bg-green-200 text-green-800 p-2 rounded">
             {{ session('message') }}
         </div>
     @endif
+
+    {{-- Posts --}}
     @forelse ($posts as $post)
         <x-post :post="$post" />
     @empty
         <p class="text-gray-500 italic">No posts yet.</p>
     @endforelse
 
+    {{-- Loading/End Message --}}
+    @if ($hasMore)
+        <div class="text-center text-gray-500 py-4">
+            Loading more posts...
+        </div>
+    @else
+        <div class="text-center text-gray-400 py-4">
+            You’ve reached the end.
+        </div>
+    @endif
 
+    {{-- Edit Post Modal --}}
     <x-ui.modal name="edit-post-modal">
         <h2 class="text-xl font-semibold mb-4">Edit Post</h2>
 
@@ -45,7 +72,4 @@
             <button @click="$dispatch('close-modal', { name: 'edit-post-modal' })" class="px-4 py-2 bg-gray-300 rounded">Cancel</button>
         </div>
     </x-ui.modal>
-
-
-
 </div>
