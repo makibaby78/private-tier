@@ -24,6 +24,28 @@ Route::middleware('auth')->group(function () {
 
     Route::get('/search', [SearchController::class, 'index'])->name('search.results');
 
+    Route::prefix('friends')->name('friends.')->group(function () {
+        Route::get('/', function () {
+            return view('friends.index');
+        })->name('index');
+
+        Route::get('/requests', function () {
+            return view('friends.requests.index');
+        })->name('requests.index');
+
+        Route::get('/suggestions', function () {
+            return view('friends.suggestions.index');
+        })->name('suggestions.index');
+
+        Route::get('/all-friends', function () {
+            return view('friends.all-friends.index');
+        })->name('all-friends.index');
+
+        Route::get('/birthdays', function () {
+            return view('friends.birthdays.index');
+        })->name('birthdays.index');
+    });
+
 });
 
 Route::get('/{username}', [UserController::class, 'showByUsername'])

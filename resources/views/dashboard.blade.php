@@ -6,7 +6,7 @@
     </x-slot>
     <div>
         <div class="right"></div>
-        <div class="middle max-w-3xl mx-auto">
+        <div class="middle max-w-3xl mx-auto py-4">
             <livewire:post-form />
             <livewire:feed />
         </div>

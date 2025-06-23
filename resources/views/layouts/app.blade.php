@@ -33,7 +33,7 @@
 
             <!-- Page Content -->
             <main>
-                <div class="p-2">
+                <div>
                     {{ $slot }}
 
                     <livewire:chat-manager />
