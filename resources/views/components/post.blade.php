@@ -72,9 +72,12 @@
                     @endif
     
                     @if ($i === 2 && count($post->media) > 3)
-                        <div class="absolute inset-0 bg-black bg-opacity-60 flex items-center justify-center text-white text-xl font-bold rounded">
+                        <a 
+                            href="{{ route('posts.show', ['username' => $post->user->username, 'post' => $post->id]) }}" 
+                            class="absolute inset-0 bg-black bg-opacity-60 flex items-center justify-center text-white text-xl font-bold rounded"
+                        >
                             +{{ count($post->media) - 3 }}
-                        </div>
+                        </a>
                     @endif
                 </div>
             @endif

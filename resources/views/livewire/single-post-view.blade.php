@@ -1,4 +1,4 @@
-<div class="max-w-xl mx-auto mt-8 p-4 bg-white shadow rounded space-y-4">
+<div class="max-w-7xl mx-auto mt-8 p-4 bg-white shadow rounded space-y-4">
     {{-- User Info --}}
     <div class="flex items-center gap-3">
         <img src="{{ $post->user->profile_photo_url }}" class="w-10 h-10 rounded-full object-cover" alt="">
