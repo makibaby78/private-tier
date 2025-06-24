@@ -57,8 +57,19 @@
             @endif
         @endauth
     </div>
-
     <p class="text-gray-800">{{ $post->body }}</p>
+    
+    @if ($post->media && $post->media->isNotEmpty())
+        <div class="border-t border-gray-300 pt-2 mt-2">
+            <a
+                class="text-xs font-bold text-blue-600 hover:underline"
+                href="{{ route('posts.show', ['username' => $post->user->username, 'post' => $post->id]) }}"
+            >
+                View Post
+            </a>
+        </div>
+    @endif
+
     <div class="w-full h-full flex gap-2 relative">
         @foreach ($post->media ?? [] as $i => $item)
             @if ($i < 3)
@@ -66,8 +77,14 @@
                     @if ($item['type'] === 'image')
                         <img src="{{ $item['url'] }}" class="rounded object-contain w-full h-auto">
                     @elseif ($item['type'] === 'video')
-                        <video class="rounded w-full" muted>
+                        <video
+                            class="w-full rounded shadow cursor-pointer"
+                            style="max-height: 470px;"
+                            muted
+                            controls
+                        >
                             <source src="{{ $item['url'] }}" type="video/mp4">
+                            Your browser does not support the video tag.
                         </video>
                     @endif
     
