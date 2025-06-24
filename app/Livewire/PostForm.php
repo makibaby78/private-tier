@@ -5,6 +5,7 @@ namespace App\Livewire;
 use App\Models\Post;
 use Livewire\Component;
 use Livewire\WithFileUploads;
+use Livewire\Attributes\Validate;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
@@ -20,9 +21,9 @@ class PostForm extends Component
     public function save()
     {
         $this->validate([
-            'body' => 'required|string',
-            'media' => 'nullable|file|mimetypes:image/*,video/*|max:102400',
-        ]);
+            'body' => 'required_without:media|string|nullable',
+            'media' => 'required_without:body|nullable|file|mimetypes:image/*,video/*|max:102400',
+        ]);        
 
         $mediaUrl = null;
         $mediaType = null;
