@@ -6,6 +6,8 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\FriendshipController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\SearchController;
+use App\Livewire\SinglePostView;
+use App\Livewire\SingleMediaView;
 use Illuminate\Http\Request;
 
 
@@ -46,6 +48,7 @@ Route::middleware('auth')->group(function () {
         })->name('birthdays.index');
     });
 
+    Route::get('/{username}/posts/{post}', SinglePostView::class)->name('posts.show');
 });
 
 Route::get('/{username}', [UserController::class, 'showByUsername'])

@@ -59,19 +59,25 @@
     </div>
 
     <p class="text-gray-800">{{ $post->body }}</p>
-
-    @if ($post->media && $post->media->count())
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            @foreach ($post->media as $media)
-                @if ($media->type === 'image')
-                    <img src="{{ $media->url }}" class="w-full rounded shadow" alt="Image post">
-                @elseif ($media->type === 'video')
-                    <video controls class="w-full rounded shadow">
-                        <source src="{{ $media->url }}" type="video/mp4">
-                        Your browser does not support the video tag.
-                    </video>
-                @endif
-            @endforeach
-        </div>
-    @endif
+    <div class="w-full h-full flex gap-2 relative">
+        @foreach ($post->media ?? [] as $i => $item)
+            @if ($i < 3)
+                <div class="relative w-full">
+                    @if ($item['type'] === 'image')
+                        <img src="{{ $item['url'] }}" class="rounded object-contain w-full h-auto">
+                    @elseif ($item['type'] === 'video')
+                        <video class="rounded w-full" muted>
+                            <source src="{{ $item['url'] }}" type="video/mp4">
+                        </video>
+                    @endif
+    
+                    @if ($i === 2 && count($post->media) > 3)
+                        <div class="absolute inset-0 bg-black bg-opacity-60 flex items-center justify-center text-white text-xl font-bold rounded">
+                            +{{ count($post->media) - 3 }}
+                        </div>
+                    @endif
+                </div>
+            @endif
+        @endforeach
+    </div>
 </div>
