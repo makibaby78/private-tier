@@ -35,20 +35,39 @@ class Post extends Model
 
     public function relevanceScore(): float
     {
-        $ageInMinutes = now()->diffInMinutes($this->created_at) + 1;
-    
-        // Get type from the first media item (or decide how to calculate overall type)
-        $firstMediaType = $this->media->first()?->type ?? 'default';
-    
-        $typeWeight = match($firstMediaType) {
-            'video' => 3,
-            'image' => 2,
-            default => 1,
+        // Make sure created_at is valid
+        if (!$this->created_at instanceof \Illuminate\Support\Carbon) {
+            return 0; // fallback if no valid timestamp
+        }
+
+        $ageInMinutes = now()->diffInMinutes($this->created_at);
+
+        // Avoid log(0) by forcing minimum age of 1 minute
+        $ageInMinutes = max($ageInMinutes, 1);
+
+        // Scoring
+        $baseScore = match ($this->media->first()?->type ?? null) {
+            'video' => 500,
+            'image' => 400,
+            default => 100,
         };
 
-        $priorityWeight = $this->is_pinned ? 100 : 1;
+        $bodyLength = strlen(strip_tags($this->body ?? ''));
+        $bodyBonus = match (true) {
+            $bodyLength >= 300 => 20,
+            $bodyLength >= 100 => 10,
+            default => 0,
+        };
 
-        return ($typeWeight * $priorityWeight) / $ageInMinutes;
+        $pinBonus = $this->is_pinned ? 10000 : 0;
+
+        // Safe log decay
+        $ageDecay = log($ageInMinutes + 1);
+        if (!is_finite($ageDecay) || $ageDecay <= 0) {
+            $ageDecay = 1; // fallback
+        }
+
+        return ($baseScore + $bodyBonus + $pinBonus) / $ageDecay;
     }
 
 }

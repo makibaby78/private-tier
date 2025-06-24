@@ -21,7 +21,6 @@ class Feed extends Component
     {
         // Load only the most recent N posts (for efficiency), with eager-loaded media
         $posts = Post::with('media')
-            ->latest() // order by created_at desc
             ->take(100) // tune this: how many posts max to load per request
             ->get();
     
