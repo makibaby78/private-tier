@@ -2,14 +2,14 @@
 
 namespace App\Livewire;
 
-use Livewire\Component;
 use App\Models\User;
 use App\Models\Post;
-use Illuminate\Support\Facades\Auth;
-use Livewire\Attributes\On;
+use App\Models\PostMedia;
+use Livewire\Component;
 use Livewire\WithFileUploads;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
-
+use Livewire\Attributes\On;
 
 class PostList extends Component
 {
@@ -23,7 +23,7 @@ class PostList extends Component
 
     public $editingPost;
     public $editingBody;
-    public $newImage;
+    public $newMedia = [];
 
     public function mount(User $user)
     {
@@ -41,9 +41,9 @@ class PostList extends Component
 
     public function openEditModal($postId)
     {
-        $this->editingPost = Post::findOrFail($postId);
+        $this->editingPost = Post::with('media')->findOrFail($postId);
         $this->editingBody = $this->editingPost->body;
-        $this->newImage = null;
+        $this->newMedia = [];
 
         $this->dispatch('open-modal', name: 'edit-post-modal');
     }
@@ -51,44 +51,44 @@ class PostList extends Component
     public function savePost()
     {
         $this->editingPost->body = $this->editingBody;
-
-        if ($this->editingPost->image && $this->newImage) {
-            // 🗑 Delete the old Cloudinary image using the stored public ID
-            if ($this->editingPost->image_public_id) {
-                Storage::disk('cloudinary')->delete($this->editingPost->image);
-            }
-
-            // ☁️ Upload new image and get the path
-            $uploadedPath = Storage::disk('cloudinary')->putFile('posts', $this->newImage);
-
-            // 🔗 Save new image URL and public_id
-            $this->editingPost->image = Storage::disk('cloudinary')->url($uploadedPath);
-            $this->editingPost->image_public_id = $uploadedPath;
-        }
-
         $this->editingPost->save();
 
-        $this->dispatch('close-modal', name: 'edit-post-modal');
+        foreach ($this->newMedia as $file) {
+            $mimeType = $file->getMimeType();
+            $path = Storage::disk('cloudinary')->putFile('posts', $file);
+            $url = Storage::disk('cloudinary')->url($path);
+            $publicId = pathinfo($path, PATHINFO_FILENAME);
+            $type = str_starts_with($mimeType, 'video/') ? 'video' : 'image';
 
+            $this->editingPost->media()->create([
+                'url' => $url,
+                'public_id' => $publicId,
+                'type' => $type,
+            ]);
+        }
+
+        $this->dispatch('close-modal', name: 'edit-post-modal');
         $this->refreshPosts();
 
-        session()->flash('message', 'Post Updated.');
+        session()->flash('message', 'Post updated.');
     }
 
     public function trashPost($postId)
     {
-        $post = Post::findOrFail($postId);
+        $post = Post::with('media')->findOrFail($postId);
 
         if ($post->user_id !== Auth::id()) {
             abort(403, 'Unauthorized action.');
         }
 
-        // ✅ Delete media from Cloudinary if public_id exists
-        if ($post->public_id) {
-            Storage::disk('cloudinary')->delete($post->public_id);
+        // Delete all media from Cloudinary
+        foreach ($post->media as $media) {
+            if ($media->public_id) {
+                Storage::disk('cloudinary')->delete("posts/{$media->public_id}");
+            }
+            $media->delete();
         }
 
-        // ✅ Then delete the post from DB
         $post->delete();
 
         $this->refreshPosts();
@@ -96,17 +96,16 @@ class PostList extends Component
         session()->flash('message', 'Post moved to trash.');
     }
 
-
     public function loadPosts()
     {
         $sliced = $this->user->posts()
+            ->with('media')
             ->latest()
             ->skip(($this->page - 1) * $this->perPage)
             ->take($this->perPage)
             ->get();
 
         $this->posts = [...$this->posts, ...$sliced];
-
         $this->hasMore = $sliced->count() === $this->perPage;
     }
 
@@ -116,14 +115,8 @@ class PostList extends Component
         $this->loadPosts();
     }
 
-    public function postsCount()
-    {
-        return count($this->posts);
-    }
-
     public function render()
     {
         return view('livewire.post-list');
     }
 }
-

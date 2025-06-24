@@ -18,6 +18,11 @@ class Post extends Model
         'video',
     ];
 
+    public function media()
+    {
+        return $this->hasMany(\App\Models\PostMedia::class);
+    }
+
     public function user()
     {
         return $this->belongsTo(\App\Models\User::class);
@@ -31,11 +36,14 @@ class Post extends Model
     public function relevanceScore(): float
     {
         $ageInMinutes = now()->diffInMinutes($this->created_at) + 1;
-
-        $typeWeight = match($this->type) {
+    
+        // Get type from the first media item (or decide how to calculate overall type)
+        $firstMediaType = $this->media->first()?->type ?? 'default';
+    
+        $typeWeight = match($firstMediaType) {
             'video' => 3,
             'image' => 2,
-            default => 1
+            default => 1,
         };
 
         $priorityWeight = $this->is_pinned ? 100 : 1;

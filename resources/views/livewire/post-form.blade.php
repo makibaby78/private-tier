@@ -18,37 +18,47 @@
 
     <div 
         x-data="{
-            file: null,
+            file: [],
             isUploading: false,
+            clearFiles() {
+                this.file = [];
+                this.$refs.uploadMedia.value = null;
+            },
             resetWhenLivewireClears() {
                 $watch('$wire.media', value => {
-                    if (!value) {
-                        file = null;
+                    if (!value || value.length === 0) {
+                        file = [];
                         $refs.uploadMedia.value = null;
                     }
                 });
             }
         }"
-        x-init="resetWhenLivewireClears()"
+        x-init="
+            resetWhenLivewireClears();
+            Livewire.on('post-created', () => {
+                clearFiles();
+            });
+        "
         class="relative"
     >
         <!-- Hidden File Input -->
         <input
             type="file"
+            multiple
             wire:model="media"
             class="hidden"
             id="uploadMedia"
             accept="image/*,video/*"
             x-ref="uploadMedia"
             @change="
-                file = $event.target.files[0];
+                file = [...$event.target.files];
                 isUploading = true;
             "
             x-bind:disabled="isUploading"
         >
 
         <!-- Upload Trigger -->
-        <div class="flex gap-x-2 items-center">
+        <div class="flex gap-x-2 items-center mt-2">
             <label 
                 for="uploadMedia" 
                 class="cursor-pointer inline-flex items-center justify-center w-10 h-10 rounded-full bg-gray-100 hover:bg-gray-200"
@@ -82,14 +92,26 @@
             <p class="text-gray-500 italic" x-show="isUploading">Uploading...</p>
         </div>
 
-        <!-- File Name Preview -->
-        <template x-if="file">
-            <p class="mt-2 text-sm text-gray-500 truncate">
-                <strong>Selected:</strong> <span x-text="file.name"></span>
-            </p>
+        <!-- File Previews -->
+        <template x-if="file.length > 0">
+            <div class="mt-3 flex flex-wrap gap-3">
+                <template x-for="(f, index) in file" :key="index">
+                    <div>
+                        <template x-if="f.type.startsWith('image/')">
+                            <img :src="URL.createObjectURL(f)" class="w-24 h-24 object-cover rounded" />
+                        </template>
+
+                        <template x-if="f.type.startsWith('video/')">
+                            <video class="w-24 h-24 rounded" controls>
+                                <source :src="URL.createObjectURL(f)">
+                            </video>
+                        </template>
+                    </div>
+                </template>
+            </div>
         </template>
 
-        @error('media')
+        @error('media.*')
             <p class="text-sm text-red-600 mt-2">{{ $message }}</p>
         @enderror
 
@@ -100,25 +122,6 @@
             x-init="$watch('$wire.media', value => isUploading = false)"
         ></div>
     </div>
-
-    @php
-        use Illuminate\Support\Str;
-    @endphp
-
-    @if ($media)
-        <div>
-            <p class="text-sm text-gray-500">Preview:</p>
-
-            @if (Str::startsWith($media->getMimeType(), 'image/'))
-                <img src="{{ $media->temporaryUrl() }}" class="w-32 h-32 object-cover rounded" alt="Image preview">
-            @elseif (Str::startsWith($media->getMimeType(), 'video/'))
-                <video class="w-32 h-32 rounded" controls>
-                    <source src="{{ $media->temporaryUrl() }}">
-                    Your browser does not support the video tag.
-                </video>
-            @endif
-        </div>
-    @endif
 
     <button 
         type="submit" 
@@ -140,5 +143,4 @@
             Posting...
         </span>
     </button>
-
 </div>

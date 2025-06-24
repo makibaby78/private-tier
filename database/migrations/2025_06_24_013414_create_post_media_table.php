@@ -11,13 +11,14 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('posts', function (Blueprint $table) {
+        Schema::create('post_media', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id')->constrained()->onDelete('cascade');
-            $table->text('body');
-            $table->softDeletes();
+            $table->foreignId('post_id')->constrained()->onDelete('cascade');
+            $table->string('url');
+            $table->string('type');
+            $table->string('public_id')->nullable();
             $table->timestamps();
-        });        
+        });             
     }
 
     /**
@@ -25,6 +26,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('posts');
+        Schema::dropIfExists('post_media');
     }
 };

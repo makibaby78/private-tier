@@ -40,36 +40,90 @@
     {{-- Edit Post Modal --}}
     <x-ui.modal name="edit-post-modal">
         <h2 class="text-xl font-semibold mb-4">Edit Post</h2>
-
-        <textarea wire:model.defer="editingBody" class="w-full border p-2 rounded"></textarea>
-
-        @if ($editingPost?->image)
-            <div class="mt-4">
-                <p class="font-medium text-sm text-gray-700 mb-2">Current Image:</p>
-
-                {{-- Show preview --}}
-                @if ($newImage)
-                    <img src="{{ $newImage->temporaryUrl() }}" class="w-full max-w-xs rounded shadow">
-                @else
-                    <img src="{{ $editingPost->image }}" class="w-full max-w-xs rounded shadow">
-                @endif
-
-                <input type="file" wire:model="newImage" class="mt-2">
+    
+        {{-- Post Body --}}
+        <textarea 
+            wire:model.defer="editingBody" 
+            class="w-full border p-2 rounded" 
+            rows="4"
+            placeholder="What's on your mind?"
+        ></textarea>
+    
+        {{-- Existing Media Previews --}}
+        @if ($editingPost?->media && $editingPost->media->count())
+            <div class="mt-4 space-y-2">
+                <p class="font-medium text-sm text-gray-700">Current Media:</p>
+    
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    @foreach ($editingPost->media as $media)
+                        @if ($media->type === 'image')
+                            <img src="{{ $media->url }}" class="w-full rounded shadow" alt="Post image">
+                        @elseif ($media->type === 'video')
+                            <video controls class="w-full rounded shadow">
+                                <source src="{{ $media->url }}" type="video/mp4">
+                                Your browser does not support the video tag.
+                            </video>
+                        @endif
+                    @endforeach
+                </div>
             </div>
         @endif
-
-        <div class="mt-4 flex justify-end gap-2">
+    
+        {{-- New Upload Preview --}}
+        @if (!empty($newMedia))
+            <div class="mt-4 space-y-2">
+                <p class="font-medium text-sm text-gray-700">New Media Selected:</p>
+    
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    @foreach ($newMedia as $file)
+                        @if (str_starts_with($file->getMimeType(), 'image/'))
+                            <img src="{{ $file->temporaryUrl() }}" class="w-full rounded shadow">
+                        @elseif (str_starts_with($file->getMimeType(), 'video/'))
+                            <video controls class="w-full rounded shadow">
+                                <source src="{{ $file->temporaryUrl() }}" type="{{ $file->getMimeType() }}">
+                            </video>
+                        @endif
+                    @endforeach
+                </div>
+            </div>
+        @endif
+    
+        {{-- File Upload Input --}}
+        <div class="mt-4">
+            <label class="block text-sm font-medium text-gray-700 mb-2">Upload New Media:</label>
+            <input 
+                type="file" 
+                wire:model="newMedia" 
+                multiple 
+                accept="image/*,video/*"
+                class="block w-full text-sm text-gray-600 file:mr-4 file:py-2 file:px-4
+                       file:rounded file:border-0 file:text-sm file:font-semibold
+                       file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100"
+            >
+            @error('newMedia.*') 
+                <p class="text-sm text-red-600 mt-2">{{ $message }}</p> 
+            @enderror
+        </div>
+    
+        {{-- Action Buttons --}}
+        <div class="mt-6 flex justify-end gap-2">
             <button 
                 wire:click="savePost" 
-                class="bg-blue-600 text-white px-4 py-2 rounded"
+                class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
                 wire:loading.attr="disabled"
                 wire:target="savePost"
             >
                 <span wire:loading.remove wire:target="savePost">💾 Save</span>
                 <span wire:loading wire:target="savePost">⏳ Saving...</span>
             </button>
-
-            <button @click="$dispatch('close-modal', { name: 'edit-post-modal' })" class="px-4 py-2 bg-gray-300 rounded">Cancel</button>
+    
+            <button 
+                @click="$dispatch('close-modal', { name: 'edit-post-modal' })" 
+                class="px-4 py-2 bg-gray-300 rounded hover:bg-gray-400"
+            >
+                Cancel
+            </button>
         </div>
     </x-ui.modal>
+    
 </div>

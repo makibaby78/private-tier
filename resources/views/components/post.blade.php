@@ -1,15 +1,15 @@
 @props(['post'])
 
-<div class="p-4 bg-white border rounded-md space-y-2">
+<div class="p-4 bg-white border rounded-md space-y-4">
     <div class="flex items-center justify-between">
-        <div class="flex gap-2">
+        <div class="flex gap-2 items-center">
             <a href="{{ route('profile.index', $post->user->username) }}">
                 <x-profile-photo 
                     :path="$post->user->profile_photo_path" 
                     :alt="$post->user->name" 
                     class="rounded-full object-cover w-10 h-10" 
-                    width="50" 
-                    height="50" 
+                    width="40" 
+                    height="40" 
                 />
             </a>
             <div>
@@ -58,14 +58,20 @@
         @endauth
     </div>
 
-    <p>{{ $post->body }}</p>
+    <p class="text-gray-800">{{ $post->body }}</p>
 
-    @if ($post->video)
-        <video class="w-full max-w-sm rounded shadow" controls>
-            <source src="{{ $post->video }}" type="video/mp4">
-            Your browser does not support the video tag.
-        </video>
-    @elseif ($post->image)
-        <img src="{{ $post->image }}" class="w-full max-w-sm rounded shadow" alt="{{ $post->body }}">
+    @if ($post->media && $post->media->count())
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            @foreach ($post->media as $media)
+                @if ($media->type === 'image')
+                    <img src="{{ $media->url }}" class="w-full rounded shadow" alt="Image post">
+                @elseif ($media->type === 'video')
+                    <video controls class="w-full rounded shadow">
+                        <source src="{{ $media->url }}" type="video/mp4">
+                        Your browser does not support the video tag.
+                    </video>
+                @endif
+            @endforeach
+        </div>
     @endif
 </div>

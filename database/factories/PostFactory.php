@@ -13,7 +13,6 @@ class PostFactory extends Factory
     {
         return [
             'body' => $this->faker->paragraph,
-            'image' => $this->faker->optional()->imageUrl(),
         ];
     }
 }

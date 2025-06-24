@@ -3,9 +3,9 @@
 namespace App\Livewire;
 
 use App\Models\Post;
+use App\Models\PostMedia;
 use Livewire\Component;
 use Livewire\WithFileUploads;
-use Livewire\Attributes\Validate;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
@@ -14,49 +14,44 @@ class PostForm extends Component
 {
     use WithFileUploads;
 
-    public $title = '';
     public $body = '';
-    public $media;
+    public array $media = [];
 
     public function save()
     {
         $this->validate([
             'body' => 'required_without:media|string|nullable',
-            'media' => 'required_without:body|nullable|file|mimetypes:image/*,video/*|max:102400',
-        ]);        
+            'media' => 'required_without:body|array|max:10',
+            'media.*' => 'file|mimetypes:image/*,video/*|max:102400',
+        ]);
 
-        $mediaUrl = null;
-        $mediaType = null;
-        $publicId = null;
-
-        if ($this->media) {
-
-            $mimeType = $this->media->getMimeType();
-
-            // Upload to Cloudinary
-            $path = Storage::disk('cloudinary')->putFile('posts', $this->media);
-            $mediaUrl = Storage::disk('cloudinary')->url($path);
-
-            $publicId = $path; // Save this in DB
-
-            if (Str::startsWith($mimeType, 'image/')) {
-                $mediaType = 'image';
-            } elseif (Str::startsWith($mimeType, 'video/')) {
-                $mediaType = 'video';
-            }
-        }
-
-        Post::create([
+        // Create the post
+        $post = Post::create([
             'user_id' => Auth::id(),
             'body' => $this->body,
-            'public_id' => $publicId,
-            'image' => $mediaType === 'image' ? $mediaUrl : null,
-            'video' => $mediaType === 'video' ? $mediaUrl : null,
         ]);
+
+        // Upload each media file
+        foreach ($this->media as $file) {
+            $mimeType = $file->getMimeType();
+            $path = Storage::disk('cloudinary')->putFile('posts', $file);
+            $url = Storage::disk('cloudinary')->url($path);
+            $publicId = pathinfo($path, PATHINFO_FILENAME);
+
+            $type = Str::startsWith($mimeType, 'video/') ? 'video' : 'image';
+
+            $post->media()->create([
+                'url' => $url,
+                'type' => $type,
+                'public_id' => $publicId,
+            ]);
+        }
 
         $this->reset();
 
         $this->dispatch('refresh-posts');
+
+        $this->dispatch('post-created');
 
         session()->flash('message', 'Post created successfully.');
     }
