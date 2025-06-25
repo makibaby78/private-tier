@@ -48,10 +48,34 @@ Route::middleware('auth')->group(function () {
         })->name('birthdays.index');
     });
 
-    Route::get('/{username}/posts/{post}', SinglePostView::class)->name('posts.show');
+    Route::prefix('{username}')
+        ->as('profile.')
+        ->group(function () {
+
+        Route::get('/about', [UserController::class, 'about'])->name('about.index');
+
+        Route::get('/friends', [UserController::class, 'friends'])->name('friends.index');
+
+        Route::get('/photos', [UserController::class, 'photos'])->name('photos.index');
+
+        Route::prefix('/photos')
+            ->as('photos.')
+            ->group(function () {
+
+            Route::get('/albums', [UserController::class, 'albums'])->name('albums.index');
+
+        });
+
+        Route::get('/videos', [UserController::class, 'videos'])->name('videos.index');
+
+        Route::get('/reels', [UserController::class, 'reels'])->name('reels.index');
+
+        Route::get('/posts/{post}', SinglePostView::class)->name('posts.show');
+
+    });
 });
 
-Route::get('/{username}', [UserController::class, 'showByUsername'])
+Route::get('/{username}', [UserController::class, 'index'])
 ->where('username', '^(?!login$|register$|admin$|dashboard$)[a-zA-Z0-9_]+$')
 ->name('profile.index');
 

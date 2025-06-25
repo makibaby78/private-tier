@@ -10,13 +10,30 @@ class Post extends Model
 {
     use SoftDeletes, HasFactory;
 
+    const TYPE_STATUS = 'status';
+    const TYPE_ALBUM  = 'album';
+    const TYPE_SHARED = 'shared';
+
     protected $fillable = [
         'user_id',
         'body',
-        'public_id',
-        'image',
-        'video',
+        'type',
     ];
+
+    public function isAlbum(): bool
+    {
+        return $this->type === self::TYPE_ALBUM;
+    }
+
+    public function isStatus(): bool
+    {
+        return $this->type === self::TYPE_STATUS;
+    }
+
+    public function isShared(): bool
+    {
+        return $this->type === self::TYPE_SHARED;
+    }
 
     public function media()
     {

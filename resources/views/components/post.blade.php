@@ -63,7 +63,7 @@
         <div class="border-t border-gray-300 pt-2 mt-2">
             <a
                 class="text-xs font-bold text-blue-600 hover:underline"
-                href="{{ route('posts.show', ['username' => $post->user->username, 'post' => $post->id]) }}"
+                href="{{ route('profile.posts.show', ['username' => $post->user->username, 'post' => $post->id]) }}"
             >
                 View Post
             </a>
@@ -90,7 +90,7 @@
     
                     @if ($i === 2 && count($post->media) > 3)
                         <a 
-                            href="{{ route('posts.show', ['username' => $post->user->username, 'post' => $post->id]) }}" 
+                            href="{{ route('profile.posts.show', ['username' => $post->user->username, 'post' => $post->id]) }}" 
                             class="absolute inset-0 bg-black bg-opacity-60 flex items-center justify-center text-white text-xl font-bold rounded"
                         >
                             +{{ count($post->media) - 3 }}

@@ -44,7 +44,7 @@
                     @if ($media->type === 'image')
                         <img
                             src="{{ $media->url }}"
-                            class="object-contain cursor-pointer w-auto"
+                            class="object-contain cursor-pointer w-full"
                             style="max-height: 470px;"
                             alt="Image post"
                             @click="show({{ $index }})"
