@@ -25,37 +25,37 @@
         <nav class="border-b border-gray-200 text-sm font-semibold">
             <ul class="flex space-x-6 px-4 overflow-x-auto">
                 <li>
-                    <a href="{{ route('profile.index', ['username' => Auth::user()->username]) }}"
+                    <a href="{{ route('profile.index', ['username' => $user->username]) }}"
                     class="py-4 inline-block {{ $activeTab === 'posts' ? 'text-blue-600 border-b-2 border-blue-600' : 'text-gray-600 hover:text-black' }}">
                         Posts
                     </a>
                 </li>
                 <li>
-                    <a href="{{ route('profile.about.index', ['username' => Auth::user()->username]) }}"
+                    <a href="{{ route('profile.about.index', ['username' => $user->username]) }}"
                     class="py-4 inline-block {{ $activeTab === 'about' ? 'text-blue-600 border-b-2 border-blue-600' : 'text-gray-600 hover:text-black' }}">
                         About
                     </a>
                 </li>
                 <li>
-                    <a href="{{ route('profile.friends.index', ['username' => Auth::user()->username]) }}"
+                    <a href="{{ route('profile.friends.index', ['username' => $user->username]) }}"
                     class="py-4 inline-block {{ $activeTab === 'friends' ? 'text-blue-600 border-b-2 border-blue-600' : 'text-gray-600 hover:text-black' }}">
                         Friends
                     </a>
                 </li>
                 <li>
-                    <a href="{{ route('profile.photos.index', ['username' => Auth::user()->username]) }}"
+                    <a href="{{ route('profile.photos.index', ['username' => $user->username]) }}"
                     class="py-4 inline-block {{ $activeTab === 'photos' ? 'text-blue-600 border-b-2 border-blue-600' : 'text-gray-600 hover:text-black' }}">
                         Photos
                     </a>
                 </li>
                 <li>
-                    <a href="{{ route('profile.videos.index', ['username' => Auth::user()->username]) }}"
+                    <a href="{{ route('profile.videos.index', ['username' => $user->username]) }}"
                     class="py-4 inline-block {{ $activeTab === 'videos' ? 'text-blue-600 border-b-2 border-blue-600' : 'text-gray-600 hover:text-black' }}">
                         Videos
                     </a>
                 </li>
                 <li>
-                    <a href="{{ route('profile.reels.index', ['username' => Auth::user()->username]) }}"
+                    <a href="{{ route('profile.reels.index', ['username' => $user->username]) }}"
                     class="py-4 inline-block {{ $activeTab === 'reels' ? 'text-blue-600 border-b-2 border-blue-600' : 'text-gray-600 hover:text-black' }}">
                         Reels
                     </a>

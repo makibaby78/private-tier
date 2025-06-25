@@ -6,12 +6,12 @@
             Photos of You
         </a> --}}
 
-        <a href="{{ route('profile.photos.index', ['username' => Auth::user()->username]) }}"
+        <a href="{{ route('profile.photos.index', ['username' => $user->username]) }}"
         class="{{ $photoTab === 'own' ? 'text-blue-600 border-b-2 border-blue-600' : 'text-gray-600 hover:text-black' }} pb-2">
             Your Photos
         </a>
 
-        <a href="{{ route('profile.photos.albums.index', ['username' => Auth::user()->username]) }}"
+        <a href="{{ route('profile.photos.albums.index', ['username' => $user->username]) }}"
         class="{{ $photoTab === 'albums' ? 'text-blue-600 border-b-2 border-blue-600' : 'text-gray-600 hover:text-black' }} pb-2">
             Albums
         </a>
@@ -19,10 +19,22 @@
 
     <!-- Right: Actions -->
     <div class="flex items-center space-x-2">
-        <a href="#"
-        class="text-sm text-blue-600 hover:underline">
-            Add photos/video
-        </a>
+
+        @auth
+            @if (auth()->id() === $user->id)
+                <button
+                    x-data
+                    x-on:click.prevent="$dispatch('open-modal', 'upload-photo')"
+                    class="text-sm text-blue-600 hover:underline"
+                >
+                    {{ __('Add photos/video') }}
+                </button>
+        
+                <x-modal name="upload-photo" focusable>
+                    <livewire:post-form />
+                </x-modal>
+            @endif
+        @endauth
 
         <div class="relative group">
             <button class="w-8 h-8 rounded-full flex items-center justify-center hover:bg-gray-200">

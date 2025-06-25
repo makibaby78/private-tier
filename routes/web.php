@@ -48,9 +48,11 @@ Route::middleware('auth')->group(function () {
         })->name('birthdays.index');
     });
 
-    Route::prefix('{username}')
-        ->as('profile.')
-        ->group(function () {
+});
+
+Route::prefix('{username}')
+    ->as('profile.')
+    ->group(function () {
 
         Route::get('/about', [UserController::class, 'about'])->name('about.index');
 
@@ -72,11 +74,10 @@ Route::middleware('auth')->group(function () {
 
         Route::get('/posts/{post}', SinglePostView::class)->name('posts.show');
 
-    });
-});
+        Route::get('/', [UserController::class, 'index'])
+            ->where('username', '^(?!login$|register$|admin$|dashboard$)[a-zA-Z0-9_]+$')
+            ->name('index');
 
-Route::get('/{username}', [UserController::class, 'index'])
-->where('username', '^(?!login$|register$|admin$|dashboard$)[a-zA-Z0-9_]+$')
-->name('profile.index');
+});
 
 require __DIR__.'/auth.php';

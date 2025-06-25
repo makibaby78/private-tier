@@ -19,6 +19,10 @@ class PostForm extends Component
 
     public function save()
     {
+        if (!Auth::check()) {
+            abort(403, 'You must be logged in to create a post.');
+        }
+        
         $this->validate([
             'body' => 'required_without:media|string|nullable',
             'media' => 'required_without:body|array|max:10',
