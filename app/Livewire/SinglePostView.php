@@ -20,7 +20,10 @@ class SinglePostView extends Component
             abort(404);
         }
 
-        $this->post = $post->load('user'); // preload user relationship
+        $this->post = $post->load([
+            'user',
+            'media' => fn ($query) => $query->orderBy('id', 'desc'),
+        ]);           
     }
 
     public function render()

@@ -2,38 +2,38 @@
     <div class="bg-black text-white flex justify-center items-start">
         <div class="flex w-full items-center justify-center flex-col md:flex-row">
 
-{{-- Left: Media Preview with Arrows --}}
-<div class="relative w-full flex items-center justify-center">
+            {{-- Left: Media Preview with Arrows --}}
+            <div class="relative w-full flex items-center justify-center">
 
-    @if (request('from'))
-        {{-- Previous Arrow --}}
-        @if ($prevId)
-            <a href="{{ route('profile.photos.media.index', [$user->username, $prevId]) }}?from={{ request('from') }}"
-            class="absolute left-4 top-1/2 transform -translate-y-1/2 text-white text-3xl z-50 hover:text-gray-300">
-                &larr;
-            </a>
-        @endif
-    @endif
+                @if (request('from'))
+                    {{-- Previous Arrow --}}
+                    @if ($prevId)
+                        <a href="{{ route('profile.photos.media.index', [$user->username, $prevId]) }}?from={{ request('from') }}"
+                        class="absolute left-4 top-1/2 transform -translate-y-1/2 text-white text-3xl z-50 hover:text-gray-300">
+                            &larr;
+                        </a>
+                    @endif
+                @endif
 
-    {{-- Media --}}
-    @if ($media->type === 'image')
-        <img src="{{ $media->url }}" alt="Photo"
-             class="w-full object-contain rounded h-[calc(60vh-32px)] md:h-[calc(100vh-64px)]">
-    @elseif ($media->type === 'video')
-        <video src="{{ $media->url }}" controls
-               class="w-full bg-black rounded h-[calc(60vh-32px)] md:h-[calc(100vh-64px)]"></video>
-    @endif
+                {{-- Media --}}
+                @if ($media->type === 'image')
+                    <img src="{{ $media->url }}" alt="Photo"
+                        class="w-full object-contain rounded h-[calc(60vh-32px)] md:h-[calc(100vh-64px)]">
+                @elseif ($media->type === 'video')
+                    <video src="{{ $media->url }}" controls
+                        class="w-full bg-black rounded h-[calc(60vh-32px)] md:h-[calc(100vh-64px)]"></video>
+                @endif
 
-    {{-- Next Arrow --}}
-    @if (request('from'))
-        @if ($nextId)
-            <a href="{{ route('profile.photos.media.index', [$user->username, $nextId]) }}?from={{ request('from') }}"
-            class="absolute right-4 top-1/2 transform -translate-y-1/2 text-white text-3xl z-50 hover:text-gray-300">
-                &rarr;
-            </a>
-        @endif
-    @endif
-</div>
+                {{-- Next Arrow --}}
+                @if (request('from'))
+                    @if ($nextId)
+                        <a href="{{ route('profile.photos.media.index', [$user->username, $nextId]) }}?from={{ request('from') }}"
+                        class="absolute right-4 top-1/2 transform -translate-y-1/2 text-white text-3xl z-50 hover:text-gray-300">
+                            &rarr;
+                        </a>
+                    @endif
+                @endif
+            </div>
 
 
             {{-- Right: Conditional Panel --}}

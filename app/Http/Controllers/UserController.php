@@ -74,10 +74,10 @@ class UserController extends Controller
                 ->pluck('id')
                 ->toArray();
 
-        } else if($from === 'post') {
+        } else if($from === 'posts') {
 
             $mediaList = PostMedia::where('post_id', $media->post_id)
-                ->orderBy('id')
+                ->orderBy('id', 'desc')
                 ->pluck('id')
                 ->toArray();
         }

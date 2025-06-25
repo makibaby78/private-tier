@@ -22,37 +22,20 @@
 
         {{-- Post Media --}}
         @if ($post->media && $post->media->count())
-        <div
-            x-data="{
-                open: false,
-                currentIndex: 0,
-                mediaItems: {{ $mediaList }},
-                show(index) {
-                    this.currentIndex = index;
-                    this.open = true;
-                },
-                next() {
-                    this.currentIndex = (this.currentIndex + 1) % this.mediaItems.length;
-                },
-                prev() {
-                    this.currentIndex = (this.currentIndex - 1 + this.mediaItems.length) % this.mediaItems.length;
-                }
-            }"
-        >
+        <div>
             <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
                 @foreach ($post->media as $index => $media)
+                <a href="{{ route('profile.photos.media.index', [$user->username, $media->id]) }}?from=posts">
                     @if ($media->type === 'image')
                         <img
                             src="{{ $media->url }}"
                             class="object-contain cursor-pointer w-full"
                             style="max-height: 470px;"
                             alt="Image post"
-                            @click="show({{ $index }})"
                         >
                     @elseif ($media->type === 'video')
                         <div
                             class="relative cursor-pointer"
-                            @click="show({{ $index }})"
                         >
                             <video
                                 class="w-full rounded shadow"
@@ -69,11 +52,9 @@
                             </div>
                         </div>
                     @endif
+                </a>
                 @endforeach
             </div>
-
-            <!-- Modal component with swipe support -->
-            <x-ui.modal-media />
         </div>
         @endif
 
