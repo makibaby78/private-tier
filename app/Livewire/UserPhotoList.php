@@ -21,7 +21,7 @@ class UserPhotoList extends Component
     {
         $photos = $this->user
             ->media()
-            ->where('type', 'image')
+            ->where('post_media.type', 'image') 
             ->latest()
             ->paginate(24);
 

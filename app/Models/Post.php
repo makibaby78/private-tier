@@ -13,12 +13,18 @@ class Post extends Model
     const TYPE_STATUS = 'status';
     const TYPE_ALBUM  = 'album';
     const TYPE_SHARED = 'shared';
+    const TYPE_MEDIA = 'media';
 
     protected $fillable = [
         'user_id',
         'body',
         'type',
     ];
+
+    public function isMedia(): bool
+    {
+        return $this->type === self::TYPE_MEDIA;
+    }
 
     public function isAlbum(): bool
     {

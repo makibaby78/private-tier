@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Models\PostMedia;
 use Illuminate\Support\Facades\Auth;
 use App\Models\User;
 
@@ -55,16 +56,36 @@ class UserController extends Controller
         return view('profile.reels.index', $this->resolveProfile($username, 'reels'));
     }
 
-    public function showMedia(string $username, int $mediaId)
+    public function showMedia(Request $request, string $username, int $mediaId)
     {
         $user = User::where('username', $username)->firstOrFail();
+    
+        $media = PostMedia::with('post.user', 'post.media')->findOrFail($mediaId);
+    
+        $from = $request->query('from');
 
-        $media = \App\Models\PostMedia::where('id', $mediaId)
-            ->whereHas('post', fn($q) => $q->where('user_id', $user->id))
-            ->firstOrFail();
+        $mediaList = [];
+    
+        if ($from === 'photos') {
 
-        $isOwnProfile = auth()->check() && auth()->id() === $user->id;
+            $mediaList = PostMedia::whereHas('post', fn($q) => $q->where('user_id', $user->id))
+                ->where('type', 'image')
+                ->orderBy('id', 'desc')
+                ->pluck('id')
+                ->toArray();
 
-        return view('profile.photos.media.index', compact('user', 'media', 'isOwnProfile'));
+        } else if($from === 'post') {
+
+            $mediaList = PostMedia::where('post_id', $media->post_id)
+                ->orderBy('id')
+                ->pluck('id')
+                ->toArray();
+        }
+    
+        $currentIndex = array_search($media->id, $mediaList);
+        $prevId = $mediaList[$currentIndex - 1] ?? null;
+        $nextId = $mediaList[$currentIndex + 1] ?? null;
+    
+        return view('profile.photos.media.index', compact('user', 'media', 'prevId', 'nextId'));
     }
 }

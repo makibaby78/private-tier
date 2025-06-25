@@ -22,31 +22,35 @@ class PostForm extends Component
         if (!Auth::check()) {
             abort(403, 'You must be logged in to create a post.');
         }
-        
+
         $this->validate([
             'body' => 'required_without:media|string|nullable',
             'media' => 'required_without:body|array|max:10',
             'media.*' => 'file|mimetypes:image/*,video/*|max:102400',
         ]);
 
-        // Create the post
+        $hasMedia = is_array($this->media) && count($this->media) > 0;
+
+        $type = $hasMedia ? Post::TYPE_MEDIA : Post::TYPE_STATUS;
+
         $post = Post::create([
             'user_id' => Auth::id(),
-            'body' => $this->body,
+            'body'    => $this->body,
+            'type'    => $type,
         ]);
 
-        // Upload each media file
-        foreach ($this->media as $file) {
+        foreach ($this->media ?? [] as $file) {
             $mimeType = $file->getMimeType();
+
             $path = Storage::disk('cloudinary')->putFile('posts', $file);
             $url = Storage::disk('cloudinary')->url($path);
             $publicId = pathinfo($path, PATHINFO_FILENAME);
 
-            $type = Str::startsWith($mimeType, 'video/') ? 'video' : 'image';
+            $mediaType = Str::startsWith($mimeType, 'video/') ? 'video' : 'image';
 
             $post->media()->create([
-                'url' => $url,
-                'type' => $type,
+                'url'       => $url,
+                'type'      => $mediaType, // image or video only
                 'public_id' => $publicId,
             ]);
         }
@@ -54,7 +58,6 @@ class PostForm extends Component
         $this->reset();
 
         $this->dispatch('refresh-posts');
-
         $this->dispatch('post-created');
 
         session()->flash('message', 'Post created successfully.');
