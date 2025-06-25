@@ -9,7 +9,7 @@
 
         </div>
 
-        <div class="profile-right w-full md:w-3/5">
+        <div class="profile-right space-y-4 w-full md:w-3/5">
             @if (auth()->id() === $user->id)
                 <livewire:post-form />
             @endif

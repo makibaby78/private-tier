@@ -31,7 +31,18 @@
                 </button>
         
                 <x-modal name="upload-photo" focusable>
+                    
+                    <button
+                        x-on:click="$dispatch('close')"
+                        class="absolute rounded-full top-0 right-0 p-2 text-sm
+                            text-gray-600 hover:text-black hover:bg-gray-300
+                            dark:text-gray-300 dark:hover:text-white dark:hover:bg-gray-700"
+                    >
+                        {{ __('X') }}
+                    </button>
+
                     <livewire:post-form />
+
                 </x-modal>
             @endif
         @endauth
