@@ -102,7 +102,11 @@
                         </template>
 
                         <template x-if="f.type.startsWith('video/')">
-                            <video class="w-24 h-24 rounded" controls>
+                            <video class="w-24 h-24 rounded" 
+                                controls
+                                controlsList="nodownload" 
+                                ="return false;"
+                            >
                                 <source :src="URL.createObjectURL(f)">
                             </video>
                         </template>

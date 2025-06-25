@@ -41,6 +41,9 @@
                                 class="w-full rounded shadow"
                                 muted
                                 preload="metadata"
+                                controls
+                                controlsList="nodownload"
+                                oncontextmenu="return false;"
                             >
                                 <source src="{{ $media->url }}#t=0.1" type="video/mp4">
                             </video>

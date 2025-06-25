@@ -60,7 +60,12 @@
                                 @if ($media->type === 'image')
                                     <img src="{{ $media->url }}" class="w-full rounded shadow">
                                 @elseif ($media->type === 'video')
-                                    <video controls class="w-full rounded shadow">
+                                    <video 
+                                        controls
+                                        controlsList="nodownload" 
+                                        oncontextmenu="return false;"
+                                        class="w-full rounded shadow"
+                                    >
                                         <source src="{{ $media->url }}" type="video/mp4">
                                     </video>
                                 @endif
@@ -89,7 +94,12 @@
                                 @if (str_starts_with($file->getMimeType(), 'image/'))
                                     <img src="{{ $file->temporaryUrl() }}" class="w-full rounded shadow">
                                 @elseif (str_starts_with($file->getMimeType(), 'video/'))
-                                    <video controls class="w-full rounded shadow">
+                                    <video 
+                                        controls
+                                        controlsList="nodownload" 
+                                        oncontextmenu="return false;" 
+                                        class="w-full rounded shadow"
+                                    >
                                         <source src="{{ $file->temporaryUrl() }}" type="{{ $file->getMimeType() }}">
                                     </video>
                                 @endif

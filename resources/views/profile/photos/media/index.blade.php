@@ -20,7 +20,11 @@
                     <img src="{{ $media->url }}" alt="Photo"
                         class="w-full object-contain rounded h-[calc(60vh-32px)] md:h-[calc(100vh-64px)]">
                 @elseif ($media->type === 'video')
-                    <video src="{{ $media->url }}" controls
+                    <video 
+                        src="{{ $media->url }}" 
+                        controls
+                        controlsList="nodownload" 
+                        oncontextmenu="return false;"
                         class="w-full bg-black rounded h-[calc(60vh-32px)] md:h-[calc(100vh-64px)]"></video>
                 @endif
 

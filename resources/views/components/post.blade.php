@@ -82,6 +82,8 @@
                             style="max-height: 470px;"
                             muted
                             controls
+                            controlsList="nodownload"
+                            oncontextmenu="return false;"
                         >
                             <source src="{{ $item['url'] }}" type="video/mp4">
                             Your browser does not support the video tag.
