@@ -54,5 +54,17 @@ class UserController extends Controller
     {
         return view('profile.reels.index', $this->resolveProfile($username, 'reels'));
     }
-    
+
+    public function showMedia(string $username, int $mediaId)
+    {
+        $user = User::where('username', $username)->firstOrFail();
+
+        $media = \App\Models\PostMedia::where('id', $mediaId)
+            ->whereHas('post', fn($q) => $q->where('user_id', $user->id))
+            ->firstOrFail();
+
+        $isOwnProfile = auth()->check() && auth()->id() === $user->id;
+
+        return view('profile.photos.media.index', compact('user', 'media', 'isOwnProfile'));
+    }
 }

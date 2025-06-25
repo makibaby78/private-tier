@@ -66,6 +66,8 @@ Route::prefix('{username}')
 
             Route::get('/albums', [UserController::class, 'albums'])->name('albums.index');
 
+            Route::get('/media/{media}', [UserController::class, 'showMedia'])->name('media.index');
+
         });
 
         Route::get('/videos', [UserController::class, 'videos'])->name('videos.index');
