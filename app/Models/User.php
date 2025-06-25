@@ -47,6 +47,18 @@ class User extends Authenticatable
         ];
     }
 
+    public function media()
+    {
+        return $this->hasManyThrough(
+            \App\Models\PostMedia::class,  // Final model (target)
+            \App\Models\Post::class,       // Intermediate model
+            'user_id',                     // Foreign key on Post table
+            'post_id',                     // Foreign key on PostMedia table
+            'id',                          // Local key on User
+            'id'                           // Local key on Post
+        );
+    }
+
     public function getNameAttribute()
     {
         return "{$this->firstname} {$this->lastname}";
