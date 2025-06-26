@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\PostMedia;
 use Illuminate\Support\Facades\Auth;
+use App\Models\Post;
 use App\Models\User;
 
     
@@ -43,6 +44,14 @@ class UserController extends Controller
         $data = $this->resolveProfile($username, 'photos');
         $data['photoTab'] = 'albums';
     
+        $user = $data['user'];
+
+        $data['albums'] = Post::with('media')
+            ->where('user_id', $user->id)
+            ->where('type', 'album')
+            ->latest()
+            ->get();
+
         return view('profile.photos.albums.index', $data);
     }
     

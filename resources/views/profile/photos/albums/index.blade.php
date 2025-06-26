@@ -13,7 +13,7 @@
 
                 <!-- Create Album -->
                 <div 
-                    class="flex flex-col items-center space-y-2 w-full"
+                    class="flex flex-col space-y-2 w-full"
                 >
                     <button
                         x-data
@@ -24,10 +24,10 @@
                             <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4" />
                         </svg>
                     </button>
-                    <div class="text-sm text-black font-medium">Create album</div>
+                    <div class="text-sm text-black font-medium text-left">Create album</div>
                 </div>
 
-                {{-- <!-- Album List -->
+                <!-- Album List -->
                 @foreach ($albums as $album)
                     <div class="flex flex-col w-full">
                         <div class="relative aspect-square w-full">
@@ -52,7 +52,7 @@
                         <div class="mt-2 text-sm text-black font-semibold truncate">{{ $album->body ?? 'Untitled album' }}</div>
                         <div class="text-xs text-gray-600">{{ $album->media->count() }} Items</div>
                     </div>
-                @endforeach --}}
+                @endforeach
 
             </div>
 
