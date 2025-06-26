@@ -10,7 +10,7 @@
             ])
 
             <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
-                @auth
+                @if ($isOwnProfile)
                 <!-- Create Album -->
                     <div 
                         class="flex flex-col space-y-2 w-full"
@@ -26,10 +26,11 @@
                         </button>
                         <div class="text-sm text-black font-medium text-left">Create album</div>
                     </div>
-                @endauth
+                @endif
 
                 <!-- Album List -->
                 @foreach ($albums as $album)
+                <a href="{{ route('profile.photos.album.index', [$user->username, $album->id]) }}">
                     <div class="flex flex-col w-full">
                         <div class="relative aspect-square w-full">
                             @if($album->media->count() > 0)
@@ -53,6 +54,7 @@
                         <div class="mt-2 text-sm text-black font-semibold truncate">{{ $album->body ?? 'Untitled album' }}</div>
                         <div class="text-xs text-gray-600">{{ $album->media->count() }} Items</div>
                     </div>
+                </a>
                 @endforeach
 
             </div>

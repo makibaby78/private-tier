@@ -54,6 +54,30 @@ class UserController extends Controller
 
         return view('profile.photos.albums.index', $data);
     }
+
+    public function album(string $username, string $album)
+    {
+        $data = $this->resolveProfile($username, 'photos');
+
+        $user = $data['user'];
+
+        // Find the album by ID or slug (depending on your setup)
+        $albumPost = Post::with('media')
+        ->where('user_id', $user->id)
+        ->where('type', 'album')
+        ->where(function ($query) use ($album) {
+            $query->where('id', $album)
+                ->orWhere('body', $album); // if using title as identifier
+        })
+        ->firstOrFail();
+
+        // Add album and media to view data
+        $data['album'] = $albumPost;
+        $data['mediaItems'] = $albumPost->media;
+        $data['back'] = request()->path();
+
+        return view('profile.photos.albums.album.index', $data);
+    }
     
     public function videos(string $username)
     {
