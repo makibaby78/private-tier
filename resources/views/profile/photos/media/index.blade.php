@@ -8,7 +8,7 @@
                 @if (request('from'))
                     {{-- Previous Arrow --}}
                     @if ($prevId)
-                        <a href="{{ route('profile.photos.media.index', [$user->username, $prevId]) }}?from={{ request('from') }}"
+                        <a href="{{ route('profile.photos.media.index', [$user->username, $prevId]) }}?from={{ request('from') }}&back={{ request('back') }}"
                         class="absolute left-4 top-1/2 transform -translate-y-1/2 text-white text-3xl z-50 hover:text-gray-300">
                             &larr;
                         </a>
@@ -31,7 +31,7 @@
                 {{-- Next Arrow --}}
                 @if (request('from'))
                     @if ($nextId)
-                        <a href="{{ route('profile.photos.media.index', [$user->username, $nextId]) }}?from={{ request('from') }}"
+                        <a href="{{ route('profile.photos.media.index', [$user->username, $nextId]) }}?from={{ request('from') }}&back={{ request('back') }}"
                         class="absolute right-4 top-1/2 transform -translate-y-1/2 text-white text-3xl z-50 hover:text-gray-300">
                             &rarr;
                         </a>
@@ -42,7 +42,7 @@
 
             {{-- Right: Conditional Panel --}}
             <div class="w-full md:w-[400px] h-[calc(40vh-32px)] md:h-[calc(100vh-64px)] bg-white text-black p-4 space-y-4" >
-                <a href="{{ url()->previous() }}"
+                <a href="{{ $backUrl }}"
                     class="inline-flex items-center text-sm text-blue-500 hover:underline">
                     ← Back
                 </a>

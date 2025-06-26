@@ -28,7 +28,11 @@ class SinglePostView extends Component
 
     public function render()
     {
-        return view('livewire.single-post-view')
+        $currentPath = request()->path();
+
+        return view('livewire.single-post-view', [
+                        'currentPath' => $currentPath,
+                    ])
             ->layout('layouts.app')
             ->title($this->post->user->name . ' - Post');
     }

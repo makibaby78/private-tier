@@ -64,6 +64,8 @@ class UserController extends Controller
     
         $from = $request->query('from');
 
+        $back = $request->query('back');
+
         $mediaList = [];
     
         if ($from === 'photos') {
@@ -74,7 +76,7 @@ class UserController extends Controller
                 ->pluck('id')
                 ->toArray();
 
-        } else if($from === 'posts') {
+        } else if($from === 'posts' || $from === 'feed') {
 
             $mediaList = PostMedia::where('post_id', $media->post_id)
                 ->orderBy('id', 'desc')
@@ -85,7 +87,12 @@ class UserController extends Controller
         $currentIndex = array_search($media->id, $mediaList);
         $prevId = $mediaList[$currentIndex - 1] ?? null;
         $nextId = $mediaList[$currentIndex + 1] ?? null;
+
+        $backUrl = match ($back) {
+            'feed'   => url('/'),
+            default  => $back ? url($back) : url()->previous(),
+        };
     
-        return view('profile.photos.media.index', compact('user', 'media', 'prevId', 'nextId'));
+        return view('profile.photos.media.index', compact('user', 'media', 'prevId', 'nextId', 'backUrl'));
     }
 }

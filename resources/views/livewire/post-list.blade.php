@@ -21,7 +21,7 @@
 
     {{-- Posts --}}
     @forelse ($posts as $post)
-        <x-post :post="$post" />
+        <x-post :post="$post" :back="$currentPath" />
     @empty
         <p class="text-gray-500 italic">No posts yet.</p>
     @endforelse

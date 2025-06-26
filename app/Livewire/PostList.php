@@ -117,6 +117,8 @@ class PostList extends Component
 
     public function render()
     {
-        return view('livewire.post-list');
+        $currentPath = request()->path();
+        
+        return view('livewire.post-list', compact('currentPath'));
     }
 }

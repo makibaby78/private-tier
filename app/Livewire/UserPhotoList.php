@@ -19,12 +19,14 @@ class UserPhotoList extends Component
 
     public function render()
     {
+        $currentPath = request()->path();
+        
         $photos = $this->user
             ->media()
             ->where('post_media.type', 'image') 
             ->latest()
             ->paginate(24);
 
-        return view('livewire.user-photo-list', compact('photos'));
+        return view('livewire.user-photo-list', compact('photos', 'currentPath'));
     }
 }

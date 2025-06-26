@@ -1,4 +1,4 @@
-@props(['post'])
+@props(['post', 'back' => null])
 
 <div class="p-4 bg-white border rounded-md space-y-4">
     <div class="flex items-center justify-between">
@@ -63,7 +63,7 @@
         <div class="border-t border-gray-300 pt-2 mt-2">
             <a
                 class="text-xs font-bold text-blue-600 hover:underline"
-                href="{{ route('profile.posts.show', ['username' => $post->user->username, 'post' => $post->id]) }}"
+                href="{{ route('profile.posts.show', ['username' => $post->user->username, 'post' => $post->id]) }}?from=posts&back={{ $back }}"
             >
                 View Post
             </a>
@@ -75,19 +75,23 @@
             @if ($i < 3)
                 <div class="relative w-full">
                     @if ($item['type'] === 'image')
-                        <img src="{{ $item['url'] }}" class="rounded object-contain w-full h-auto">
+                        <a href="{{ route('profile.photos.media.index', [$post->user->username, $item->id]) }}?from=posts&back={{ $back }}">
+                            <img src="{{ $item['url'] }}" class="rounded object-contain w-full h-auto">
+                        </a>
                     @elseif ($item['type'] === 'video')
-                        <video
-                            class="w-full rounded shadow cursor-pointer"
-                            style="max-height: 470px;"
-                            muted
-                            controls
-                            controlsList="nodownload"
-                            oncontextmenu="return false;"
-                        >
-                            <source src="{{ $item['url'] }}" type="video/mp4">
-                            Your browser does not support the video tag.
-                        </video>
+                        <a href="{{ route('profile.photos.media.index', [$post->user->username, $item->id]) }}?from=posts&back={{ $back }}">
+                            <video
+                                class="w-full rounded shadow cursor-pointer"
+                                style="max-height: 470px;"
+                                muted
+                                controls
+                                controlsList="nodownload"
+                                oncontextmenu="return false;"
+                            >
+                                <source src="{{ $item['url'] }}" type="video/mp4">
+                                Your browser does not support the video tag.
+                            </video>
+                        </a>
                     @endif
     
                     @if ($i === 2 && count($post->media) > 3)
