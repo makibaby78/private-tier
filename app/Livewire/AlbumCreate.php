@@ -12,6 +12,8 @@ class AlbumCreate extends Component
 
     public function create()
     {
+        if (!auth()->check()) return;
+        
         $this->validate([
             'body' => 'required|string|max:255',
         ]);

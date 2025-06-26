@@ -8,8 +8,9 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\View\View;
-use Cloudinary\Laravel\CloudinaryEngine;
 use Illuminate\Support\Facades\Storage;
+use App\Models\Post;
+use App\Models\PostMedia;
 
 
 class SetttingsController extends Controller
@@ -76,9 +77,25 @@ class SetttingsController extends Controller
 
         // Upload new image to Cloudinary
         $publicId = Storage::disk('cloudinary')->putFile('profile-photos', $request->file('photo'));
+        $url = Storage::disk('cloudinary')->url($publicId);
 
         $user->profile_photo_path = $publicId;
         $user->save();
+
+        // ✅ 3. Find or create the "Profile Pictures" album
+        $album = Post::firstOrCreate([
+            'user_id' => $user->id,
+            'body' => 'Profile Pictures',
+            'type' => 'album',
+        ]);
+
+        // ✅ 4. Store the media in post_media
+        PostMedia::create([
+            'post_id' => $album->id,
+            'url' => $url,
+            'type' => 'image',
+            'public_id' => $publicId,
+        ]);
 
         return back()->with('success', 'Profile photo updated!');
     }

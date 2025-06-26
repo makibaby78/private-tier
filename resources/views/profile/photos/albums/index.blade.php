@@ -10,29 +10,30 @@
             ])
 
             <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
-
+                @auth
                 <!-- Create Album -->
-                <div 
-                    class="flex flex-col space-y-2 w-full"
-                >
-                    <button
-                        x-data
-                        x-on:click.prevent="$dispatch('open-modal', 'album-create')"
-                        class="aspect-square w-full bg-gray-200 hover:bg-gray-300 flex items-center justify-center rounded-md"
+                    <div 
+                        class="flex flex-col space-y-2 w-full"
                     >
-                        <svg class="w-8 h-8 text-gray-600" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4" />
-                        </svg>
-                    </button>
-                    <div class="text-sm text-black font-medium text-left">Create album</div>
-                </div>
+                        <button
+                            x-data
+                            x-on:click.prevent="$dispatch('open-modal', 'album-create')"
+                            class="aspect-square w-full bg-gray-200 hover:bg-gray-300 flex items-center justify-center rounded-md"
+                        >
+                            <svg class="w-8 h-8 text-gray-600" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4" />
+                            </svg>
+                        </button>
+                        <div class="text-sm text-black font-medium text-left">Create album</div>
+                    </div>
+                @endauth
 
                 <!-- Album List -->
                 @foreach ($albums as $album)
                     <div class="flex flex-col w-full">
                         <div class="relative aspect-square w-full">
                             @if($album->media->count() > 0)
-                                <img src="{{ asset('storage/' . $album->media->first()->url) }}"
+                                <img src="{{ $album->media->first()->url }}"
                                     class="object-cover w-full h-full rounded-md">
                             @else
                                 <div class="w-full h-full bg-gray-200 rounded-md flex items-center justify-center text-gray-500">
