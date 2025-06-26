@@ -22,7 +22,7 @@
                 <div class="flex items-center gap-x-2">
 
                     <x-profile-photo 
-                        :path="$chat['profile_photo_path']" 
+                        :path="$chat['profile_public_id']" 
                         :alt="$chat['name']" 
                         class="rounded-full object-cover w-6 h-6" 
                         width="30" 

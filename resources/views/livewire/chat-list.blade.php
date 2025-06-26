@@ -9,7 +9,7 @@
         >
             <div class="p-2 flex items-center space-x-3 rounded hover:bg-gray-100">
                 <x-profile-photo 
-                    :path="$friend['profile_photo_path']" 
+                    :path="$friend['profile_public_id']" 
                     :alt="$friend['name']" 
                     class="rounded-full object-cover w-6 h-6" 
                     width="30" 

@@ -11,7 +11,7 @@
                             <div>
                                 <a href="{{ route('profile.index', $user->username) }}">
                                     <x-profile-photo 
-                                        :path="$user->profile_photo_path" 
+                                        :path="$user->profile_public_id" 
                                         :alt="$user->name" 
                                         class="rounded-full object-cover w-10 h-10" 
                                         width="30" 

@@ -42,7 +42,7 @@ class ChatList extends Component
             return [
                 'id' => $friend->id,
                 'name' => $friend->name,
-                'profile_photo_path' => $friend->profile_photo_path,
+                'profile_public_id' => $friend->profile_public_id,
                 'last_message' => $lastMessage?->message ?? 'No messages yet',
                 'last_time' => $lastMessage?->created_at?->diffForHumans(),
             ];

@@ -10,7 +10,7 @@
         @forelse ($requests as $user)
             <div class="flex gap-x-2">
                 <x-profile-photo 
-                    :path="$user->profile_photo_path" 
+                    :path="$user->profile_public_id" 
                     :alt="$user->name" 
                     class="object-cover rounded-full w-12 h-12" 
                     width="50" 

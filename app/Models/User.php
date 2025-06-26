@@ -47,6 +47,21 @@ class User extends Authenticatable
         ];
     }
 
+    public function profilePhoto()
+    {
+        return $this->belongsTo(PostMedia::class, 'profile_photo_id');
+    }
+
+    public function getProfilePublicIdAttribute()
+    {
+        return $this->profilePhoto?->public_id;
+    }
+
+    public function bannerPhoto()
+    {
+        return $this->belongsTo(PostMedia::class, 'banner_photo_id');
+    }
+    
     public function media()
     {
         return $this->hasManyThrough(
@@ -66,9 +81,8 @@ class User extends Authenticatable
 
     public function getProfilePhotoUrlAttribute()
     {
-        return $this->profile_photo_path 
-            ? asset('storage/' . $this->profile_photo_path)
-            : 'https://ui-avatars.com/api/?name=' . urlencode($this->name);
+        return $this->profilePhoto?->url
+            ?? 'https://ui-avatars.com/api/?name=' . urlencode($this->name);
     }
 
     public function messages()

@@ -38,7 +38,7 @@
                         <button class="inline-flex items-center border border-transparent text-sm leading-4 font-medium rounded-md text-gray-500 dark:text-gray-400 bg-white dark:bg-gray-800 hover:text-gray-700 dark:hover:text-gray-300 focus:outline-none transition ease-in-out duration-150">                            
 
                             <x-profile-photo 
-                                :path="Auth::user()->profile_photo_path" 
+                                :path="Auth::user()->profile_public_id" 
                                 :alt="Auth::user()->name" 
                                 class="rounded-full object-cover w-10 h-10 max-w-none" 
                                 width="50" 

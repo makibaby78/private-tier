@@ -4,7 +4,7 @@
             <div class="flex flex-col md:flex-row items-center gap-y-4 gap-x-2">
                 
                 <x-profile-photo 
-                    :path="$user->profile_photo_path" 
+                    :path="$user->profile_public_id" 
                     :alt="$user->name" 
                     class="rounded object-cover w-32 h-32" 
                     width="50" 

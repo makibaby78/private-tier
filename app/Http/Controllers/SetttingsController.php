@@ -79,9 +79,6 @@ class SetttingsController extends Controller
         $publicId = Storage::disk('cloudinary')->putFile('profile-photos', $request->file('photo'));
         $url = Storage::disk('cloudinary')->url($publicId);
 
-        $user->profile_photo_path = $publicId;
-        $user->save();
-
         // ✅ 3. Find or create the "Profile Pictures" album
         $album = Post::firstOrCreate([
             'user_id' => $user->id,
@@ -90,12 +87,15 @@ class SetttingsController extends Controller
         ]);
 
         // ✅ 4. Store the media in post_media
-        PostMedia::create([
+        $media = PostMedia::create([
             'post_id' => $album->id,
             'url' => $url,
             'type' => 'image',
             'public_id' => $publicId,
         ]);
+
+        $user->profile_photo_id = $media->id;
+        $user->save();
 
         return back()->with('success', 'Profile photo updated!');
     }

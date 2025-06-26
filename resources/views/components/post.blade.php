@@ -5,7 +5,7 @@
         <div class="flex gap-2 items-center">
             <a href="{{ route('profile.index', $post->user->username) }}">
                 <x-profile-photo 
-                    :path="$post->user->profile_photo_path" 
+                    :path="$post->user->profile_public_id" 
                     :alt="$post->user->name" 
                     class="rounded-full object-cover w-10 h-10" 
                     width="40" 

@@ -13,7 +13,7 @@
             <div class="bg-white shadow rounded overflow-hidden" style="width: fit-content;">
                 <a href="{{ route('profile.index', $user->username) }}">
                     <x-profile-photo 
-                        :path="$user->profile_photo_path" 
+                        :path="$user->profile_public_id" 
                         :alt="$user->name" 
                         class="object-cover w-52 h-52" 
                         width="100" 

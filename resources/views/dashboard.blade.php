@@ -5,7 +5,7 @@
                 <a href="{{ route('profile.index', ['username' => Auth::user()->username]) }}">
                     <div class="p-2 text-gray-800 dark:text-gray-200 w-full rounded leading-tight hover:bg-gray-100 hover:text-gray-800 text-sm flex gap-x-1 items-center">
                         <x-profile-photo 
-                            :path="Auth::user()->profile_photo_path" 
+                            :path="Auth::user()->profile_public_id" 
                             :alt="Auth::user()->name" 
                             class="rounded-full object-cover w-8 h-8 max-w-none" 
                             width="50" 

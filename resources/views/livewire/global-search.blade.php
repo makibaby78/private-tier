@@ -28,7 +28,7 @@
                         <div class="px-4 py-2 hover:bg-gray-100 flex gap-x-2">
                             <div>
                                 <x-profile-photo 
-                                    :path="$user->profile_photo_path" 
+                                    :path="$user->profile_public_id" 
                                     :alt="$user->name" 
                                     class="rounded-full object-cover w-10 h-10" 
                                     width="30" 

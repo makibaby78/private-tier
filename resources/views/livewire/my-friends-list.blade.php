@@ -10,7 +10,7 @@
                     <div class="w-full sm:max-w-xs md:max-w-sm lg:max-w-md aspect-square rounded overflow-hidden">
                         <a href="{{ route('profile.index', ['username' => $friend->username]) }}">
                             <x-profile-photo 
-                                :path="$friend->profile_photo_path" 
+                                :path="$friend->profile_public_id" 
                                 :alt="$friend->name" 
                                 class="object-cover w-full h-full" 
                                 width="100" 
