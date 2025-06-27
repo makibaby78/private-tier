@@ -46,6 +46,11 @@ class Post extends Model
         return $this->hasMany(\App\Models\PostMedia::class);
     }
 
+    public function mediaFile()
+    {
+        return $this->hasOne(\App\Models\PostMedia::class);
+    }
+
     public function user()
     {
         return $this->belongsTo(\App\Models\User::class);

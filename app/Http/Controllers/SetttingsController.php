@@ -11,6 +11,7 @@ use Illuminate\View\View;
 use Illuminate\Support\Facades\Storage;
 use App\Models\Post;
 use App\Models\PostMedia;
+use App\Models\ProfilePicture;
 
 
 class SetttingsController extends Controller
@@ -66,36 +67,38 @@ class SetttingsController extends Controller
     {
         $request->validate([
             'photo' => 'required|image|max:2048',
+            'body' => 'nullable|string|max:1000',
         ]);
 
         $user = $request->user();
 
-        // Delete old image from Cloudinary (optional if stored as public_id)
-        if ($user->cloudinary_public_id) {
-            Storage::disk('cloudinary')->delete($user->cloudinary_public_id);
-        }
+        // 🔁 Step 1: Mark previous profile pictures as NOT current
+        ProfilePicture::whereIn('post_id', $user->posts()->pluck('id'))
+            ->update(['is_current' => false]);
 
         // Upload new image to Cloudinary
         $publicId = Storage::disk('cloudinary')->putFile('profile-photos', $request->file('photo'));
         $url = Storage::disk('cloudinary')->url($publicId);
 
-        // ✅ 3. Find or create the "Profile Pictures" album
-        $album = Post::firstOrCreate([
-            'user_id' => $user->id,
-            'body' => 'Profile Pictures',
-            'type' => 'album',
+        // ✅ 3. Create the Post
+        $post = Post::create([
+            'user_id' => auth()->id(),
+            'type' => 'media',
+            'body' => $request->body,
         ]);
 
         // ✅ 4. Store the media in post_media
         $media = PostMedia::create([
-            'post_id' => $album->id,
+            'post_id' => $post->id,
             'url' => $url,
             'type' => 'image',
             'public_id' => $publicId,
         ]);
 
-        $user->profile_photo_id = $media->id;
-        $user->save();
+        ProfilePicture::create([
+            'post_id' => $post->id,
+            'is_current' => true,
+        ]);
 
         return back()->with('success', 'Profile photo updated!');
     }

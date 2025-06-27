@@ -47,21 +47,41 @@ class User extends Authenticatable
         ];
     }
 
-    public function profilePhoto()
+    public function profilePictures()
     {
-        return $this->belongsTo(PostMedia::class, 'profile_photo_id');
+        return $this->hasManyThrough(
+            \App\Models\ProfilePicture::class,
+            \App\Models\Post::class,
+            'user_id',   // Foreign key on Post table
+            'post_id',   // Foreign key on ProfilePicture table
+            'id',        // Local key on User
+            'id'         // Local key on Post
+        );
+    }
+
+    public function getProfilePhotoUrlAttribute()
+    {
+        $post = $this->profilePictures()
+            ->where('is_current', true)
+            ->with('post.mediaFile') // eager load media file
+            ->latest()
+            ->first();
+
+        return $post?->post?->mediaFile?->url
+            ?? 'https://ui-avatars.com/api/?name=' . urlencode($this->name);
     }
 
     public function getProfilePublicIdAttribute()
     {
-        return $this->profilePhoto?->public_id;
+        $post = $this->profilePictures()
+            ->where('is_current', true)
+            ->with('post.mediaFile')
+            ->latest()
+            ->first();
+
+        return $post?->post?->mediaFile?->public_id;
     }
 
-    public function bannerPhoto()
-    {
-        return $this->belongsTo(PostMedia::class, 'banner_photo_id');
-    }
-    
     public function media()
     {
         return $this->hasManyThrough(
@@ -77,12 +97,6 @@ class User extends Authenticatable
     public function getNameAttribute()
     {
         return "{$this->firstname} {$this->lastname}";
-    }
-
-    public function getProfilePhotoUrlAttribute()
-    {
-        return $this->profilePhoto?->url
-            ?? 'https://ui-avatars.com/api/?name=' . urlencode($this->name);
     }
 
     public function messages()
