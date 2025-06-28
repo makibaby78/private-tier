@@ -19,7 +19,7 @@
         <div class="p-6 bg-white dark:bg-gray-800 shadow-sm sm:rounded-lg space-y-4">
             <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
 
-                @if ($isOwnProfile)
+                @if ($isOwnProfile && isset($album) && isset($album->id))
                     <div 
                         class="flex flex-col space-y-2 w-full"
                     >
@@ -69,9 +69,9 @@
             >
                 {{ __('X') }}
             </button>
-
-            add image to album
-
+            @if ($isOwnProfile && isset($album) && isset($album->id))
+                <livewire:media-form :postId="$album->id" />
+            @endif
         </x-modal>
     </div>
 

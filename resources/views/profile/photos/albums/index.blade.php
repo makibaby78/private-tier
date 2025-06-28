@@ -55,7 +55,7 @@
                         <div class="relative aspect-square w-full">
                             @if($album->media->count() > 0)
                                 <img src="{{ $album->media->first()->url }}"
-                                    class="object-cover w-full h-full rounded-md">
+                                    class="object-cover aspect-square w-full h-full rounded-md">
                             @else
                                 <div class="w-full h-full bg-gray-200 rounded-md flex items-center justify-center text-gray-500">
                                     No media
