@@ -30,23 +30,24 @@
 
                 <!-- Album List -->
                 <div class="flex flex-col w-full">
-                    <div class="relative aspect-square w-full">
-                        <img src="{{ $user->profile_photo_url }}"
-                            class="object-cover aspect-square w-full h-full rounded-md">
-                        <!-- 3-dot menu (optional) -->
-                        <div class="absolute top-1 right-1">
-                            <button class="text-white bg-black/50 rounded-full p-1 hover:bg-black/70">
-                                <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
-                                    <path d="M6 10a2 2 0 11-4 0 2 2 0 014 0zm6 0a2 2 0 11-4 0 2 2 0 014 0zm6 0a2 2 0 11-4 0 2 2 0 014 0z" />
-                                </svg>
-                            </button>
+                    <a href="{{ route('profile.photos.pictures.index', [$user->username]) }}">
+                        <div class="relative aspect-square w-full">
+                            <img src="{{ $user->profile_photo_url }}"
+                                class="object-cover aspect-square w-full h-full rounded-md">
+                            <!-- 3-dot menu (optional) -->
+                            <div class="absolute top-1 right-1">
+                                <button class="text-white bg-black/50 rounded-full p-1 hover:bg-black/70">
+                                    <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                                        <path d="M6 10a2 2 0 11-4 0 2 2 0 014 0zm6 0a2 2 0 11-4 0 2 2 0 014 0zm6 0a2 2 0 11-4 0 2 2 0 014 0z" />
+                                    </svg>
+                                </button>
+                            </div>
                         </div>
-                    </div>
-                    <div class="mt-2 text-sm text-black font-semibold truncate">
-                        Profile Pictures
-                    </div>
-                    <div class="text-xs text-gray-600">{{ $user->profilePictures()->count() }} Items</div>
-                    
+                        <div class="mt-2 text-sm text-black font-semibold truncate">
+                            Profile Pictures
+                        </div>
+                        <div class="text-xs text-gray-600">{{ $user->profilePictures()->count() }} Items</div>
+                    </a>
                 </div>
                 @foreach ($albums as $album)
                 <a href="{{ route('profile.photos.album.index', [$user->username, $album->id]) }}">

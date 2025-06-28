@@ -7,6 +7,7 @@ use App\Models\PostMedia;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Post;
 use App\Models\User;
+use App\Models\ProfilePicture;
 
     
 class UserController extends Controller
@@ -79,6 +80,25 @@ class UserController extends Controller
         return view('profile.photos.albums.album.index', $data);
     }
     
+    public function pictures(string $username)
+    {
+        $data = $this->resolveProfile($username, 'photos');
+
+        $user = $data['user'];
+
+        $pictures = $user->profilePictures()->with('post.media')->get();
+
+        $mediaItems = $pictures->flatMap(fn($pic) => $pic->post?->media ?? []);
+
+        $data['album'] = (object) [
+            'body' => 'Profile Pictures',
+        ];
+        $data['mediaItems'] = $mediaItems;
+        $data['back'] = request()->path();
+
+        return view('profile.photos.albums.album.index', $data);
+    }
+
     public function videos(string $username)
     {
         return view('profile.videos.index', $this->resolveProfile($username, 'videos'));

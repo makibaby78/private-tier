@@ -2,12 +2,6 @@
 
     @include('profile.partials.profile-header')
 
-    <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 pb-4">
-        <div class="p-6 bg-white dark:bg-gray-800 shadow-sm sm:rounded-lg space-y-4">
-            Album
-        </div>
-    </div>
-
     <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 pb-4 space-y-4">
         <div class="flex items-center justify-between p-6 bg-white dark:bg-gray-800 shadow-sm sm:rounded-lg space-y-4">
             <div>
@@ -24,6 +18,24 @@
         {{-- Media Grid --}}
         <div class="p-6 bg-white dark:bg-gray-800 shadow-sm sm:rounded-lg space-y-4">
             <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
+
+                @if ($isOwnProfile)
+                    <div 
+                        class="flex flex-col space-y-2 w-full"
+                    >
+                        <button
+                            x-data
+                            x-on:click.prevent="$dispatch('open-modal', 'add-to-album')"
+                            class="aspect-square w-full bg-gray-200 hover:bg-gray-300 flex items-center justify-center rounded-md"
+                        >
+                            <svg class="w-8 h-8 text-gray-600" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4" />
+                            </svg>
+                        </button>
+                        <div class="text-sm text-black font-medium text-left">+ Add to album</div>
+                    </div>
+                @endif
+
                 @foreach ($mediaItems as $media)
                 <a href="{{ route('profile.photos.media.index', [$user->username, $media->id]) }}?from={{ request('from') }}&back={{ $back }}">
                     <div class="relative group">
@@ -45,7 +57,22 @@
                 @endforeach
             </div>
         </div>
+
+
+        <x-modal name="add-to-album" focusable>
+
+            <button
+                x-on:click="$dispatch('close')"
+                class="absolute rounded-full top-0 right-0 p-2 text-sm
+                    text-gray-600 hover:text-black hover:bg-gray-300
+                    dark:text-gray-300 dark:hover:text-white dark:hover:bg-gray-700"
+            >
+                {{ __('X') }}
+            </button>
+
+            add image to album
+
+        </x-modal>
     </div>
-    
 
 </x-app-layout>
