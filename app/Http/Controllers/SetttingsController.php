@@ -84,11 +84,11 @@ class SetttingsController extends Controller
         $post = Post::create([
             'user_id' => auth()->id(),
             'type' => 'media',
-            'body' => $request->body,
+            'body' => $request->input('body', null),
         ]);
 
         // ✅ 4. Store the media in post_media
-        $media = PostMedia::create([
+        PostMedia::create([
             'post_id' => $post->id,
             'url' => $url,
             'type' => 'image',

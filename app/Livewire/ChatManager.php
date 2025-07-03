@@ -6,12 +6,30 @@ use App\Models\Message;
 use Livewire\Component;
 use Livewire\Attributes\On;
 use App\Models\User;
+use Livewire\WithFileUploads;
+use Illuminate\Support\Facades\Storage;
 
 class ChatManager extends Component
 {
+    use WithFileUploads;
+
     public array $openChats = [];
     public array $messageInputs = [];
     public array $messages = [];
+    public array $media = [];
+
+    public function updatedMedia()
+    {
+        $this->validate([
+            'media.*' => 'file|mimes:jpeg,png,jpg,mp4,mov,webm|max:102400', // 100MB max
+        ]);
+    }
+
+    public function removeMedia($index)
+    {
+        unset($this->media[$index]);
+        $this->media = array_values($this->media); // Re-index the array
+    }
 
     #[On('open-chat')]
     public function openChat(int $userId)
@@ -62,16 +80,39 @@ class ChatManager extends Component
     public function sendMessage($userId)
     {
         $text = trim($this->messageInputs[$userId] ?? '');
-        if ($text === '') return;
 
-        $message = Message::create([
-            'sender_id' => auth()->id(),
-            'receiver_id' => $userId,
-            'message' => $text,
-        ]);
+        if ($text === '' && empty($this->media)) {
+            return;
+        }
+
+        if (!empty($this->media)) {
+            foreach ($this->media as $file) {
+                $type = str($file->getMimeType())->startsWith('image') ? 'image' : 'video';
+
+                $publicId = Storage::disk('cloudinary')->putFile('messages', $file);
+
+                $message = Message::create([
+                    'sender_id' => auth()->id(),
+                    'receiver_id' => $userId,
+                    'message' => $publicId,
+                    'type' => $type,
+                ]);
+            }
+        }
+
+        if ($text != '') {
+
+            $message = Message::create([
+                'sender_id' => auth()->id(),
+                'receiver_id' => $userId,
+                'message' => $text,
+                'type' => 'text',
+            ]);
+        }
 
         $this->messages[$userId][] = $message->load('sender')->toArray();
         $this->messageInputs[$userId] = '';
+        $this->media = [];
 
         broadcast(new \App\Events\MessageSent($message))->toOthers();
 

@@ -18,7 +18,7 @@
 
                 <div class="flex-1">
                     <div class="text-left font-semibold">{{ $friend['name'] }}</div>
-                    <div class="text-left text-sm text-gray-500 truncate">{{ $friend['last_message'] }} {{ $friend['last_time'] ?? '' }}</div>
+                    <div class="text-left text-xs text-gray-500 truncate">{{Str::limit( $friend['last_message'], 23) }} {{ $friend['last_time'] ?? '' }}</div>
                 </div>
             </div>
         </button>

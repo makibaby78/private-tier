@@ -50,7 +50,7 @@ class PostForm extends Component
 
             $post->media()->create([
                 'url'       => $url,
-                'type'      => $mediaType, // image or video only
+                'type'      => $mediaType,
                 'public_id' => $publicId,
             ]);
         }
