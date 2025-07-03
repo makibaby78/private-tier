@@ -37,6 +37,7 @@ class ChatManager extends Component
         if (isset($this->openChats[$userId])) {
             // Toggle minimized/open
             $this->openChats[$userId]['status'] = $this->openChats[$userId]['status'] === 'open' ? 'minimized' : 'open';
+
         } else {
             // First time open
             $user = User::findOrFail($userId);
@@ -61,7 +62,7 @@ class ChatManager extends Component
     }
 
     #[On('message-received')]
-    public function addIncomingMessage(string $message, int $sender_id, string $sender_name)
+    public function addIncomingMessage(string $message, int $sender_id, string $sender_name, string $type)
     {
         if (!isset($this->messages[$sender_id])) {
             $this->messages[$sender_id] = [];
@@ -69,6 +70,7 @@ class ChatManager extends Component
 
         $this->messages[$sender_id][] = [
             'message' => $message,
+            'type' => $type,
             'sender_id' => $sender_id,
             'sender_name' => $sender_name,
             'created_at' => now()->toDateTimeString(),

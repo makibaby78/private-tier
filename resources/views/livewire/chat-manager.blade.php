@@ -1,7 +1,7 @@
 <div 
     x-data 
     x-init="window.chatManager = $wire"
-    class="fixed bottom-0 right-0 flex flex-row-reverse gap-3 p-4 z-50"
+    class="fixed bottom-0 right-0 flex flex-row-reverse gap-3 px-4 z-50"
 >
     @foreach ($openChats as $userId => $chat)
         <div 

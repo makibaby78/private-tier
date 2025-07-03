@@ -23,6 +23,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 // ✅ Call Livewire to update the UI reactively
                 Livewire.dispatch('message-received', {
                     message: e.message,
+                    type: e.type,
                     sender_id: e.sender_id,
                     sender_name: e.sender_name,
                 });
