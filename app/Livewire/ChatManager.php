@@ -17,6 +17,7 @@ class ChatManager extends Component
     public array $messageInputs = [];
     public array $messages = [];
     public array $media = [];
+    public array $messageOffsets = []; // track pagination offsets per chat
 
     public function updatedMedia()
     {
@@ -35,13 +36,10 @@ class ChatManager extends Component
     public function openChat(int $userId)
     {
         if (isset($this->openChats[$userId])) {
-            // Toggle minimized/open
             $this->openChats[$userId]['status'] = $this->openChats[$userId]['status'] === 'open' ? 'minimized' : 'open';
-
         } else {
-            // First time open
             $user = User::findOrFail($userId);
-            
+
             $this->openChats[$userId] = [
                 'status' => 'open',
                 'name' => $user->name,
@@ -49,16 +47,42 @@ class ChatManager extends Component
             ];
 
             $this->messageInputs[$userId] = '';
+            $this->messageOffsets[$userId] = 0;
 
-            $this->messages[$userId] = Message::where(function ($q) use ($userId) {
+            $this->loadMessages($userId);
+        }
+
+        $this->dispatch('scroll-chat', userId: $userId);
+    }
+
+    public function loadMessages(int $userId)
+    {
+        $offset = $this->messageOffsets[$userId] ?? 0;
+
+        $newMessages = Message::where(function ($q) use ($userId) {
                 $q->where('sender_id', auth()->id())->where('receiver_id', $userId);
             })->orWhere(function ($q) use ($userId) {
                 $q->where('sender_id', $userId)->where('receiver_id', auth()->id());
-            })->with('sender')->orderBy('created_at')->get()->toArray();
-        }
+            })
+            ->with('sender')
+            ->orderByDesc('created_at')
+            ->skip($offset)
+            ->take(15)
+            ->get()
+            ->reverse()
+            ->values()
+            ->toArray();
 
-        // Dispatch to scroll when chat is reopened
-        $this->dispatch('scroll-chat', userId: $userId);
+        $this->messages[$userId] = array_merge($newMessages, $this->messages[$userId] ?? []);
+        $this->messageOffsets[$userId] += 15;
+    }
+
+    #[On('load-older-messages')]
+    public function loadOlderMessages(int $userId)
+    {
+        if (!isset($this->openChats[$userId])) return;
+
+        $this->loadMessages($userId);
     }
 
     #[On('message-received')]
@@ -103,7 +127,6 @@ class ChatManager extends Component
         }
 
         if ($text != '') {
-
             $message = Message::create([
                 'sender_id' => auth()->id(),
                 'receiver_id' => $userId,
@@ -118,13 +141,12 @@ class ChatManager extends Component
 
         broadcast(new \App\Events\MessageSent($message))->toOthers();
 
-        // Dispatch to scroll down on send
         $this->dispatch('scroll-chat', userId: $userId);
     }
 
     public function closeChat($userId)
     {
-        unset($this->openChats[$userId], $this->messageInputs[$userId], $this->messages[$userId]);
+        unset($this->openChats[$userId], $this->messageInputs[$userId], $this->messages[$userId], $this->messageOffsets[$userId]);
     }
 
     public function render()

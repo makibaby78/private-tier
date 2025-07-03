@@ -45,6 +45,10 @@
                         x-ref="chatBody{{ $userId }}" 
                         class="h-80 overflow-y-auto border rounded mb-2 p-1 text-sm text-gray-700 space-y-1"
                         id="messages"
+                        @scroll.passive="
+                        if ($el.scrollTop === 0) {
+                            window.chatManager.$dispatch('load-older-messages', { userId: {{ $userId }} });
+                        }"
                     >
                         @foreach ($messages[$userId] ?? [] as $msg)
                             <div class="{{ $msg['sender_id'] === auth()->id() ? 'text-right' : 'text-left' }}">
@@ -119,6 +123,7 @@
                                 rows="1"
                                 x-ref="ta"
                                 x-on:input="$refs.ta.style.height = 'auto'; $refs.ta.style.height = $refs.ta.scrollHeight + 'px';"
+                                @keydown.enter.prevent="$wire.sendMessage({{ $userId }})"
                                 class="flex-1 text-sm resize-none border rounded-md p-2 max-h-40 overflow-y-auto leading-snug"
                                 style="min-height: 2.5rem;"
                             ></textarea>
