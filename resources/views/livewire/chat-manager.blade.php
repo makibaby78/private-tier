@@ -43,62 +43,65 @@
                 <div class="p-2">
                     <div 
                         x-ref="chatBody{{ $userId }}" 
-                        class="max-h-80 overflow-y-auto border rounded mb-2 p-1 text-sm text-gray-700 space-y-1"
+                        class="h-80 border rounded mb-2 p-1 text-sm text-gray-700 flex flex-col justify-between"
                         id="messages"
                         @scroll.passive="
                         if ($el.scrollTop === 0) {
                             window.chatManager.$dispatch('load-older-messages', { userId: {{ $userId }} });
                         }"
                     >
-                        @foreach ($messages[$userId] ?? [] as $msg)
-                            <div class="{{ $msg['sender_id'] === auth()->id() ? 'text-right' : 'text-left' }}">
-                                <div 
-                                    class="px-2 py-1 rounded inline-block align-top max-w-[75%] break-words text-left
-                                        {{ $msg['sender_id'] === auth()->id() ? 'bg-blue-100' : 'bg-gray-100' }}"
-                                >
-                                    @if ($msg['type'] === 'text')
-                                        <span>{{ str($msg['message'])->limit(500) }}</span>
-                        
-                                    @elseif ($msg['type'] === 'image')
+                        <div class="overflow-y-auto space-y-1">
+                            @foreach ($messages[$userId] ?? [] as $msg)
+                                <div class="{{ $msg['sender_id'] === auth()->id() ? 'text-right' : 'text-left' }}">
+                                    <div 
+                                        class="px-2 py-1 rounded inline-block align-top max-w-[75%] break-words text-left
+                                            {{ $msg['sender_id'] === auth()->id() ? 'bg-blue-100' : 'bg-gray-100' }}"
+                                    >
+                                        @if ($msg['type'] === 'text')
+                                            <span>{{ str($msg['message'])->limit(500) }}</span>
+                            
+                                        @elseif ($msg['type'] === 'image')
 
-                                        <x-cloudinary::image :public-id="$msg['message']" class="rounded max-w-full max-h-60" />
-                        
-                                    @elseif ($msg['type'] === 'video')
-                                    <x-cloudinary::video :public-id="$msg['message']" width="300" height="200" controls />
-                                    @else
-                                        <span class="italic text-gray-500">Unsupported message type.</span>
+                                            <x-cloudinary::image :public-id="$msg['message']" class="rounded max-w-full max-h-60" />
+                            
+                                        @elseif ($msg['type'] === 'video')
+                                        <x-cloudinary::video :public-id="$msg['message']" width="300" height="200" controls />
+                                        @else
+                                            <span class="italic text-gray-500">Unsupported message type.</span>
+                                        @endif
+                                    </div>
+                                </div>
+                            @endforeach
+                        </div>
+
+                        <div class="grid grid-cols-3 gap-4">
+                            @foreach ($media as $index => $file)
+                                <div class="relative group">
+                                    <button 
+                                        type="button" 
+                                        wire:click="removeMedia({{ $index }})"
+                                        class="absolute top-1 right-1 bg-white text-red-500 rounded-full w-6 h-6 flex items-center justify-center shadow hover:bg-red-100"
+                                        title="Remove"
+                                    >
+                                        &times;
+                                    </button>
+                    
+                                    @if (str($file->getMimeType())->startsWith('image'))
+                                        <img src="{{ $file->temporaryUrl() }}" class="w-full m-2 h-10 object-cover rounded shadow">
+                                    @elseif (str($file->getMimeType())->startsWith('video'))
+                                        <video controls class="w-full m-2 h-20 object-cover rounded shadow">
+                                            <source src="{{ $file->temporaryUrl() }}" type="{{ $file->getMimeType() }}">
+                                        </video>
                                     @endif
                                 </div>
-                            </div>
-                        @endforeach
+                            @endforeach
+                        </div>
+
                     </div>
 
                     {{-- Message form --}}
                     <form wire:submit.prevent="sendMessage({{ $userId }})">
                         <div class="">
-
-                            <div class="grid grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
-                                @foreach ($media as $index => $file)
-                                    <div class="relative group">
-                                        <button 
-                                            type="button" 
-                                            wire:click="removeMedia({{ $index }})"
-                                            class="absolute top-1 right-1 bg-white text-red-500 rounded-full w-6 h-6 flex items-center justify-center shadow hover:bg-red-100"
-                                            title="Remove"
-                                        >
-                                            &times;
-                                        </button>
-                        
-                                        @if (str($file->getMimeType())->startsWith('image'))
-                                            <img src="{{ $file->temporaryUrl() }}" class="w-full m-2 h-20 object-cover rounded shadow">
-                                        @elseif (str($file->getMimeType())->startsWith('video'))
-                                            <video controls class="w-full m-2 h-20 object-cover rounded shadow">
-                                                <source src="{{ $file->temporaryUrl() }}" type="{{ $file->getMimeType() }}">
-                                            </video>
-                                        @endif
-                                    </div>
-                                @endforeach
-                            </div>
 
                             <div class="flex gap-1 mt-2">
 
