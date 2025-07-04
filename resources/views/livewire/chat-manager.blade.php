@@ -1,7 +1,7 @@
 <div 
     x-data 
     x-init="window.chatManager = $wire"
-    class="fixed bottom-0 right-0 flex flex-row-reverse gap-3 px-4 z-50"
+    class="fixed bottom-0 right-0 flex items-end flex-row-reverse gap-3 px-4 z-50"
 >
     @foreach ($openChats as $userId => $chat)
         <div 
@@ -62,7 +62,7 @@
                             
                                         @elseif ($msg['type'] === 'image')
 
-                                            <x-cloudinary::image :public-id="$msg['message']" class="rounded max-w-full max-h-60" />
+                                            <x-cloudinary::image :public-id="$msg['message']" class="rounded max-w-full" />
                             
                                         @elseif ($msg['type'] === 'video')
                                         <x-cloudinary::video :public-id="$msg['message']" width="300" height="200" controls />
