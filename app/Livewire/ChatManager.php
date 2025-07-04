@@ -116,12 +116,14 @@ class ChatManager extends Component
                 $type = str($file->getMimeType())->startsWith('image') ? 'image' : 'video';
 
                 $publicId = Storage::disk('cloudinary')->putFile('messages', $file);
+                $url = Storage::disk('cloudinary')->url($publicId);
 
                 $message = Message::create([
                     'sender_id' => auth()->id(),
                     'receiver_id' => $userId,
                     'message' => $publicId,
                     'type' => $type,
+                    'url' => $url,
                 ]);
             }
         }

@@ -18,6 +18,7 @@ return new class extends Migration
             $table->foreignId('conversation_id')->nullable()->constrained()->nullOnDelete();
             $table->text('message');
             $table->enum('type', ['text', 'image', 'video', 'audio'])->default('text');
+            $table->string('url')->nullable();
             $table->timestamp('read_at')->nullable();
             $table->timestamps();
         });

@@ -43,7 +43,7 @@
                 <div class="p-2">
                     <div 
                         x-ref="chatBody{{ $userId }}" 
-                        class="h-80 overflow-y-auto border rounded mb-2 p-1 text-sm text-gray-700 space-y-1"
+                        class="max-h-80 overflow-y-auto border rounded mb-2 p-1 text-sm text-gray-700 space-y-1"
                         id="messages"
                         @scroll.passive="
                         if ($el.scrollTop === 0) {
@@ -60,14 +60,11 @@
                                         <span>{{ str($msg['message'])->limit(500) }}</span>
                         
                                     @elseif ($msg['type'] === 'image')
-                                        <x-cloudinary::image public-id="{{ $msg['message'] }}" class="rounded max-w-full max-h-60" />
+
+                                        <x-cloudinary::image :public-id="$msg['message']" class="rounded max-w-full max-h-60" />
                         
                                     @elseif ($msg['type'] === 'video')
-                                        <video controls class="rounded max-w-full max-h-60">
-                                            <source src="https://res.cloudinary.com/YOUR_CLOUD_NAME/video/upload/{{ $msg['message'] }}.mp4" type="video/mp4">
-                                            Your browser does not support the video tag.
-                                        </video>
-                        
+                                    <x-cloudinary::video :public-id="$msg['message']" width="300" height="200" controls />
                                     @else
                                         <span class="italic text-gray-500">Unsupported message type.</span>
                                     @endif
@@ -78,65 +75,66 @@
 
                     {{-- Message form --}}
                     <form wire:submit.prevent="sendMessage({{ $userId }})">
+                        <div class="">
 
-                        <div class="grid grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
-                            @foreach ($media as $index => $file)
-                                <div class="relative group">
-                                    <button 
-                                        type="button" 
-                                        wire:click="removeMedia({{ $index }})"
-                                        class="absolute top-1 right-1 bg-white text-red-500 rounded-full w-6 h-6 flex items-center justify-center shadow hover:bg-red-100"
-                                        title="Remove"
+                            <div class="grid grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
+                                @foreach ($media as $index => $file)
+                                    <div class="relative group">
+                                        <button 
+                                            type="button" 
+                                            wire:click="removeMedia({{ $index }})"
+                                            class="absolute top-1 right-1 bg-white text-red-500 rounded-full w-6 h-6 flex items-center justify-center shadow hover:bg-red-100"
+                                            title="Remove"
+                                        >
+                                            &times;
+                                        </button>
+                        
+                                        @if (str($file->getMimeType())->startsWith('image'))
+                                            <img src="{{ $file->temporaryUrl() }}" class="w-full m-2 h-20 object-cover rounded shadow">
+                                        @elseif (str($file->getMimeType())->startsWith('video'))
+                                            <video controls class="w-full m-2 h-20 object-cover rounded shadow">
+                                                <source src="{{ $file->temporaryUrl() }}" type="{{ $file->getMimeType() }}">
+                                            </video>
+                                        @endif
+                                    </div>
+                                @endforeach
+                            </div>
+
+                            <div class="flex gap-1 mt-2">
+
+                                <div class="flex items-center justify-center ">
+                                    <label 
+                                        class="w-6 h-6 rounded-md bg-blue-400 hover:bg-blue-500 flex items-center justify-center cursor-pointer transition duration-200"
                                     >
-                                        &times;
-                                    </button>
-                    
-                                    @if (str($file->getMimeType())->startsWith('image'))
-                                        <img src="{{ $file->temporaryUrl() }}" class="w-full m-2 h-20 object-cover rounded shadow">
-                                    @elseif (str($file->getMimeType())->startsWith('video'))
-                                        <video controls class="w-full m-2 h-20 object-cover rounded shadow">
-                                            <source src="{{ $file->temporaryUrl() }}" type="{{ $file->getMimeType() }}">
-                                        </video>
-                                    @endif
+                                        <!-- Icon -->
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 24 24">
+                                            <path d="M21 19V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2ZM8 11l2.03 2.71 3.52-4.5L18 17H6l2-6Z" />
+                                        </svg>
+                                
+                                        <input type="file" accept="image/*,video/*" class="hidden" multiple wire:model="media">
+                                    </label>
                                 </div>
-                            @endforeach
-                        </div>
 
-                        <div class="flex gap-1 mt-2">
-
-                            <div class="flex items-center justify-center ">
-                                <label 
-                                    class="w-6 h-6 rounded-md bg-blue-400 hover:bg-blue-500 flex items-center justify-center cursor-pointer transition duration-200"
-                                >
-                                    <!-- Icon -->
-                                    <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 24 24">
-                                        <path d="M21 19V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2ZM8 11l2.03 2.71 3.52-4.5L18 17H6l2-6Z" />
-                                    </svg>
-                            
-                                    <input type="file" accept="image/*,video/*" class="hidden" multiple wire:model="media">
-                                </label>
-                            </div>
-
-                            <textarea
-                                wire:model.defer="messageInputs.{{ $userId }}"
-                                placeholder="Type a message..."
-                                rows="1"
-                                x-ref="ta"
-                                x-on:input="$refs.ta.style.height = 'auto'; $refs.ta.style.height = $refs.ta.scrollHeight + 'px';"
-                                @keydown.enter.prevent="$wire.sendMessage({{ $userId }})"
-                                class="flex-1 text-sm resize-none border rounded-md p-2 max-h-40 overflow-y-auto leading-snug"
-                                style="min-height: 2.5rem;"
-                            ></textarea>
-                            <div class="flex items-center justify-center">             
-                                <button 
-                                    type="submit"
-                                    class="bg-blue-600 text-white px-2 py-2 rounded text-sm hover:bg-blue-700"
-                                >
-                                    Send
-                                </button>
+                                <textarea
+                                    wire:model.defer="messageInputs.{{ $userId }}"
+                                    placeholder="Type a message..."
+                                    rows="1"
+                                    x-ref="ta"
+                                    x-on:input="$refs.ta.style.height = 'auto'; $refs.ta.style.height = $refs.ta.scrollHeight + 'px';"
+                                    @keydown.enter.prevent="$wire.sendMessage({{ $userId }})"
+                                    class="flex-1 text-sm resize-none border rounded-md p-2 max-h-40 overflow-y-auto leading-snug"
+                                    style="min-height: 2.5rem;"
+                                ></textarea>
+                                <div class="flex items-center justify-center">             
+                                    <button 
+                                        type="submit"
+                                        class="bg-blue-600 text-white px-2 py-2 rounded text-sm hover:bg-blue-700"
+                                    >
+                                        Send
+                                    </button>
+                                </div>
                             </div>
                         </div>
-
                     </form>
                 </div>
             @endif
