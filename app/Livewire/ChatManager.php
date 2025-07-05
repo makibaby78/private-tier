@@ -115,13 +115,14 @@ class ChatManager extends Component
             foreach ($this->media as $file) {
                 $type = str($file->getMimeType())->startsWith('image') ? 'image' : 'video';
 
-                $publicId = Storage::disk('cloudinary')->putFile('messages', $file);
-                $url = Storage::disk('cloudinary')->url($publicId);
+                $path = Storage::disk('cloudinary')->putFile('messages', $file);
+                $url = Storage::disk('cloudinary')->url($path);
+                $publicId = pathinfo($path, PATHINFO_FILENAME);
 
                 $message = Message::create([
                     'sender_id' => auth()->id(),
                     'receiver_id' => $userId,
-                    'message' => $publicId,
+                    'message' => $path,
                     'type' => $type,
                     'url' => $url,
                 ]);

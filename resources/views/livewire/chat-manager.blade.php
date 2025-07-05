@@ -65,7 +65,17 @@
                                             <x-cloudinary::image :public-id="$msg['message']" class="rounded max-w-full" />
                             
                                         @elseif ($msg['type'] === 'video')
-                                        <x-cloudinary::video :public-id="$msg['message']" width="300" height="200" controls />
+                                            <video
+                                                class="w-full rounded shadow cursor-pointer"
+                                                style="max-height: 470px;"
+                                                muted
+                                                controls
+                                                controlsList="nodownload"
+                                                oncontextmenu="return false;"
+                                            >
+                                                <source src="{{ $msg['url'] }}" type="video/mp4">
+                                                Your browser does not support the video tag.
+                                            </video>
                                         @else
                                             <span class="italic text-gray-500">Unsupported message type.</span>
                                         @endif
