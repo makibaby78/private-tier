@@ -22,7 +22,16 @@ class UserController extends Controller
 
     public function index(string $username)
     {
-        return view('profile.index', $this->resolveProfile($username, 'posts'));
+        $profile = $this->resolveProfile($username, 'posts');
+        $user = $profile['user'];
+
+        $photos = $user->media()
+            ->where('post_media.type', 'image')
+            ->latest()
+            ->take(9)
+            ->get();
+
+        return view('profile.index', array_merge($profile, ['photos' => $photos]));
     }
     
     public function about(string $username)
