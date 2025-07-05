@@ -39,11 +39,20 @@ class ChatList extends Component
                 ->orderByDesc('created_at')
                 ->first();
 
+                
+            $displayMessage = null;
+            if ($lastMessage) {
+                $displayMessage = $lastMessage->type === 'text'
+                    ? $lastMessage->body
+                    : strtoupper($lastMessage->type); // e.g. IMAGE, VIDEO
+            }
+                
+
             return [
                 'id' => $friend->id,
                 'name' => $friend->name,
                 'profile_public_id' => $friend->profile_public_id,
-                'last_message' => $lastMessage?->message ?? 'No messages yet',
+                'last_message' => $displayMessage ?? 'No messages yet',
                 'last_time' => $lastMessage?->created_at?->diffForHumans(),
             ];
         })->sortByDesc('last_time')->values();
