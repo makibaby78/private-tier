@@ -1,5 +1,5 @@
 <div class="p-4 bg-white dark:bg-gray-800 shadow-sm sm:rounded-lg">
-    <div class="mb-4 space-x-2">
+    <div class="mb-4 space-x-2 dark:text-white">
         Friends ({{ $count }})
     </div>
 
@@ -19,7 +19,7 @@
                         </a>
                     </div>
                     <a href="{{ route('profile.index', ['username' => $friend->username]) }}"
-                       class="text-sm font-semibold">{{ $friend->name }}</a>
+                       class="text-sm font-semibold dark:text-white">{{ $friend->name }}</a>
                 </div>
             @endforeach
         </div>

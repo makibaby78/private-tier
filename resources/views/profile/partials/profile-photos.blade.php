@@ -1,5 +1,5 @@
 <div class="p-4 bg-white dark:bg-gray-800 shadow-sm sm:rounded-lg">
-    <div class="mb-4 space-x-2">
+    <div class="mb-4 space-x-2 dark:text-white">
         Photos
     </div>
 

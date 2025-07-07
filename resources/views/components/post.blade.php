@@ -1,6 +1,6 @@
 @props(['post', 'back' => null])
 
-<div class="bg-white border rounded-md space-y-4">
+<div class="bg-white dark:bg-gray-800 sm:rounded-lg space-y-4">
     <div class="px-4 pt-4">
         <div class="flex items-center justify-between">
             <div class="flex gap-2 items-center">
@@ -15,7 +15,7 @@
                 </a>
                 <div>
                     <a href="{{ route('profile.index', $post->user->username) }}">
-                        <h5 class="text-base font-semibold">{{ $post->user->name }}</h5>
+                        <h5 class="text-base font-semibold dark:text-white">{{ $post->user->name }}</h5>
                     </a>
                     <small class="text-gray-500">
                         {{ $post->created_at->diffForHumans() }}
@@ -40,7 +40,7 @@
                             <div>
                                 <button 
                                     wire:click="openEditModal({{ $post->id }})"
-                                    class="hover:text-blue-600 p-2 hover:bg-gray-100 w-full text-left text-sm"
+                                    class="hover:text-blue-600 dark:text-white p-2 hover:bg-gray-100 w-full text-left text-sm"
                                 >
                                     ✏️ Edit
                                 </button>
@@ -48,7 +48,7 @@
                             <div>
                                 <button 
                                     wire:click="trashPost({{ $post->id }})" 
-                                    class="hover:text-red-600 p-2 hover:bg-gray-100 w-full text-left text-sm"
+                                    class="hover:text-red-600 dark:text-white p-2 hover:bg-gray-100 w-full text-left text-sm"
                                 >
                                     🗑️ Move to Trash
                                 </button>
@@ -58,7 +58,7 @@
                 @endif
             @endauth
         </div>
-        <p class="text-gray-800">{{ $post->body }}</p>
+        <p class="text-gray-800 dark:text-white">{{ $post->body }}</p>
         
         @if ($post->media && $post->media->isNotEmpty())
             <div class="border-t border-gray-300 pt-2 mt-2">

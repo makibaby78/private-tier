@@ -1,6 +1,6 @@
 <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 py-4">
     <div class="p-6 bg-white dark:bg-gray-800 shadow-sm sm:rounded-lg">
-        <div class="flex items-center justify-between flex-col md:flex-row gap-y-4 gap-x-2">
+        <div class="border-b border-gray-200 flex items-center justify-between flex-col pb-6 md:flex-row gap-y-4 gap-x-2">
             <div class="flex flex-col md:flex-row items-center gap-y-4 gap-x-2">
                 
                 <x-profile-photo 
@@ -22,41 +22,41 @@
             $activeTab = $activeTab ?? 'posts'; // fallback if not set
         @endphp
 
-        <nav class="border-b border-gray-200 text-sm font-semibold">
+        <nav class="text-sm font-semibold">
             <ul class="flex space-x-6 px-4 overflow-x-auto">
                 <li>
                     <a href="{{ route('profile.index', ['username' => $user->username]) }}"
-                    class="py-4 inline-block {{ $activeTab === 'posts' ? 'text-blue-600 border-b-2 border-blue-600' : 'text-gray-600 hover:text-black' }}">
+                    class="py-4 inline-block dark:text-white {{ $activeTab === 'posts' ? 'text-blue-600 border-b-2 border-blue-600' : 'text-gray-600 hover:text-gray-400' }}">
                         Posts
                     </a>
                 </li>
                 <li>
                     <a href="{{ route('profile.about.index', ['username' => $user->username]) }}"
-                    class="py-4 inline-block {{ $activeTab === 'about' ? 'text-blue-600 border-b-2 border-blue-600' : 'text-gray-600 hover:text-black' }}">
+                    class="py-4 inline-block dark:text-white {{ $activeTab === 'about' ? 'text-blue-600 border-b-2 border-blue-600' : 'text-gray-600 hover:text-gray-400' }}">
                         About
                     </a>
                 </li>
                 <li>
                     <a href="{{ route('profile.friends.index', ['username' => $user->username]) }}"
-                    class="py-4 inline-block {{ $activeTab === 'friends' ? 'text-blue-600 border-b-2 border-blue-600' : 'text-gray-600 hover:text-black' }}">
+                    class="py-4 inline-block dark:text-white {{ $activeTab === 'friends' ? 'text-blue-600 border-b-2 border-blue-600' : 'text-gray-600 hover:text-gray-400' }}">
                         Friends
                     </a>
                 </li>
                 <li>
                     <a href="{{ route('profile.photos.index', ['username' => $user->username]) }}"
-                    class="py-4 inline-block {{ $activeTab === 'photos' ? 'text-blue-600 border-b-2 border-blue-600' : 'text-gray-600 hover:text-black' }}">
+                    class="py-4 inline-block dark:text-white {{ $activeTab === 'photos' ? 'text-blue-600 border-b-2 border-blue-600' : 'text-gray-600 hover:text-gray-400' }}">
                         Photos
                     </a>
                 </li>
                 <li>
                     <a href="{{ route('profile.videos.index', ['username' => $user->username]) }}"
-                    class="py-4 inline-block {{ $activeTab === 'videos' ? 'text-blue-600 border-b-2 border-blue-600' : 'text-gray-600 hover:text-black' }}">
+                    class="py-4 inline-block dark:text-white {{ $activeTab === 'videos' ? 'text-blue-600 border-b-2 border-blue-600' : 'text-gray-600 hover:text-gray-400' }}">
                         Videos
                     </a>
                 </li>
                 <li>
                     <a href="{{ route('profile.reels.index', ['username' => $user->username]) }}"
-                    class="py-4 inline-block {{ $activeTab === 'reels' ? 'text-blue-600 border-b-2 border-blue-600' : 'text-gray-600 hover:text-black' }}">
+                    class="py-4 inline-block dark:text-white {{ $activeTab === 'reels' ? 'text-blue-600 border-b-2 border-blue-600' : 'text-gray-600 hover:text-gray-400' }}">
                         Reels
                     </a>
                 </li>
