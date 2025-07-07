@@ -3,13 +3,36 @@
         <div class="border-b border-gray-200 flex items-center justify-between flex-col pb-6 md:flex-row gap-y-4 gap-x-2">
             <div class="flex flex-col md:flex-row items-center gap-y-4 gap-x-2">
                 
-                <x-profile-photo 
-                    :path="$user->profile_public_id" 
-                    :alt="$user->name" 
-                    class="rounded object-cover w-32 h-32" 
-                    width="50" 
-                    height="50" 
-                />
+                <x-dropdown align="left" width="40">
+                    <x-slot name="trigger">
+                        <x-profile-photo 
+                            :path="$user->profile_public_id" 
+                            :alt="$user->name" 
+                            class="rounded object-cover w-32 h-32" 
+                            width="50" 
+                            height="50" 
+                        />
+                    </x-slot>
+
+                    <x-slot name="content">
+                        <div>
+                            <a href="{{ route('profile.posts.show', ['username' => $user->username, 'post' => $post_id]) }}?from=posts&back={{ $user->username }}"
+                                class="cursor-pointer hover:text-blue-600 dark:text-white p-2 hover:bg-gray-100 w-full text-left text-sm block"
+                            >
+                                See profile picture
+                            </a>
+                        </div>
+                        @if (auth()->id() === $user->id)
+                            <div>
+                                <button 
+                                    class="hover:text-blue-600 dark:text-white p-2 hover:bg-gray-100 w-full text-left text-sm"
+                                >
+                                    Choose profile picture
+                                </button>
+                            </div>
+                        @endif
+                    </x-slot>
+                </x-dropdown>
 
                 <h1 class="text-xl font-extrabold leading-none tracking-tight text-gray-900 md:text-3xl lg:text-4xl dark:text-white">{{ $user->name }}</h1>
 

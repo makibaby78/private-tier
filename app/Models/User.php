@@ -71,6 +71,16 @@ class User extends Authenticatable
             ?? 'https://ui-avatars.com/api/?name=' . urlencode($this->name);
     }
 
+    public function getProfilePostIdAttribute()
+    {
+        $post = $this->profilePictures()
+            ->where('is_current', true)
+            ->latest()
+            ->first();
+        
+        return $post->post_id;
+    }
+
     public function getProfilePublicIdAttribute()
     {
         $post = $this->profilePictures()

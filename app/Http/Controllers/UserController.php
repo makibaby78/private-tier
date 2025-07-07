@@ -25,13 +25,15 @@ class UserController extends Controller
         $profile = $this->resolveProfile($username, 'posts');
         $user = $profile['user'];
 
+        $post_id = $user->getProfilePostIdAttribute();
+
         $photos = $user->media()
             ->where('post_media.type', 'image')
             ->latest()
             ->take(9)
             ->get();
 
-        return view('profile.index', array_merge($profile, ['photos' => $photos]));
+        return view('profile.index', array_merge($profile, ['photos' => $photos, 'post_id' => $post_id]));
     }
     
     public function about(string $username)
