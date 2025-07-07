@@ -16,8 +16,10 @@ class UserController extends Controller
     {
         $user = User::where('username', $username)->firstOrFail();
         $isOwnProfile = Auth::check() && Auth::id() === $user->id;
+
+        $profile_post_id = $user->getProfilePostIdAttribute();
     
-        return compact('user', 'isOwnProfile', 'activeTab');
+        return compact('user', 'isOwnProfile', 'activeTab','profile_post_id');
     }
 
     public function index(string $username)
@@ -25,15 +27,13 @@ class UserController extends Controller
         $profile = $this->resolveProfile($username, 'posts');
         $user = $profile['user'];
 
-        $post_id = $user->getProfilePostIdAttribute();
-
         $photos = $user->media()
             ->where('post_media.type', 'image')
             ->latest()
             ->take(9)
             ->get();
 
-        return view('profile.index', array_merge($profile, ['photos' => $photos, 'post_id' => $post_id]));
+        return view('profile.index', array_merge($profile, ['photos' => $photos]));
     }
     
     public function about(string $username)

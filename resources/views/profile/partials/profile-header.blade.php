@@ -16,7 +16,7 @@
 
                     <x-slot name="content">
                         <div>
-                            <a href="{{ route('profile.posts.show', ['username' => $user->username, 'post' => $post_id]) }}?from=posts&back={{ $user->username }}"
+                            <a href="{{ route('profile.posts.show', ['username' => $user->username, 'post' => $profile_post_id]) }}?from=posts&back={{ $user->username }}"
                                 class="cursor-pointer hover:text-blue-600 dark:text-white p-2 hover:bg-gray-100 w-full text-left text-sm block"
                             >
                                 See profile picture
