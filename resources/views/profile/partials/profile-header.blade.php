@@ -25,6 +25,7 @@
                         @if (auth()->id() === $user->id)
                             <div>
                                 <button 
+                                    x-on:click.prevent="$dispatch('open-modal', 'upload-profile')"
                                     class="hover:text-blue-600 dark:text-white p-2 hover:bg-gray-100 w-full text-left text-sm"
                                 >
                                     Choose profile picture
@@ -99,4 +100,26 @@
         </nav>
 
     </div>
+
+
+    <x-modal name="upload-profile" focusable>
+                                    
+        <button
+            x-on:click="$dispatch('close')"
+            class="absolute rounded-full top-0 right-0 p-2 text-sm
+                text-gray-600 hover:text-black hover:bg-gray-300
+                dark:text-gray-300 dark:hover:text-white dark:hover:bg-gray-700"
+        >
+            {{ __('X') }}
+        </button>
+
+        <div class="px-6 pt-6">
+            <h2 class="text-lg font-extrabold leading-none tracking-tight text-gray-900 md:text-xl lg:text-2xl dark:text-white">
+                Upload
+            </h2>
+        </div>
+
+        <livewire:post-form :from="'profile'" />
+
+    </x-modal>
 </div>

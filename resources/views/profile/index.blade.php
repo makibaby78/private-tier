@@ -13,7 +13,7 @@
 
         <div class="profile-right space-y-4 w-full md:w-3/5">
             @if (auth()->id() === $user->id)
-                <livewire:post-form />
+                <livewire:post-form :from="'timeline'" />
             @endif
             
             <livewire:post-list :user="$user" />

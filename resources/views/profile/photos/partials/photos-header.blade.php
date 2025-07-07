@@ -41,7 +41,7 @@
                         {{ __('X') }}
                     </button>
 
-                    <livewire:post-form />
+                    <livewire:post-form :from="'photos'" />
 
                 </x-modal>
             @endif
