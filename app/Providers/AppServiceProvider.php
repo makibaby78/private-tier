@@ -5,24 +5,23 @@ namespace App\Providers;
 use Illuminate\Support\ServiceProvider;
 use App\Models\User;
 use Illuminate\Support\Facades\URL;
+use Illuminate\Http\Request;
 
 class AppServiceProvider extends ServiceProvider
 {
     /**
      * Register any application services.
      */
-    public function register(): void
+    public function boot()
     {
-        //
+        // $this->forceHttpsForNgrok(app(Request::class));
     }
 
-    /**
-     * Bootstrap any application services.
-     */
-    public function boot(): void
+    protected function forceHttpsForNgrok(Request $request): void
     {
-        // if (app()->environment('local')) {
+        // if ($this->app->environment('local')) {
         //     URL::forceScheme('https');
+        //     $request->server->set('HTTPS', 'on');
         // }
     }
 }

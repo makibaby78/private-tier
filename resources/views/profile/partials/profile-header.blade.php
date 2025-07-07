@@ -15,13 +15,13 @@
                     </x-slot>
 
                     <x-slot name="content">
-                        <div>
+                        @isset($profile_post_id)
                             <a href="{{ route('profile.posts.show', ['username' => $user->username, 'post' => $profile_post_id]) }}?from=posts&back={{ $user->username }}"
-                                class="cursor-pointer hover:text-blue-600 dark:text-white p-2 hover:bg-gray-100 w-full text-left text-sm block"
-                            >
+                                class="cursor-pointer hover:text-blue-600 dark:text-white p-2 hover:bg-gray-100 w-full text-left text-sm block">
                                 See profile picture
                             </a>
-                        </div>
+                        @endisset
+
                         @if (auth()->id() === $user->id)
                             <div>
                                 <button 

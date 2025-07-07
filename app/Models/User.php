@@ -78,7 +78,7 @@ class User extends Authenticatable
             ->latest()
             ->first();
         
-        return $post->post_id;
+        return $post?->post_id;
     }
 
     public function getProfilePublicIdAttribute()
