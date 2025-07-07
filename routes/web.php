@@ -17,7 +17,6 @@ Route::middleware('auth')->group(function () {
     Route::get('/settings', [SetttingsController::class, 'edit'])->name('settings.edit');
     Route::patch('/settings', [SetttingsController::class, 'update'])->name('settings.update');
     Route::delete('/settings', [SetttingsController::class, 'destroy'])->name('settings.destroy');
-    Route::post('/settings/upload-photo', [SetttingsController::class, 'upload'])->name('settings.upload-photo');
 
     Route::post('/friend-request/send/{id}', [FriendshipController::class, 'sendRequest'])->name('friend.send');
     Route::post('/friend-request/accept/{id}', [FriendshipController::class, 'acceptRequest'])->name('friend.accept');

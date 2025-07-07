@@ -62,44 +62,4 @@ class SetttingsController extends Controller
 
         return Redirect::to('/');
     }
-
-    public function upload(Request $request)
-    {
-        $request->validate([
-            'photo' => 'required|image|max:2048',
-            'body' => 'nullable|string|max:1000',
-        ]);
-
-        $user = $request->user();
-
-        // 🔁 Step 1: Mark previous profile pictures as NOT current
-        ProfilePicture::whereIn('post_id', $user->posts()->pluck('id'))
-            ->update(['is_current' => false]);
-
-        // Upload new image to Cloudinary
-        $publicId = Storage::disk('cloudinary')->putFile('profile-photos', $request->file('photo'));
-        $url = Storage::disk('cloudinary')->url($publicId);
-
-        // ✅ 3. Create the Post
-        $post = Post::create([
-            'user_id' => auth()->id(),
-            'type' => 'media',
-            'body' => $request->input('body', null),
-        ]);
-
-        // ✅ 4. Store the media in post_media
-        PostMedia::create([
-            'post_id' => $post->id,
-            'url' => $url,
-            'type' => 'image',
-            'public_id' => $publicId,
-        ]);
-
-        ProfilePicture::create([
-            'post_id' => $post->id,
-            'is_current' => true,
-        ]);
-
-        return back()->with('success', 'Profile photo updated!');
-    }
 }
