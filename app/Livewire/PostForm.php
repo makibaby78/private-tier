@@ -9,20 +9,13 @@ use Livewire\WithFileUploads;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
-use App\Models\ProfilePicture;
 
 class PostForm extends Component
 {
     use WithFileUploads;
 
     public $body = '';
-    public string $from;
     public array $media = [];
-
-    public function mount(string $from)
-    {
-        $this->from = $from;
-    }
 
     public function save()
     {
@@ -30,28 +23,11 @@ class PostForm extends Component
             abort(403, 'You must be logged in to create a post.');
         }
 
-        $rules = [];
-        $cloudinary_directory = '';
-
-        if ($this->from === 'profile') {
-
-            $cloudinary_directory = 'profile-photos';
-
-            $rules['body'] = 'nullable|string';
-            $rules['media'] = 'required|array|size:1';
-            $rules['media.*'] = 'file|mimetypes:image/*,video/*|max:102400';
-
-        } else {
-
-            $cloudinary_directory = 'posts';
-
-            $rules['body'] = 'required_without:media|string|nullable';
-            $rules['media'] = 'required_without:body|array|max:10';
-            $rules['media.*'] = 'file|mimetypes:image/*,video/*|max:102400';
-
-        }
-
-        $this->validate($rules);
+        $this->validate([
+            'body' => 'required_without:media|string|nullable',
+            'media' => 'required_without:body|array|max:10',
+            'media.*' => 'file|mimetypes:image/*,video/*|max:102400',
+        ]);
 
         $hasMedia = is_array($this->media) && count($this->media) > 0;
 
@@ -63,23 +39,10 @@ class PostForm extends Component
             'type'    => $type,
         ]);
 
-        if ($this->from === 'profile') {
-
-            $user = Auth::user();
-
-            ProfilePicture::whereIn('post_id', $user->posts()->pluck('id'))
-            ->update(['is_current' => false]);
-
-            ProfilePicture::create([
-                'post_id' => $post->id,
-                'is_current' => true,
-            ]);
-        }
-
         foreach ($this->media ?? [] as $file) {
             $mimeType = $file->getMimeType();
 
-            $path = Storage::disk('cloudinary')->putFile($cloudinary_directory, $file);
+            $path = Storage::disk('cloudinary')->putFile('posts', $file);
             $url = Storage::disk('cloudinary')->url($path);
             $publicId = pathinfo($path, PATHINFO_FILENAME);
 

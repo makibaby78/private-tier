@@ -22,8 +22,8 @@
                 </a>
             </div>
         </div>
-        <div class="middle lg:max-w-2xl md:max-w-lg max-w-md mx-auto py-4 space-y-4">
-            <livewire:post-form :from="'feed'" />
+        <div class="middle lg:max-w-2xl max-w-lg mx-auto py-4 space-y-4">
+            <livewire:post-form />
             <livewire:feed />
         </div>
         <div class="right"></div>

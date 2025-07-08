@@ -53,6 +53,8 @@ Route::prefix('{username}')
     ->as('profile.')
     ->group(function () {
 
+        Route::post('/update-picture', [UserController::class, 'updatePicture'])->name('update-picture');
+
         Route::get('/about', [UserController::class, 'about'])->name('about.index');
 
         Route::get('/friends', [UserController::class, 'friends'])->name('friends.index');

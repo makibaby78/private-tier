@@ -119,7 +119,71 @@
             </h2>
         </div>
 
-        <livewire:post-form :from="'profile'" />
+        <div class="space-y-2 bg-white p-6 dark:bg-gray-800 shadow-sm sm:rounded-lg">
+            @if (session()->has('message'))
+                <div class="bg-green-200 text-green-800 p-2 rounded">
+                    {{ session('message') }}
+                </div>
+            @endif
+
+            <form 
+            x-data="{
+                previewUrl: null,
+                updatePreview(event) {
+                    const file = event.target.files[0];
+                    if (file && file.type.startsWith('image/')) {
+                        const reader = new FileReader();
+                        reader.onload = e => this.previewUrl = e.target.result;
+                        reader.readAsDataURL(file);
+                    } else {
+                        this.previewUrl = null;
+                    }
+                }
+            }"
+            action="{{ route('profile.update-picture', ['username' => auth()->user()->username]) }}" 
+            method="POST" 
+            enctype="multipart/form-data"
+        >
+            @csrf
+
+            <div class="mb-4">
+                <textarea id="body" name="body" rows="3" class="mt-1 block w-full rounded border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500" placeholder="Caption">{{ old('body') }}</textarea>
+                @error('body')
+                    <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                @enderror
+            </div>
+    
+            <!-- File input: only image -->
+            <div class="mb-4">
+                <input 
+                    id="media" 
+                    name="media[]" 
+                    type="file" 
+                    accept="image/*" 
+                    class="mt-1 block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100"
+                    @change="updatePreview"
+                    required
+                >
+                @error('media')
+                    <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                @enderror
+                @error('media.*')
+                    <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                @enderror
+            </div>
+    
+            <!-- Live image preview -->
+            <div class="mb-4" x-show="previewUrl" x-transition>
+                <p class="text-sm text-gray-600 mb-2">Image Preview:</p>
+                <img :src="previewUrl" alt="Preview" class="w-32 h-32 object-cover rounded border">
+            </div>
+    
+            <button type="submit" class="w-full px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">
+                Update Profile Picture
+            </button>
+        </form>
+
+        </div>
 
     </x-modal>
 </div>

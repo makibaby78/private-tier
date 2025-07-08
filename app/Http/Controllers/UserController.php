@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Models\Post;
 use App\Models\User;
 use App\Models\ProfilePicture;
+use Illuminate\Support\Facades\Storage;
 
     
 class UserController extends Controller
@@ -159,4 +160,60 @@ class UserController extends Controller
     
         return view('profile.photos.media.index', compact('user', 'media', 'prevId', 'nextId', 'backUrl'));
     }
+
+    public function updatePicture(Request $request, $username)
+    {
+        // Ensure the user is authenticated
+        if (!Auth::check()) {
+            abort(403, 'You must be logged in to update your profile picture.');
+        }
+    
+        // Validate the request input
+        $validated = $request->validate([
+            'body'      => 'nullable|string',
+            'media'     => 'required|array|size:1',
+            'media.*'   => 'file|mimetypes:image/*,video/*|max:102400', // Max 100MB per file
+        ]);
+    
+        // Fetch the user by username
+        $user = User::where('username', $username)->firstOrFail();
+    
+        // Authorize only the owner
+        if (Auth::id() !== $user->id) {
+            abort(403, 'Unauthorized access.');
+        }
+    
+        // Create a new media-type post
+        $post = Post::create([
+            'user_id' => $user->id,
+            'body'    => $validated['body'] ?? null,
+            'type'    => 'media',
+        ]);
+    
+        // Set all previous profile pictures to not current
+        ProfilePicture::whereIn('post_id', $user->posts()->pluck('id'))
+            ->update(['is_current' => false]);
+    
+        // Mark the new profile picture
+        ProfilePicture::create([
+            'post_id'    => $post->id,
+            'is_current' => true,
+        ]);
+    
+        // Upload the media file (only one is expected)
+        $file = $validated['media'][0];
+        $path = Storage::disk('cloudinary')->putFile('profile-photos', $file);
+        $url = Storage::disk('cloudinary')->url($path);
+        $publicId = pathinfo($path, PATHINFO_FILENAME);
+    
+        // Save media reference to the post
+        $post->media()->create([
+            'url'       => $url,
+            'type'      => 'image', // optionally detect image/video by mime
+            'public_id' => $path,
+        ]);
+    
+        return back()->with('success', 'Profile picture updated successfully.');
+    }
+    
 }
