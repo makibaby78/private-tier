@@ -4,12 +4,12 @@
     </div>
 
     @if ($photos->count())
-        <div class="grid grid-cols-3 gap-4 w-full">
+        <div class="grid grid-cols-3 gap-1 w-full rounded-lg overflow-hidden">
             @foreach ($photos as $photo)
                 <div>
-                    <div class="w-full sm:max-w-xs md:max-w-sm lg:max-w-md aspect-square rounded overflow-hidden">
+                    <div class="w-full sm:max-w-xs md:max-w-sm lg:max-w-md aspect-square">
                         <a href="{{ route('profile.photos.media.index', [$user->username, $photo->id]) }}?from=photos&back={{ $user->username }}">
-                            <div class="aspect-square overflow-hidden rounded">
+                            <div class="aspect-square">
                                 <img
                                     src="{{ $photo->url }}"
                                     alt="User Photo"

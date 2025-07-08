@@ -21,6 +21,16 @@ class Post extends Model
         'type',
     ];
 
+    public function profilePictures()
+    {
+        return $this->hasMany(ProfilePicture::class);
+    }
+
+    public function isProfilePicture(): bool
+    {
+        return $this->profilePictures()->exists();
+    }
+
     public function isMedia(): bool
     {
         return $this->type === self::TYPE_MEDIA;

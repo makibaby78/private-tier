@@ -1,6 +1,6 @@
 @props(['post', 'back' => null])
 
-<div class="bg-white dark:bg-gray-800 sm:rounded-lg space-y-4">
+<div class="bg-white dark:bg-gray-800 sm:rounded-lg overflow-hidden space-y-4">
     <div class="px-4 pt-4">
         <div class="flex items-center justify-between">
             <div class="flex gap-2 items-center">
@@ -15,11 +15,21 @@
                 </a>
                 <div>
                     <a href="{{ route('profile.index', $post->user->username) }}">
-                        <h5 class="text-base font-semibold dark:text-white">{{ $post->user->name }}</h5>
+
+                        <h5 class="text-base font-semibold dark:text-white inline">
+                            {{ $post->user->name }}
+                        </h5>
+
+                        @if ($post->isProfilePicture())
+                            <p class="text-gray-500 text-base inline">updated their profile picture.</p>
+                        @endif
+
                     </a>
-                    <small class="text-gray-500">
-                        {{ $post->created_at->diffForHumans() }}
-                    </small>
+                    <p>
+                        <small class="text-gray-500">
+                            {{ $post->created_at->diffForHumans() }}
+                        </small>
+                    </p>
                 </div>
             </div>
 
