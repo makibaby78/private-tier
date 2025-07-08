@@ -126,7 +126,7 @@
                 </div>
             @endif
 
-            <form 
+        <form 
             x-data="{
                 previewUrl: null,
                 updatePreview(event) {
@@ -140,7 +140,7 @@
                     }
                 }
             }"
-            action="{{ route('profile.update-picture', ['username' => auth()->user()->username]) }}" 
+            action="{{ route('profile.update-picture', ['username' => $user->username]) }}" 
             method="POST" 
             enctype="multipart/form-data"
         >
