@@ -6,7 +6,7 @@
         <div class="p-6 bg-white dark:bg-gray-800 shadow-sm sm:rounded-lg ">
             <h2 class="dark:text-white pb-2 font-bold">Videos</h2>
 
-            <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
+            <div class="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 gap-4">
                 @foreach ($videos as $video)
 
                     <a href="{{ route('profile.media.index', [$user->username, $video->id]) }}?from=photos&back={{ $user->username . '/videos' }}">

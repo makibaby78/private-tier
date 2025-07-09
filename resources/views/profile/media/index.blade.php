@@ -47,16 +47,14 @@
                     ← Back
                 </a>
                  
-                @if ($media->post->media->count() > 1)
-                    <div class="border-t border-b border-gray-300 py-2 my-2">
-                        <a
-                            class="text-xs font-bold text-blue-600 hover:underline"
-                            href="{{ route('profile.posts.show', [$media->post->user->username, $media->post->id]) }}"
-                        >
-                            View Post
-                        </a>
-                    </div>
-                @endif
+                <div class="border-t border-b border-gray-300 py-2 my-2">
+                    <a
+                        class="text-xs font-bold text-blue-600 hover:underline"
+                        href="{{ route('profile.posts.show', [$media->post->user->username, $media->post->id]) }}"
+                    >
+                        View Post
+                    </a>
+                </div>
 
                 <div class="flex items-center space-x-3">
                     <img src="{{ $media->post->user->profile_photo_url }}" alt="avatar" class="w-10 h-10 rounded-full">
