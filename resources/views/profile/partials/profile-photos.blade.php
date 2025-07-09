@@ -1,6 +1,14 @@
 <div class="p-4 bg-white dark:bg-gray-800 shadow-sm sm:rounded-lg">
-    <div class="mb-4 space-x-2 dark:text-white">
-        Photos
+    <div class="mb-4 space-x-2 dark:text-white flex justify-between">
+        
+        <p class="font-bold">Photos</p>
+
+        @if ($photos->count() > 9)
+            <a href="{{ route('profile.photos.index', [$user->username]) }}">
+                See all photos
+            </a>
+        @endif
+
     </div>
 
     @if ($photos->count())
@@ -8,7 +16,7 @@
             @foreach ($photos as $photo)
                 <div>
                     <div class="w-full sm:max-w-xs md:max-w-sm lg:max-w-md aspect-square">
-                        <a href="{{ route('profile.photos.media.index', [$user->username, $photo->id]) }}?from=photos&back={{ $user->username }}">
+                        <a href="{{ route('profile.media.index', [$user->username, $photo->id]) }}?from=photos&back={{ $user->username }}">
                             <div class="aspect-square">
                                 <img
                                     src="{{ $photo->url }}"

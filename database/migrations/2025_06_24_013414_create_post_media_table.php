@@ -16,7 +16,9 @@ return new class extends Migration
             $table->foreignId('post_id')->constrained()->onDelete('cascade');
             $table->string('url');
             $table->string('type');
-            $table->string('public_id')->nullable();
+            $table->string('path');
+            $table->string('public_id');
+            $table->string('duration')->nullable();
             $table->timestamps();
         });             
     }

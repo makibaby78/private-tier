@@ -25,7 +25,7 @@
         <div>
             <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
                 @foreach ($post->media as $index => $media)
-                <a href="{{ route('profile.photos.media.index', [$user->username, $media->id]) }}?from=posts&back={{ $currentPath }}">
+                <a href="{{ route('profile.media.index', [$user->username, $media->id]) }}?from=posts&back={{ $currentPath }}">
                     @if ($media->type === 'image')
                         <img
                             src="{{ $media->url }}"

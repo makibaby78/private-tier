@@ -88,11 +88,11 @@
             @if ($i < 3)
                 <div class="relative w-full">
                     @if ($item['type'] === 'image')
-                        <a href="{{ route('profile.photos.media.index', [$post->user->username, $item->id]) }}?from=posts&back={{ $back }}">
+                        <a href="{{ route('profile.media.index', [$post->user->username, $item->id]) }}?from=posts&back={{ $back }}">
                             <img src="{{ $item['url'] }}" class="object-contain w-full h-auto">
                         </a>
                     @elseif ($item['type'] === 'video')
-                        <a href="{{ route('profile.photos.media.index', [$post->user->username, $item->id]) }}?from=posts&back={{ $back }}">
+                        <a href="{{ route('profile.media.index', [$post->user->username, $item->id]) }}?from=posts&back={{ $back }}">
                             <video
                                 class="w-full shadow cursor-pointer"
                                 style="max-height: 470px;"

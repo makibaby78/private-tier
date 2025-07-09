@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class PostMedia extends Model
 {
-    protected $fillable = ['post_id', 'url', 'type', 'public_id'];
+    protected $fillable = ['post_id', 'url', 'path', 'duration', 'type', 'public_id'];
 
     public function post()
     {

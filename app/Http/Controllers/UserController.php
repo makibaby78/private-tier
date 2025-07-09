@@ -113,7 +113,18 @@ class UserController extends Controller
 
     public function videos(string $username)
     {
-        return view('profile.videos.index', $this->resolveProfile($username, 'videos'));
+
+        $data = $this->resolveProfile($username, 'videos');
+
+        $user = $data['user'];
+
+        $data['videos'] = $user
+            ->media()
+            ->where('post_media.type', 'video') 
+            ->latest()
+            ->paginate(24);
+
+        return view('profile.videos.index', $data);
     }
     
     public function reels(string $username)
@@ -158,7 +169,7 @@ class UserController extends Controller
             default  => $back ? url($back) : url()->previous(),
         };
     
-        return view('profile.photos.media.index', compact('user', 'media', 'prevId', 'nextId', 'backUrl'));
+        return view('profile.media.index', compact('user', 'media', 'prevId', 'nextId', 'backUrl'));
     }
 
     public function updatePicture(Request $request, $username)

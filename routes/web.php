@@ -61,6 +61,8 @@ Route::prefix('{username}')
 
         Route::get('/photos', [UserController::class, 'photos'])->name('photos.index');
 
+        Route::get('/media/{media}', [UserController::class, 'showMedia'])->name('media.index');
+
         Route::prefix('/photos')
             ->as('photos.')
             ->group(function () {
@@ -70,8 +72,6 @@ Route::prefix('{username}')
             Route::get('/albums/{album}', [UserController::class, 'album'])->name('album.index');
 
             Route::get('/profile-pictures', [UserController::class, 'pictures'])->name('pictures.index');
-
-            Route::get('/media/{media}', [UserController::class, 'showMedia'])->name('media.index');
 
         });
 

@@ -41,17 +41,17 @@ class PostForm extends Component
 
         foreach ($this->media ?? [] as $file) {
             $mimeType = $file->getMimeType();
+            $mediaType = Str::startsWith($mimeType, 'video/') ? 'video' : 'image';
 
             $path = Storage::disk('cloudinary')->putFile('posts', $file);
             $url = Storage::disk('cloudinary')->url($path);
             $publicId = pathinfo($path, PATHINFO_FILENAME);
-
-            $mediaType = Str::startsWith($mimeType, 'video/') ? 'video' : 'image';
-
+        
             $post->media()->create([
                 'url'       => $url,
                 'type'      => $mediaType,
-                'public_id' => $path,
+                'path'      => $path,
+                'public_id' => $publicId,
             ]);
         }
 

@@ -37,7 +37,7 @@
                 @endif
 
                 @foreach ($mediaItems as $media)
-                <a href="{{ route('profile.photos.media.index', [$user->username, $media->id]) }}?from={{ request('from') }}&back={{ $back }}">
+                <a href="{{ route('profile.media.index', [$user->username, $media->id]) }}?from={{ request('from') }}&back={{ $back }}">
                     <div class="relative group">
                         <img src="{{ $media->url }}" alt="Media"
                             class="w-full object-cover rounded-md border border-gray-300">
