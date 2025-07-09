@@ -9,9 +9,13 @@
 
         <div class="pt-4 px-4">
             <div class="flex items-center gap-3">
-                <img src="{{ $post->user->profile_photo_url }}" class="w-10 h-10 rounded-full object-cover" alt="">
+                <a href="{{ route('profile.index', $post->user->username) }}">
+                    <img src="{{ $post->user->profile_photo_url }}" class="w-10 h-10 rounded-full object-cover" alt="{{ $post->user->name }}">
+                </a>
                 <div>
-                    <h2 class="dark:text-white font-bold">{{ $post->user->name }}</h2>
+                    <a href="{{ route('profile.index', $post->user->username) }}">
+                        <h2 class="dark:text-white font-bold">{{ $post->user->name }}</h2>
+                    </a>
                     <p class="text-sm text-gray-500 dark:text-white">{{ $post->created_at->diffForHumans() }}</p>
                 </div>
             </div>
@@ -35,12 +39,14 @@
             <div class="grid {{ $gridCols }} gap-2">
                 @foreach ($post->media as $index => $media)
                     @if ($media->type === 'image')
-                        <img
-                            src="{{ $media->url }}"
-                            loading="lazy"
-                            class="object-cover w-full h-full max-h-[470px]"
-                            alt="Post image"
-                        >
+                        <a href="{{ route('profile.media.index', [$post->user->username, $media->id]) }}?from=posts&back={{ $post->user->username . '/posts/' . $post->id }}">
+                            <img
+                                src="{{ $media->url }}"
+                                loading="lazy"
+                                class="object-cover w-full h-full max-h-[470px]"
+                                alt="Post image"
+                            >
+                        </a>
                     @elseif ($media->type === 'video')
 
                         <video

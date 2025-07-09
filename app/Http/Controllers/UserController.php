@@ -220,8 +220,9 @@ class UserController extends Controller
         // Save media reference to the post
         $post->media()->create([
             'url'       => $url,
-            'type'      => 'image', // optionally detect image/video by mime
-            'public_id' => $path,
+            'type'      => 'image',
+            'path'      => $path,
+            'public_id' => $publicId,
         ]);
     
         return back()->with('success', 'Profile picture updated successfully.');

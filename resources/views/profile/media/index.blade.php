@@ -41,7 +41,7 @@
 
 
             {{-- Right: Conditional Panel --}}
-            <div class="w-full md:w-[400px] h-[calc(40vh-32px)] md:h-[calc(100vh-64px)] bg-white text-black p-4 space-y-4" >
+            <div class="w-full md:w-[400px] h-[calc(40vh-32px)] md:h-[calc(100vh-64px)] bg-white dark:bg-gray-800  text-black dark:text-white p-4 space-y-4" >
                 <a href="{{ $backUrl }}"
                     class="inline-flex items-center text-sm text-blue-500 hover:underline">
                     ← Back
@@ -57,18 +57,17 @@
                 </div>
 
                 <div class="flex items-center space-x-3">
-                    <img src="{{ $media->post->user->profile_photo_url }}" alt="avatar" class="w-10 h-10 rounded-full">
+                    <a href="{{ route('profile.index', $media->post->user->username) }}">
+                        <img src="{{ $media->post->user->profile_photo_url }}" alt="avatar" class="w-10 h-10 rounded-full">
+                    </a>
                     <div>
-                        <h2 class="font-semibold">{{ $media->post->user->name }}</h2>
+                        <a href="{{ route('profile.index', $media->post->user->username) }}">
+                            <h2 class="font-semibold">{{ $media->post->user->name }}</h2>
+                        </a>
                         <p class="text-sm text-gray-500">{{ $media->created_at->format('F j, Y') }}</p>
                     </div>
                 </div>
 
-                @if ($media->post->media->count() === 1)
-                    <div class="text-sm">
-                        {!! nl2br(e($media->post->body)) !!}
-                    </div>
-                @endif
             </div>
         </div>
     </div>

@@ -53,33 +53,35 @@ Route::prefix('{username}')
     ->as('profile.')
     ->group(function () {
 
-        Route::post('/update-picture', [UserController::class, 'updatePicture'])->name('update-picture');
+        Route::middleware('auth')->group(function () {
+            Route::post('/update-picture', [UserController::class, 'updatePicture'])->name('update-picture');
 
-        Route::get('/about', [UserController::class, 'about'])->name('about.index');
+            Route::get('/about', [UserController::class, 'about'])->name('about.index');
+    
+            Route::get('/friends', [UserController::class, 'friends'])->name('friends.index');
+    
+            Route::get('/photos', [UserController::class, 'photos'])->name('photos.index');
 
-        Route::get('/friends', [UserController::class, 'friends'])->name('friends.index');
+            Route::get('/videos', [UserController::class, 'videos'])->name('videos.index');
 
-        Route::get('/photos', [UserController::class, 'photos'])->name('photos.index');
+            Route::get('/reels', [UserController::class, 'reels'])->name('reels.index');
+
+            Route::prefix('/photos')
+                ->as('photos.')
+                ->group(function () {
+
+                Route::get('/albums', [UserController::class, 'albums'])->name('albums.index');
+
+                Route::get('/albums/{album}', [UserController::class, 'album'])->name('album.index');
+
+                Route::get('/profile-pictures', [UserController::class, 'pictures'])->name('pictures.index');
+
+            });
+        });
+        
+        Route::get('/posts/{post}', SinglePostView::class)->name('posts.show');
 
         Route::get('/media/{media}', [UserController::class, 'showMedia'])->name('media.index');
-
-        Route::prefix('/photos')
-            ->as('photos.')
-            ->group(function () {
-
-            Route::get('/albums', [UserController::class, 'albums'])->name('albums.index');
-
-            Route::get('/albums/{album}', [UserController::class, 'album'])->name('album.index');
-
-            Route::get('/profile-pictures', [UserController::class, 'pictures'])->name('pictures.index');
-
-        });
-
-        Route::get('/videos', [UserController::class, 'videos'])->name('videos.index');
-
-        Route::get('/reels', [UserController::class, 'reels'])->name('reels.index');
-
-        Route::get('/posts/{post}', SinglePostView::class)->name('posts.show');
 
         Route::get('/', [UserController::class, 'index'])
             ->where('username', '^(?!login$|register$|admin$|dashboard$)[a-zA-Z0-9_]+$')

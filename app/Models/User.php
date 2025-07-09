@@ -89,7 +89,7 @@ class User extends Authenticatable
             ->latest()
             ->first();
 
-        return $post?->post?->mediaFile?->public_id;
+        return $post?->post?->mediaFile?->path;
     }
 
     public function media()

@@ -1,4 +1,4 @@
-<div class="flex items-center justify-between border-b border-gray-200 px-4 pb-2">
+<div class="flex items-center justify-between border-b border-gray-200 pb-2">
     <!-- Left: Sub-navigation tabs -->
     <div class="flex space-x-6 text-sm font-medium">
         {{-- <a href="{{ route('profile.photos.index', [$user->username, 'tab' => 'tagged']) }}"
