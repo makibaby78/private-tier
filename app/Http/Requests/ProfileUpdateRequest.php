@@ -34,8 +34,16 @@ class ProfileUpdateRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'firstname' => ['required', 'string', 'max:255'],
-            'lastname' => ['required', 'string', 'max:255'],
+            'firstname' => [
+                'required', 
+                'string', 
+                'max:255'
+            ],
+            'lastname' => [
+                'required', 
+                'string', 
+                'max:255'
+            ],
             'email' => [
                 'required',
                 'string',
@@ -49,6 +57,10 @@ class ProfileUpdateRequest extends FormRequest
                 'date',
                 'before:today',
                 'after:1900-01-01',
+            ],
+            'gender' => [
+                'required', 
+                Rule::in(['male', 'female', 'non_binary', 'prefer_not_to_say']),
             ],
             'middlename' => [
                 'nullable',

@@ -74,6 +74,19 @@
             :month="$birthdate?->month"
             :year="$birthdate?->year"
         />
+
+        <div class="mt-4">
+            <x-input-label for="gender" :value="__('Gender')" />
+            <select id="gender" name="gender" class="block mt-1 w-full border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-white focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm">
+                <option value="" disabled {{ old('gender', $user->gender) ? '' : 'selected' }}>Select your gender</option>
+                <option value="male" {{ old('gender', $user->gender) === 'male' ? 'selected' : '' }}>Male</option>
+                <option value="female" {{ old('gender', $user->gender) === 'female' ? 'selected' : '' }}>Female</option>
+                <option value="non_binary" {{ old('gender', $user->gender) === 'non_binary' ? 'selected' : '' }}>Non-binary</option>
+                <option value="prefer_not_to_say" {{ old('gender', $user->gender) === 'prefer_not_to_say' ? 'selected' : '' }}>Prefer not to say</option>
+            </select>
+            
+            <x-input-error :messages="$errors->get('gender')" class="mt-2" />
+        </div>
     
         <div class="flex items-center gap-4">
             <x-primary-button>{{ __('Save') }}</x-primary-button>

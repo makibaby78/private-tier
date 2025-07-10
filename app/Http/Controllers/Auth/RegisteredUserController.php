@@ -10,6 +10,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rules;
+use Illuminate\Validation\Rule;
 use Illuminate\View\View;
 
 class RegisteredUserController extends Controller
@@ -35,6 +36,7 @@ class RegisteredUserController extends Controller
             'birth_day' => ['required', 'integer', 'between:1,31'],
             'birth_month' => ['required', 'integer', 'between:1,12'],
             'birth_year' => ['required', 'integer', 'between:1900,' . now()->year],
+            'gender' => ['required', Rule::in(['male', 'female', 'non_binary', 'prefer_not_to_say'])],
             'username' => ['required', 'alpha_num', 'unique:users,username', 'not_in:login,register,admin,dashboard'],
             'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:'.User::class],
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
@@ -51,6 +53,7 @@ class RegisteredUserController extends Controller
             'firstname' => $request->firstname,
             'lastname' => $request->lastname,
             'birthdate' => $birthdate,
+            'gender' => $request->gender,
             'username' => $request->username,
             'email' => $request->email,
             'password' => Hash::make($request->password),
