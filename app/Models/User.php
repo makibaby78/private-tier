@@ -168,6 +168,11 @@ class User extends Authenticatable
             );
     }
 
+    public function isFriendWith(User $otherUser): bool
+    {
+        return $this->friends()->contains('id', $otherUser->id);
+    }
+
     // Check if a friend request is sent to another user
     public function hasSentFriendRequestTo(User $user)
     {

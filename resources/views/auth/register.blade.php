@@ -12,7 +12,7 @@
         <!-- Last Name -->
         <div class="mt-4">
             <x-input-label for="lastname" :value="__('Last Name')" />
-            <x-text-input id="lastname" class="block mt-1 w-full" type="text" name="lastname" :value="old('lastname')" required autofocus autocomplete="name" />
+            <x-text-input id="lastname" class="block mt-1 w-full" type="text" name="lastname" :value="old('lastname')" required autocomplete="name" />
             <x-input-error :messages="$errors->get('lastname')" class="mt-2" />
         </div>
 
@@ -20,22 +20,22 @@
         <x-birthdate-picker />
 
         <!-- Gender -->
-        <div class="mt-4">
-            <x-input-label for="gender" :value="__('Gender')" />
-            <select id="gender" name="gender" class="block mt-1 w-full border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-white focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm">
-                <option value="" disabled {{ old('gender', $user->gender) ? '' : 'selected' }}>Select your gender</option>
-                <option value="male" {{ old('gender', $user->gender) === 'male' ? 'selected' : '' }}>Male</option>
-                <option value="female" {{ old('gender', $user->gender) === 'female' ? 'selected' : '' }}>Female</option>
-                <option value="non_binary" {{ old('gender', $user->gender) === 'non_binary' ? 'selected' : '' }}>Non-binary</option>
-                <option value="prefer_not_to_say" {{ old('gender', $user->gender) === 'prefer_not_to_say' ? 'selected' : '' }}>Prefer not to say</option>
-            </select>
-            <x-input-error :messages="$errors->get('gender')" class="mt-2" />
-        </div>
+    <div class="mt-4">
+        <x-input-label for="gender" :value="__('Gender')" />
+        <select id="gender" name="gender" class="block mt-1 w-full border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-white focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm">
+            <option value="" disabled selected>Select your gender</option>
+            <option value="male" {{ old('gender') === 'male' ? 'selected' : '' }}>Male</option>
+            <option value="female" {{ old('gender') === 'female' ? 'selected' : '' }}>Female</option>
+            <option value="non_binary" {{ old('gender') === 'non_binary' ? 'selected' : '' }}>Non-binary</option>
+            <option value="prefer_not_to_say" {{ old('gender') === 'prefer_not_to_say' ? 'selected' : '' }}>Prefer not to say</option>
+        </select>
+        <x-input-error :messages="$errors->get('gender')" class="mt-2" />
+    </div>
 
         <!-- Username -->
         <div class="mt-4">
             <x-input-label for="username" :value="__('Username')" />
-            <x-text-input id="username" class="block mt-1 w-full" type="text" name="username" :value="old('username')" required autofocus autocomplete="username" />
+            <x-text-input id="username" class="block mt-1 w-full" type="text" name="username" :value="old('username')" required autocomplete="username" />
             <x-input-error :messages="$errors->get('username')" class="mt-2" />
         </div>
 

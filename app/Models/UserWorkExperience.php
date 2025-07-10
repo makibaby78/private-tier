@@ -20,6 +20,12 @@ class UserWorkExperience extends Model
         'visibility',
     ];
 
+    protected $casts = [
+        'start_date' => 'date',
+        'end_date' => 'date',
+        'is_current' => 'boolean',
+    ];
+
     public function user()
     {
         return $this->belongsTo(User::class);
