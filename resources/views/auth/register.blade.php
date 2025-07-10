@@ -16,6 +16,9 @@
             <x-input-error :messages="$errors->get('lastname')" class="mt-2" />
         </div>
 
+        <!-- Birthdate -->
+        <x-birthdate-picker />
+
         <!-- Username -->
         <div class="mt-4">
             <x-input-label for="username" :value="__('Username')" />
