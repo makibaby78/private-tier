@@ -20,6 +20,7 @@
     </head>
     <body class="font-sans antialiased">
         <div class="min-h-screen bg-gray-100 dark:bg-gray-900 relative">
+            <x-flash-message />
             @include('layouts.navigation')
             <div class="w-full h-16"></div>
             <!-- Page Content -->

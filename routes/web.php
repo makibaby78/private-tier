@@ -1,6 +1,6 @@
 <?php
 
-use App\Http\Controllers\SetttingsController;
+use App\Http\Controllers\SettingsController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\FriendshipController;
@@ -14,9 +14,9 @@ use Illuminate\Http\Request;
 Route::get('/', [HomeController::class, 'index'])->name('home');
 
 Route::middleware('auth')->group(function () {
-    Route::get('/settings', [SetttingsController::class, 'edit'])->name('settings.edit');
-    Route::patch('/settings', [SetttingsController::class, 'update'])->name('settings.update');
-    Route::delete('/settings', [SetttingsController::class, 'destroy'])->name('settings.destroy');
+    Route::get('/settings', [SettingsController::class, 'edit'])->name('settings.edit');
+    Route::patch('/settings', [SettingsController::class, 'update'])->name('settings.update');
+    Route::delete('/settings', [SettingsController::class, 'destroy'])->name('settings.destroy');
 
     Route::post('/friend-request/send/{id}', [FriendshipController::class, 'sendRequest'])->name('friend.send');
     Route::post('/friend-request/accept/{id}', [FriendshipController::class, 'acceptRequest'])->name('friend.accept');

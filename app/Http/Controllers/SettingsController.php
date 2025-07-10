@@ -8,13 +8,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\View\View;
-use Illuminate\Support\Facades\Storage;
-use App\Models\Post;
-use App\Models\PostMedia;
-use App\Models\ProfilePicture;
 
-
-class SetttingsController extends Controller
+class SettingsController extends Controller
 {
     /**
      * Display the user's settings form.
@@ -31,6 +26,7 @@ class SetttingsController extends Controller
      */
     public function update(ProfileUpdateRequest $request): RedirectResponse
     {
+ 
         $request->user()->fill($request->validated());
 
         if ($request->user()->isDirty('email')) {
@@ -39,7 +35,12 @@ class SetttingsController extends Controller
 
         $request->user()->save();
 
-        return Redirect::route('settings.edit')->with('status', 'settings-updated');
+        return Redirect::route('settings.edit')
+                ->with([
+                    'status' => 'settings-updated',
+                    'message' => 'Your settings have been saved.',
+                    'type' => 'success',
+                ]);
     }
 
     /**
