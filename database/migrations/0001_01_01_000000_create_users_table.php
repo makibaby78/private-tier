@@ -22,10 +22,12 @@ return new class extends Migration
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
             $table->date('birthdate')->nullable();
+            $table->enum('gender', ['male', 'female', 'non_binary', 'prefer_not_to_say'])->nullable();
+            $table->enum('gender_visibility', ['public', 'friends', 'only_me'])->default('public');
             $table->rememberToken();
             $table->timestamps();
         });
-
+        
         Schema::create('password_reset_tokens', function (Blueprint $table) {
             $table->string('email')->primary();
             $table->string('token');

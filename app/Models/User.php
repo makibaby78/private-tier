@@ -50,6 +50,31 @@ class User extends Authenticatable
         ];
     }
 
+    public function workExperiences()
+    {
+        return $this->hasMany(UserWorkExperience::class);
+    }
+
+    public function education()
+    {
+        return $this->hasMany(UserEducation::class);
+    }
+
+    public function places()
+    {
+        return $this->hasMany(UserPlace::class);
+    }
+
+    public function relationship()
+    {
+        return $this->hasOne(UserRelationship::class);
+    }
+
+    public function contacts()
+    {
+        return $this->hasMany(UserContact::class);
+    }
+
     public function profilePictures()
     {
         return $this->hasManyThrough(
