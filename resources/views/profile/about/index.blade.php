@@ -11,6 +11,8 @@
             <livewire:place-section :user="$user" :is-owner="$isOwnProfile" />
 
             <livewire:info-section :user="$user" :is-owner="$isOwnProfile" />
+
+            <livewire:relationship-section :user="$user" :is-owner="$isOwnProfile" />
         </div>
     </div>
 

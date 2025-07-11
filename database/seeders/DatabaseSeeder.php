@@ -109,6 +109,8 @@ class DatabaseSeeder extends Seeder
             UserWorkExperienceSeeder::class,
             UserEducationSeeder::class,
             UserPlaceSeeder::class,
+            UserContactSeeder::class,
+            UserRelationshipSeeder::class,
         ]);
     }
 }
