@@ -7,6 +7,8 @@
             <livewire:work-section :user="$user" :is-owner="$isOwnProfile" />
 
             <livewire:education-section :user="$user" :is-owner="$isOwnProfile" />
+
+            <livewire:place-section :user="$user" :is-owner="$isOwnProfile" />
         </div>
     </div>
 

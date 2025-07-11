@@ -12,31 +12,31 @@
 
     @if ($showForm)
         <form wire:submit="{{ $editingId ? 'update' : 'save' }}" class="space-y-3 bg-white dark:bg-gray-800 p-4 rounded-md border dark:border-gray-700">
-            <select wire:model.live="level" class="w-full border rounded dark:bg-gray-900 dark:text-white">
+            <select id="education_level" wire:model.live="level" class="w-full border rounded dark:bg-gray-900 dark:text-white">
                 <option value="college">College</option>
                 <option value="highschool">High School</option>
                 <option value="others">Others</option>
             </select>
 
-            <x-text-input wire:model.live="school" placeholder="School" class="w-full" />
+            <x-text-input id="education_school" wire:model.live="school" placeholder="School" class="w-full" />
 
             @if ($level === 'college')
-                <x-text-input wire:model.live="degree" placeholder="Degree (e.g. BS Computer Science)" class="w-full" />
+                <x-text-input id="education_degree" wire:model.live="degree" placeholder="Degree (e.g. BS Computer Science)" class="w-full" />
             @endif
 
             <div class="flex gap-2">
-                <x-text-input wire:model.live="start_date" type="date" class="w-full" />
+                <x-text-input id="education_start" wire:model.live="start_date" type="date" class="w-full" />
                 @unless($is_current)
-                    <x-text-input wire:model.live="end_date" type="date" class="w-full" />
+                    <x-text-input id="education_end" wire:model.live="end_date" type="date" class="w-full" />
                 @endunless
             </div>
 
             <label class="flex items-center space-x-2">
-                <input type="checkbox" wire:model.live="is_current" />
+                <input id="education_current" type="checkbox" wire:model.live="is_current" />
                 <span class="text-sm dark:text-white">Currently studying here</span>
             </label>
 
-            <select wire:model.live="visibility" class="w-full border rounded dark:bg-gray-900 dark:text-white">
+            <select id="education_visibility" wire:model.live="visibility" class="w-full border rounded dark:bg-gray-900 dark:text-white">
                 <option value="public">Public</option>
                 <option value="friends">Friends</option>
                 <option value="only_me">Only Me</option>

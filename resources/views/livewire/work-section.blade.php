@@ -6,31 +6,33 @@
     @if ($isOwner)
         @if ($showForm)
             <form wire:submit="{{ $editingId ? 'update' : 'save' }}" class="space-y-3 p-4 rounded-md border dark:border-gray-700">
-                <x-text-input wire:model.live="position" id="position" name="position" type="text" class="mt-1 block w-full"  autocomplete="position" placeholder="Position" />
-                <x-text-input wire:model.live="company" id="company" name="company" type="text" class="mt-1 block w-full" autocomplete="company" placeholder="Company" />
-                <x-text-input wire:model.live="location" id="location" name="location" type="text" class="mt-1 block w-full" autocomplete="location" placeholder="Location" />
+                <x-text-input id="work_position" wire:model.live="position" id="position" name="position" type="text" class="mt-1 block w-full"  autocomplete="position" placeholder="Position" />
+
+                <x-text-input id="work_company" wire:model.live="company" id="company" name="company" type="text" class="mt-1 block w-full" autocomplete="company" placeholder="Company" />
+
+                <x-text-input id="work_location" wire:model.live="location" id="location" name="location" type="text" class="mt-1 block w-full" autocomplete="location" placeholder="Location" />
 
                 <div class="flex gap-2">
                     <div>
-                        <x-input-label :value="__('Start Date')" />
-                        <x-text-input wire:model.live="start_date" type="date" class="border p-2 rounded" />
+                        <x-input-label for="work_start" :value="__('Start Date')" />
+                        <x-text-input id="work_start" wire:model.live="start_date" type="date" class="border p-2 rounded" />
                     </div>
 
                     @unless($is_current)
                         <div>
-                            <x-input-label :value="__('End Date')" />
-                            <x-text-input wire:model.live="end_date" type="date" class="border p-2 rounded" />
+                            <x-input-label for="work_end" :value="__('End Date')" />
+                            <x-text-input id="work_end" wire:model.live="end_date" type="date" class="border p-2 rounded" />
                         </div>
                     @endunless
                 </div>
 
                 <label class="flex items-center gap-2 dark:text-white">
-                    <input type="checkbox" wire:model.live="is_current" />
+                    <input id="work_current" type="checkbox" wire:model.live="is_current" />
                     Currently working here
                 </label>
 
                 <div>
-                    <select wire:model.live="visibility" class="w-full border rounded dark:bg-gray-900 dark:text-white">
+                    <select id="work_visibility" wire:model.live="visibility" class="w-full border rounded dark:bg-gray-900 dark:text-white">
                         <option value="public">Public</option>
                         <option value="friends">Friends</option>
                         <option value="only_me">Only Me</option>
