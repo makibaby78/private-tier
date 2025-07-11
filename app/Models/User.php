@@ -203,4 +203,8 @@ class User extends Authenticatable
         return $this->hasMany(\App\Models\Post::class);
     }
 
+    public function educations()
+    {
+        return $this->hasMany(\App\Models\UserEducation::class);
+    }
 }

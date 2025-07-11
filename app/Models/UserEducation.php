@@ -9,11 +9,13 @@ class UserEducation extends Model
 {
     use HasFactory;
 
+    protected $table = 'user_educations';
+
     protected $fillable = [
         'user_id',
         'school',
         'degree',
-        'field_of_study',
+        'level',
         'start_date',
         'end_date',
         'is_current',

@@ -1,9 +1,11 @@
 <div class="space-y-4">
-    <h2 class="dark:text-white text-lg font-semibold">Work</h2>
+    @if ($isOwner || count($this->experiences))
+        <h2 class="dark:text-white text-lg font-semibold">Work</h2>
+    @endif
 
     @if ($isOwner)
         @if ($showForm)
-            <form wire:submit="{{ $editingId ? 'update' : 'save' }}" class="space-y-3">
+            <form wire:submit="{{ $editingId ? 'update' : 'save' }}" class="space-y-3 p-4 rounded-md border dark:border-gray-700">
                 <x-text-input wire:model.live="position" id="position" name="position" type="text" class="mt-1 block w-full"  autocomplete="position" placeholder="Position" />
                 <x-text-input wire:model.live="company" id="company" name="company" type="text" class="mt-1 block w-full" autocomplete="company" placeholder="Company" />
                 <x-text-input wire:model.live="location" id="location" name="location" type="text" class="mt-1 block w-full" autocomplete="location" placeholder="Location" />
@@ -27,8 +29,8 @@
                     Currently working here
                 </label>
 
-                <div class="max-w-xs">
-                    <select wire:model.live="visibility" class="border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm">
+                <div>
+                    <select wire:model.live="visibility" class="w-full border rounded dark:bg-gray-900 dark:text-white">
                         <option value="public">Public</option>
                         <option value="friends">Friends</option>
                         <option value="only_me">Only Me</option>
@@ -39,7 +41,7 @@
                     <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded">
                         {{ $editingId ? 'Update' : 'Save' }}
                     </button>
-                    <button type="button" wire:click="cancelEdit" class="text-gray-600">Cancel</button>
+                    <button type="button" wire:click="cancelEdit" class="text-gray-600 dark:text-gray-300">Cancel</button>
                 </div>
             </form>
         @else
@@ -55,10 +57,6 @@
     @foreach ($this->experiences as $exp)
         <div class="flex items-start justify-between bg-white dark:bg-gray-900 rounded-lg p-4 shadow-sm border dark:border-gray-700">
             <div class="flex gap-3">
-                <div class="w-10 h-10">
-                    <img src="https://via.placeholder.com/40x40/1f2937/ffffff.png?text=Web" alt="Company Logo" class="rounded-full w-10 h-10 object-cover">
-                </div>
-
                 <div>
                     <div class="text-sm text-gray-800 dark:text-white">
                         <span class="font-semibold">{{ $exp->position }}</span>

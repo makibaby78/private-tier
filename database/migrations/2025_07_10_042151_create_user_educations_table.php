@@ -11,12 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('user_education', function (Blueprint $table) {
+        Schema::create('user_educations', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
             $table->string('school');
             $table->string('degree')->nullable();
-            $table->string('field_of_study')->nullable();
+            $table->enum('level', ['highschool', 'college', 'others'])->default('college');
             $table->date('start_date')->nullable();
             $table->date('end_date')->nullable();
             $table->boolean('is_current')->default(false);
@@ -30,6 +30,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('user_education');
+        Schema::dropIfExists('user_educations');
     }
 };

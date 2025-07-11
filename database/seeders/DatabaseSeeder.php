@@ -105,11 +105,9 @@ class DatabaseSeeder extends Seeder
 
         $this->call([
             FriendshipSeeder::class,
-        ]);
-
-        $this->call([
             PostSeeder::class,
+            UserWorkExperienceSeeder::class,
+            UserEducationSeeder::class,
         ]);
-
     }
 }
