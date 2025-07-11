@@ -2,8 +2,9 @@
 
     @include('profile.partials.profile-header')
 
-    <div class="profile-l-r max-w-7xl mx-auto sm:px-6 md:px-8 flex flex-col md:flex-row gap-4">
+    <div class="profile-l-r max-w-7xl mx-auto sm:px-6 lg:px-8 flex flex-col md:flex-row gap-4">
         <div class="profile-left w-full md:w-2/5 space-y-4">
+            <livewire:intro-section :user="$user" />
 
             @include('profile.partials.profile-photos')
 

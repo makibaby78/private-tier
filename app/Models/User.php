@@ -207,4 +207,25 @@ class User extends Authenticatable
     {
         return $this->hasMany(\App\Models\UserEducation::class);
     }
+
+    public function currentJob()
+    {
+        return $this->hasOne(UserWorkExperience::class)->where('is_current', true);
+    }
+
+    public function previousJobs()
+    {
+        return $this->hasMany(UserWorkExperience::class)->where('is_current', false);
+    }
+
+    public function currentCity()
+    {
+        return $this->hasOne(UserPlace::class)->where('type', 'current_city');
+    }
+
+    public function hometown()
+    {
+        return $this->hasOne(UserPlace::class)->where('type', 'hometown');
+    }
+
 }
