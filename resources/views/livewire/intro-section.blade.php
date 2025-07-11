@@ -29,16 +29,16 @@
 
         {{-- Places --}}
         @if ($user->currentCity && $user->currentCity->visibility === 'public')
-            <li>Lives in {{ $user->currentCity->city }}</li>
+            <li>Lives in <strong>{{ $user->currentCity->city }}</strong></li>
         @endif
 
         @if ($user->hometown && $user->hometown->visibility === 'public')
-            <li>From {{ $user->hometown->value }}</li>
+            <li>From <strong>{{ $user->hometown->value }}</strong></li>
         @endif
 
         {{-- Relationship --}}
         @if ($user->relationship && $user->relationship->visibility === 'public')
-            <li>{{ $user->relationship->status }}</li>
+            <li><strong>{{ $user->relationship->status }}</strong></li>
         @endif
 
         {{-- Website from contacts --}}
