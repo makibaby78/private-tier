@@ -108,6 +108,7 @@ class DatabaseSeeder extends Seeder
             PostSeeder::class,
             UserWorkExperienceSeeder::class,
             UserEducationSeeder::class,
+            UserPlaceSeeder::class,
         ]);
     }
 }

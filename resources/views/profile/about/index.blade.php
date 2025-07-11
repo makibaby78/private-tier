@@ -9,6 +9,8 @@
             <livewire:education-section :user="$user" :is-owner="$isOwnProfile" />
 
             <livewire:place-section :user="$user" :is-owner="$isOwnProfile" />
+
+            <livewire:info-section :user="$user" :is-owner="$isOwnProfile" />
         </div>
     </div>
 
