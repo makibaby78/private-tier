@@ -1,5 +1,5 @@
 <div class="p-2 space-y-1">
-    <h2 class="px-2 text-lg font-bold">Chats</h2>
+    <h2 class="px-2 text-lg font-bold dark:text-white">Chats</h2>
 
     @foreach ($friendsWithLastMessage as $friend)
         <button 

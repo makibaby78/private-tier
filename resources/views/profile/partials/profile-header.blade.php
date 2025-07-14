@@ -78,12 +78,12 @@
                         Videos
                     </a>
                 </li>
-                <li>
+                {{-- <li>
                     <a href="{{ route('profile.reels.index', ['username' => $user->username]) }}"
                     class="py-4 inline-block dark:text-white {{ $activeTab === 'reels' ? 'text-blue-600 border-b-2 border-blue-600' : 'text-gray-600 hover:text-gray-400' }}">
                         Reels
                     </a>
-                </li>
+                </li> --}}
                 {{-- <li class="relative group">
                     <button class="py-4 inline-block text-gray-600 hover:text-black flex items-center focus:outline-none">
                         More
