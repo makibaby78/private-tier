@@ -30,9 +30,15 @@ Route::middleware('auth')->group(function () {
             return view('friends.index');
         })->name('index');
 
-        Route::get('/requests', function () {
-            return view('friends.requests.index');
-        })->name('requests.index');
+        Route::prefix('requests')->name('requests.')->group(function () {
+            Route::get('/', function () {
+                return view('friends.requests.index');
+            })->name('index');
+
+            Route::get('/{username}', function () {
+                return view('friends.requests.show');
+            })->name('show');
+        });
 
         Route::get('/suggestions', function () {
             return view('friends.suggestions.index');
