@@ -36,9 +36,26 @@
             <li>From <strong>{{ $user->hometown->value }}</strong></li>
         @endif
 
-        {{-- Relationship --}}
-        @if ($user->relationship && $user->relationship->visibility === 'public')
-            <li><strong>{{ $user->relationship->status }}</strong></li>
+        @if ($canViewRelationship && $relationship)
+            <li>
+                <strong>{{ ucwords(str_replace('_', ' ', $relationship->status)) }}</strong>
+        
+                @if ($relationship->partner && $relationship->confirmed)
+                    with <a href="{{ route('profile.index', $relationship->partner->username) }}" class="text-blue-600 hover:underline">
+                        {{ $relationship->partner->name }}
+                    </a>
+                @endif
+        
+                @if ($relationship->since)
+                    since {{ \Carbon\Carbon::parse($relationship->since)->format('F Y') }}
+                @endif
+        
+                @if ($isOwner && !$relationship->confirmed && $relationship->partner_id)
+                    <div class="text-xs text-yellow-600 dark:text-yellow-400">
+                        Pending confirmation from partner. This won't be visible publicly until confirmed.
+                    </div>
+                @endif
+            </li>
         @endif
 
         {{-- Website from contacts --}}

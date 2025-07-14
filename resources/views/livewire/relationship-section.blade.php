@@ -21,18 +21,61 @@
                 @endforeach
             </select>
 
-            {{-- Partner & Since --}}
+            {{-- Partner selector --}}
             @if ($status !== 'single')
-                <input
-                    type="number"
-                    wire:model.live="partner_id"
-                    class="w-full border rounded dark:bg-gray-900 dark:text-white"
-                    placeholder="Partner User ID (optional)"
-                >
+                <div x-data="{ open: false }" class="relative">
+                    <button
+                        type="button"
+                        @click="open = !open"
+                        class="w-full border px-4 py-2 rounded dark:bg-gray-900 dark:text-white flex items-center justify-between"
+                    >
+                        <div class="flex items-center gap-2">
+                            @if ($partner_id)
+                                @php
+                                    $selectedFriend = $friends->firstWhere('id', $partner_id);
+                                @endphp
+                                <x-profile-photo 
+                                    :path="$selectedFriend?->profile_public_id" 
+                                    :alt="$selectedFriend?->name"
+                                    class="w-6 h-6 rounded-full object-cover"
+                                />
+                                <span>{{ $selectedFriend?->name }}</span>
+                            @else
+                                <span class="text-gray-400">Select Partner (Friend)</span>
+                            @endif
+                        </div>
+                
+                        <svg class="w-4 h-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path d="M19 9l-7 7-7-7" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"/>
+                        </svg>
+                    </button>
+                
+                    <div
+                        x-show="open"
+                        @click.away="open = false"
+                        class="absolute z-50 mt-2 w-full max-h-64 overflow-y-auto rounded bg-white dark:bg-gray-800 border dark:border-gray-700 shadow"
+                    >
+                        @foreach ($friends as $friend)
+                            <div
+                                wire:click="$set('partner_id', {{ $friend->id }})"
+                                @click="open = false"
+                                class="flex items-center gap-2 px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer"
+                            >
+                                <x-profile-photo 
+                                    :path="$friend->profile_public_id" 
+                                    :alt="$friend->name"
+                                    class="w-6 h-6 rounded-full object-cover"
+                                />
+                                <span class="text-sm text-gray-900 dark:text-white">{{ $friend->name }}</span>
+                            </div>
+                        @endforeach
+                    </div>
+                </div>
+            
 
                 <input
                     type="date"
-                    wire:model.live="since"
+                    wire:model="since"
                     class="w-full border rounded dark:bg-gray-900 dark:text-white"
                 >
 

@@ -228,4 +228,8 @@ class User extends Authenticatable
         return $this->hasOne(UserPlace::class)->where('type', 'hometown');
     }
 
+    public function partner()
+    {
+        return $this->belongsTo(User::class, 'partner_id');
+    }
 }

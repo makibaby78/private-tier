@@ -12,7 +12,7 @@
 
             <livewire:info-section :user="$user" :is-owner="$isOwnProfile" />
 
-            <livewire:relationship-section :user="$user" :is-owner="$isOwnProfile" />
+            <livewire:relationship-section :user="$user" :is-owner="$isOwnProfile" :is-friend="auth()->user()?->isFriendWith($user)" />
         </div>
     </div>
 

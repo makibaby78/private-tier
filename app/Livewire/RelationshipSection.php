@@ -21,6 +21,7 @@ class RelationshipSection extends Component
     public $editing = false;
     public $relationship;
     public $incomingRequest;
+    public $friends = [];
 
     public function mount($user, $isOwner, $isFriend = false)
     {
@@ -37,10 +38,13 @@ class RelationshipSection extends Component
             $this->visibility = $this->relationship->visibility;
         }
 
-        // Find incoming request to this user
         $this->incomingRequest = UserRelationship::where('partner_id', $user->id)
             ->where('confirmed', false)
             ->first();
+
+        if ($this->isOwner) {
+            $this->friends = $this->user->friends();
+        }
     }
 
     public function updatedStatus($value)
@@ -62,15 +66,28 @@ class RelationshipSection extends Component
 
         $existing = $this->relationship;
 
+        $existingSince = $existing->since ? \Carbon\Carbon::parse($existing->since)->format('Y-m-d') : null;
+        $dataSince = $data['since'] ?? null;
+        
+        if (
+            $existing &&
+            $existing->status === $data['status'] &&
+            (int) $existing->partner_id === (int) $data['partner_id'] &&
+            $existingSince === $dataSince &&
+            $existing->visibility === $data['visibility']
+        ) {
+            $this->editing = false;
+            return;
+        }        
+    
         if ($data['status'] === 'single') {
-            // Remove partner's record if needed
             if ($existing && $existing->partner_id) {
+                // Remove the mirrored partner record
                 UserRelationship::where('user_id', $existing->partner_id)
                     ->where('partner_id', $this->user->id)
                     ->delete();
             }
 
-            // Save own record as single
             UserRelationship::updateOrCreate(
                 ['user_id' => $this->user->id],
                 [
@@ -81,9 +98,8 @@ class RelationshipSection extends Component
                     'confirmed' => true,
                 ]
             );
-
         } else {
-            // Save new relationship request
+
             $data['confirmed'] = $data['partner_id'] ? false : true;
 
             UserRelationship::updateOrCreate(
