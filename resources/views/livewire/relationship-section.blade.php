@@ -11,7 +11,7 @@
         </button>
     @endif
 
-    {{-- Edit form --}}
+    {{-- Edit Form --}}
     @if ($editing)
         <form wire:submit.prevent="save" class="space-y-3 bg-white dark:bg-gray-800 p-4 rounded-md border dark:border-gray-700">
             {{-- Status --}}
@@ -21,7 +21,7 @@
                 @endforeach
             </select>
 
-            {{-- Partner selector --}}
+            {{-- Partner Dropdown (only if not single) --}}
             @if ($status !== 'single')
                 <div x-data="{ open: false }" class="relative">
                     <button
@@ -30,29 +30,25 @@
                         class="w-full border px-4 py-2 rounded dark:bg-gray-900 dark:text-white flex items-center justify-between"
                     >
                         <div class="flex items-center gap-2">
-                            @if ($partner_id)
-                                @php
-                                    $selectedFriend = $friends->firstWhere('id', $partner_id);
-                                @endphp
-                                <x-profile-photo 
-                                    :path="$selectedFriend?->profile_public_id" 
-                                    :alt="$selectedFriend?->name"
-                                    class="w-6 h-6 rounded-full object-cover"
-                                />
-                                <span>{{ $selectedFriend?->name }}</span>
+                            @php
+                                $selected = $friends->firstWhere('id', $partner_id);
+                            @endphp
+                            @if ($selected)
+                                <x-profile-photo :path="$selected->profile_public_id" :alt="$selected->name" class="w-6 h-6 rounded-full object-cover" />
+                                <span>{{ $selected->name }}</span>
                             @else
                                 <span class="text-gray-400">Select Partner (Friend)</span>
                             @endif
                         </div>
-                
                         <svg class="w-4 h-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path d="M19 9l-7 7-7-7" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"/>
                         </svg>
                     </button>
-                
+
                     <div
                         x-show="open"
                         @click.away="open = false"
+                        x-cloak
                         class="absolute z-50 mt-2 w-full max-h-64 overflow-y-auto rounded bg-white dark:bg-gray-800 border dark:border-gray-700 shadow"
                     >
                         @foreach ($friends as $friend)
@@ -61,21 +57,16 @@
                                 @click="open = false"
                                 class="flex items-center gap-2 px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer"
                             >
-                                <x-profile-photo 
-                                    :path="$friend->profile_public_id" 
-                                    :alt="$friend->name"
-                                    class="w-6 h-6 rounded-full object-cover"
-                                />
+                                <x-profile-photo :path="$friend->profile_public_id" :alt="$friend->name" class="w-6 h-6 rounded-full object-cover" />
                                 <span class="text-sm text-gray-900 dark:text-white">{{ $friend->name }}</span>
                             </div>
                         @endforeach
                     </div>
                 </div>
-            
 
                 <input
                     type="date"
-                    wire:model="since"
+                    wire:model.live="since"
                     class="w-full border rounded dark:bg-gray-900 dark:text-white"
                 >
 
@@ -93,7 +84,7 @@
                 <option value="only_me">Only Me</option>
             </select>
 
-            {{-- Form actions --}}
+            {{-- Actions --}}
             <div class="flex gap-2">
                 <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded">Save</button>
                 <button type="button" wire:click="cancel" class="text-gray-600 dark:text-gray-300">Cancel</button>
@@ -101,7 +92,7 @@
         </form>
     @endif
 
-    {{-- Display relationship --}}
+    {{-- Relationship Display --}}
     @if ($canView && $relationship)
         <div class="text-sm text-gray-800 dark:text-white">
             {{ ucwords(str_replace('_', ' ', $relationship->status)) }}
@@ -122,7 +113,7 @@
         </div>
     @endif
 
-    {{-- Incoming request --}}
+    {{-- Incoming Request --}}
     @if ($isOwner && $incomingRequest)
         <div class="bg-yellow-50 dark:bg-gray-700 p-4 rounded border dark:border-gray-600 text-sm">
             <div class="mb-2 text-gray-800 dark:text-gray-100">

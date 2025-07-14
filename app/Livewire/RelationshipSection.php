@@ -29,7 +29,9 @@ class RelationshipSection extends Component
         $this->isOwner = $isOwner;
         $this->isFriend = $isFriend;
 
-        $this->relationship = UserRelationship::where('user_id', $user->id)->first();
+        $this->relationship = UserRelationship::withTrashed()
+            ->where('user_id', $user->id)
+            ->first();
 
         if ($this->relationship) {
             $this->status = $this->relationship->status;
@@ -38,7 +40,8 @@ class RelationshipSection extends Component
             $this->visibility = $this->relationship->visibility;
         }
 
-        $this->incomingRequest = UserRelationship::where('partner_id', $user->id)
+        $this->incomingRequest = UserRelationship::withTrashed()
+            ->where('partner_id', $user->id)
             ->where('confirmed', false)
             ->first();
 
@@ -64,11 +67,28 @@ class RelationshipSection extends Component
             'visibility' => 'required|in:public,friends,only_me',
         ]);
 
+        if ($data['partner_id'] && $data['partner_id'] == $this->user->id) {
+            $this->addError('partner_id', 'You cannot be in a relationship with yourself.');
+            return;
+        }
+
+        if ($data['partner_id']) {
+            $existingPartnerRelationship = UserRelationship::withTrashed()
+                ->where('user_id', $data['partner_id'])
+                ->where('confirmed', true)
+                ->first();
+
+            if ($existingPartnerRelationship && $existingPartnerRelationship->partner_id !== $this->user->id) {
+                $this->addError('partner_id', 'This user is already in a relationship.');
+                return;
+            }
+        }
+
         $existing = $this->relationship;
 
         $existingSince = $existing->since ? \Carbon\Carbon::parse($existing->since)->format('Y-m-d') : null;
         $dataSince = $data['since'] ?? null;
-        
+
         if (
             $existing &&
             $existing->status === $data['status'] &&
@@ -78,41 +98,45 @@ class RelationshipSection extends Component
         ) {
             $this->editing = false;
             return;
-        }        
-    
-        if ($data['status'] === 'single') {
-            if ($existing && $existing->partner_id) {
-                // Remove the mirrored partner record
-                UserRelationship::where('user_id', $existing->partner_id)
-                    ->where('partner_id', $this->user->id)
-                    ->delete();
-            }
+        }
 
+        // Remove existing mirrored relationship
+        if ($existing && $existing->partner_id && $existing->partner_id != $data['partner_id']) {
+            UserRelationship::withTrashed()
+                ->where('user_id', $existing->partner_id)
+                ->where('partner_id', $this->user->id)
+                ->forceDelete();
+        }
+
+        // Remove outgoing pending requests
+        UserRelationship::withTrashed()
+            ->where('user_id', $this->user->id)
+            ->where('confirmed', false)
+            ->forceDelete();
+
+        if ($data['status'] === 'single') {
             UserRelationship::updateOrCreate(
                 ['user_id' => $this->user->id],
                 [
-                    'status' => $data['status'],
-                    'since' => $data['since'],
-                    'visibility' => $data['visibility'],
+                    'status' => 'single',
                     'partner_id' => null,
+                    'since' => null,
+                    'visibility' => $data['visibility'],
                     'confirmed' => true,
+                    'deleted_at' => null,
                 ]
             );
         } else {
-
             $data['confirmed'] = $data['partner_id'] ? false : true;
 
             UserRelationship::updateOrCreate(
                 ['user_id' => $this->user->id],
-                $data
+                array_merge($data, ['deleted_at' => null])
             );
         }
 
         $this->editing = false;
-        $this->relationship = UserRelationship::where('user_id', $this->user->id)->first();
-        $this->incomingRequest = UserRelationship::where('partner_id', $this->user->id)
-            ->where('confirmed', false)
-            ->first();
+        $this->mount($this->user, $this->isOwner, $this->isFriend);
     }
 
     public function edit()
@@ -128,19 +152,32 @@ class RelationshipSection extends Component
     public function accept()
     {
         if ($this->incomingRequest) {
+            $requestingUserId = $this->incomingRequest->user_id;
 
-            $this->incomingRequest->update(['confirmed' => true]);
+            // Remove existing confirmed relationships (soft delete them)
+            UserRelationship::where(function ($query) use ($requestingUserId) {
+                $query->where('user_id', $this->user->id)
+                      ->orWhere('user_id', $requestingUserId);
+            })->forceDelete();
 
-            UserRelationship::updateOrCreate(
-                ['user_id' => $this->user->id],
-                [
-                    'status' => $this->incomingRequest->status,
-                    'partner_id' => $this->incomingRequest->user_id,
-                    'since' => $this->incomingRequest->since,
-                    'visibility' => $this->incomingRequest->visibility,
-                    'confirmed' => true,
-                ]
-            );
+            // Create mirrored relationship
+            UserRelationship::create([
+                'user_id' => $this->user->id,
+                'partner_id' => $requestingUserId,
+                'status' => $this->incomingRequest->status,
+                'since' => $this->incomingRequest->since,
+                'visibility' => $this->incomingRequest->visibility,
+                'confirmed' => true,
+            ]);
+
+            UserRelationship::create([
+                'user_id' => $requestingUserId,
+                'partner_id' => $this->user->id,
+                'status' => $this->incomingRequest->status,
+                'since' => $this->incomingRequest->since,
+                'visibility' => $this->incomingRequest->visibility,
+                'confirmed' => true,
+            ]);
 
             $this->mount($this->user, $this->isOwner, $this->isFriend);
         }
@@ -159,7 +196,7 @@ class RelationshipSection extends Component
         $canView = $this->relationship &&
             ($this->relationship->confirmed || $this->isOwner) &&
             $this->relationship->canViewBy(Auth::user());
-    
+
         return view('livewire.relationship-section', [
             'canView' => $canView,
             'partnerName' => $this->relationship?->partner?->name,

@@ -30,6 +30,7 @@ return new class extends Migration
             $table->enum('visibility', ['public', 'friends', 'only_me'])->default('public');
             $table->timestamps();
             $table->unique('user_id');
+            $table->softDeletes();
         });
     }
 
