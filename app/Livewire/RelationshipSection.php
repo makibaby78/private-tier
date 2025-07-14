@@ -157,16 +157,9 @@ class RelationshipSection extends Component
     public function render()
     {
         $canView = $this->relationship &&
-            (
-                $this->relationship->confirmed ||
-                $this->isOwner
-            ) &&
-            (
-                $this->relationship->visibility === 'public' ||
-                ($this->relationship->visibility === 'friends' && ($this->isOwner || $this->isFriend)) ||
-                ($this->relationship->visibility === 'only_me' && $this->isOwner)
-            );     
-
+            ($this->relationship->confirmed || $this->isOwner) &&
+            $this->relationship->canViewBy(Auth::user());
+    
         return view('livewire.relationship-section', [
             'canView' => $canView,
             'partnerName' => $this->relationship?->partner?->name,
