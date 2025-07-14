@@ -14,9 +14,9 @@ class UserRelationshipSeeder extends Seeder
     public function run(): void
     {
         UserRelationship::create([
-            'user_id' => 2,
+            'user_id' => 3,
             'status' => 'in_a_relationship',
-            'partner_id' => 3,
+            'partner_id' => 7,
             'since' => '2023-02-14',
             'visibility' => 'public',
         ]);

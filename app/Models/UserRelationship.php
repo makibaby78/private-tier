@@ -13,6 +13,7 @@ class UserRelationship extends Model
         'user_id',
         'status',
         'partner_id',
+        'confirmed',
         'since',
         'visibility',
     ];
