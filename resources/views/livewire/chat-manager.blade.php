@@ -21,13 +21,15 @@
             <div class="flex items-center gap-x-2 justify-between bg-blue-600 text-white px-3 py-2 rounded-t-lg">
                 <div class="flex items-center gap-x-2">
 
-                    <x-profile-photo 
-                        :path="$chat['profile_public_id']" 
-                        :alt="$chat['name']" 
-                        class="rounded-full object-cover w-6 h-6" 
-                        width="30" 
-                        height="30" 
-                    />
+                    <a href="{{ route('profile.index', $chat['username']) }}">
+                        <x-profile-photo 
+                            :path="$chat['profile_public_id']" 
+                            :alt="$chat['name']" 
+                            class="rounded-full object-cover w-6 h-6" 
+                            width="30" 
+                            height="30" 
+                        />
+                    </a>
 
                     <span class="text-sm font-semibold">{{ $chat['name'] }}</span>
 
@@ -119,11 +121,7 @@
                                     <label 
                                         class="w-6 h-6 rounded-md bg-blue-400 hover:bg-blue-500 flex items-center justify-center cursor-pointer transition duration-200"
                                     >
-                                        <!-- Icon -->
-                                        <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 24 24">
-                                            <path d="M21 19V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2ZM8 11l2.03 2.71 3.52-4.5L18 17H6l2-6Z" />
-                                        </svg>
-                                
+                                        <x-icons.media />
                                         <input type="file" accept="image/*,video/*" class="hidden" multiple wire:model="media">
                                     </label>
                                 </div>
@@ -143,9 +141,7 @@
                                         type="submit"
                                         class="bg-blue-600 text-white px-2 py-2 rounded text-sm hover:bg-blue-700"
                                     >
-                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
-                                            <path stroke-linecap="round" stroke-linejoin="round" d="M6 12 3.269 3.125A59.769 59.769 0 0 1 21.485 12 59.768 59.768 0 0 1 3.27 20.875L5.999 12Zm0 0h7.5" />
-                                        </svg>                                      
+                                        <x-icons.airplane />
                                     </button>
                                 </div>
                             </div>

@@ -43,6 +43,7 @@ class ChatManager extends Component
             $this->openChats[$userId] = [
                 'status' => 'open',
                 'name' => $user->name,
+                'username' => $user->username,
                 'profile_public_id' => $user->profile_public_id,
             ];
 
