@@ -11,6 +11,7 @@ class Friends extends Component
     public User $user;
     public $search = '';
     public $perPage = 20;
+    public string $activeTab = 'All friends';
 
     public function mount(User $user)
     {
@@ -22,9 +23,13 @@ class Friends extends Component
         $this->perPage += 20;
     }
 
+    public function setActiveTab(string $tab)
+    {
+        $this->activeTab = $tab;
+    }
+
     public function render()
     {
-
         $friends = $this->user->friends();
 
         if (!empty($this->search)) {
@@ -33,9 +38,17 @@ class Friends extends Component
             );
         }
 
+        if ($this->activeTab === 'Birthdays') {
+            $today = now()->format('m-d');
+            $friends = $friends->filter(function ($friend) use ($today) {
+                if (!$friend->birthdate) return false;
+                return $friend->birthdate->format('m-d') === $today;
+            });
+        }
+
         $friends = $friends->take($this->perPage);
 
-        $friends = $friends->take($this->perPage)->map(function ($friend) {
+        $friends = $friends->map(function ($friend) {
             return (object) [
                 'id' => $friend->id,
                 'name' => $friend->name,

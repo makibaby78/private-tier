@@ -18,8 +18,8 @@
     <div class="flex justify-between items-center mb-4">
         <h2 class="text-xl font-bold">Friends</h2>
 
-        <div class="flex w-full max-w-md">
-            <div class="relative w-full">
+        <div class="flex md:gap-x-4 gap-x-2">
+            <div class="relative flex items-center w-full border-red-100">
                 <span class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                     <x-icons.magnifying-glass class="text-gray-500" />
                 </span>
@@ -28,18 +28,38 @@
                     type="text"
                     wire:model.live.debounce.300ms="search"
                     placeholder="Search Friends"
-                    class="w-full bg-transparent placeholder:text-slate-400 text-slate-700 dark:text-white text-sm border border-slate-200 rounded-md pl-10 pr-3 py-1 transition duration-300 ease focus:outline-none focus:border-slate-400 hover:border-slate-300 shadow-sm focus:shadow"
+                    class="max-w-md w-full bg-transparent placeholder:text-slate-400 text-slate-700 dark:text-white text-sm border border-slate-200 rounded-md pl-10 pr-3 py-1 transition duration-300 ease focus:outline-none focus:border-slate-400 hover:border-slate-300 shadow-sm focus:shadow"
                 >
-            </div>            
+            </div>
+
+            @if (auth()->id() === $user->id)
+                <div>
+                    <a href="{{ route('friends.requests.index') }}" class="text-blue-600 font-bold hover:underline whitespace-nowrap">
+                        Friend Requests
+                    </a>
+                </div>
+            @endif
         </div>
     </div>
 
     <div class="flex space-x-4 border-b pb-2 mb-4 overflow-x-auto">
-        @foreach (['All friends', 'Birthdays', 'College', 'High School', 'Current city', 'Hometown', 'Followers', 'Following'] as $tab)
-            <button class="text-sm font-medium whitespace-nowrap {{ $loop->first ? 'text-blue-600 border-b-2 border-blue-600' : 'text-gray-600' }}">
-                {{ $tab }}
+        @if (auth()->id() === $user->id)
+            @foreach (['All friends', 'Birthdays'] as $tab)
+                <button
+                    wire:click="setActiveTab('{{ $tab }}')"
+                    class="text-sm font-medium whitespace-nowrap px-3 py-2 border-b-2 transition
+                        {{ $activeTab === $tab ? 'text-blue-600 border-blue-600' : 'text-gray-600 border-transparent hover:text-blue-600 hover:border-blue-600' }}"
+                >
+                    {{ $tab }}
+                </button>
+            @endforeach
+        @else
+            <button 
+                class="text-sm font-medium whitespace-nowrap px-3 py-2 border-b-2 transition text-blue-600 border-blue-600"
+            >
+                Friends
             </button>
-        @endforeach
+        @endif
     </div>
 
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
