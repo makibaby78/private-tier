@@ -18,9 +18,7 @@
             <!-- Settings Dropdown -->
             <div class="flex items-center gap-x-2">
                 <button class="h-10 w-10 bg-gray-200 rounded-full flex items-center justify-center">
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M14.857 17.082a23.848 23.848 0 0 0 5.454-1.31A8.967 8.967 0 0 1 18 9.75V9A6 6 0 0 0 6 9v.75a8.967 8.967 0 0 1-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 0 1-5.714 0m5.714 0a3 3 0 1 1-5.714 0" />
-                    </svg>
+                    <x-icons.bell />
                 </button>
                 <x-dropdown align="right" width="80">
                     <x-slot name="trigger">
@@ -29,9 +27,7 @@
                             @click="window.Livewire.dispatch('refresh-chat-list')"
                             class="h-10 w-10 bg-gray-200 rounded-full flex items-center justify-center"
                         >
-                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="black" viewBox="0 0 512 512">
-                                <path d="M256 0C114.62 0 0 110.18 0 246.06c0 77.47 37.25 146.12 95.69 191.43V512l88.06-48.25c22.56 6.19 46.51 9.63 72.25 9.63 141.38 0 256-110.18 256-246.06S397.38 0 256 0zm29.75 314.94-57.94-62.13-122.5 62.13 142.25-151.31 59.31 62.13 119.06-62.13-140.18 151.31z"/>
-                            </svg>
+                            <x-icons.messenger />
                         </button>
                     </x-slot>
                     <x-slot name="content">
@@ -50,7 +46,7 @@
                                 height="50" 
                             />
                             <div class="ms-1">
-                                <x-icons.messenger />
+                                <x-icons.dropdown />
                             </div>
                         </button>
                     </x-slot>

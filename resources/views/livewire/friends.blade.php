@@ -17,12 +17,21 @@
 >
     <div class="flex justify-between items-center mb-4">
         <h2 class="text-xl font-bold">Friends</h2>
-        <input
-            type="text"
-            wire:model.live.debounce.300ms="search"
-            placeholder="Search"
-            class="border rounded px-3 py-1 text-sm w-1/2 text-black"
-        >
+
+        <div class="flex w-full max-w-md">
+            <div class="relative w-full">
+                <span class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                    <x-icons.magnifying-glass class="text-gray-500" />
+                </span>
+            
+                <input
+                    type="text"
+                    wire:model.live.debounce.300ms="search"
+                    placeholder="Search Friends"
+                    class="w-full bg-transparent placeholder:text-slate-400 text-slate-700 dark:text-white text-sm border border-slate-200 rounded-md pl-10 pr-3 py-1 transition duration-300 ease focus:outline-none focus:border-slate-400 hover:border-slate-300 shadow-sm focus:shadow"
+                >
+            </div>            
+        </div>
     </div>
 
     <div class="flex space-x-4 border-b pb-2 mb-4 overflow-x-auto">
