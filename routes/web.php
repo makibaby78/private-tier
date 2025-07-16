@@ -8,10 +8,14 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\SearchController;
 use App\Livewire\SinglePostView;
 use App\Livewire\SingleMediaView;
+use App\Http\Controllers\Auth\GoogleController;
 use Illuminate\Http\Request;
 
 
 Route::get('/', [HomeController::class, 'index'])->name('home');
+
+Route::get('/auth/google', [GoogleController::class, 'redirect'])->name('google.redirect');
+Route::get('/auth/google/callback', [GoogleController::class, 'callback'])->name('google.callback');
 
 Route::middleware('auth')->group(function () {
     Route::get('/settings', [SettingsController::class, 'edit'])->name('settings.edit');
