@@ -22,13 +22,22 @@
                 </button>
                 <x-dropdown align="right" width="80">
                     <x-slot name="trigger">
-                        <button
-                            x-data
-                            @click="window.Livewire.dispatch('refresh-chat-list')"
-                            class="h-10 w-10 bg-gray-200 rounded-full flex items-center justify-center"
-                        >
-                            <x-icons.messenger />
-                        </button>
+                        <div x-data="{ unreadCount: 0 }" @update-unread-user-count.window="unreadCount = $event.detail.count" class="relative">
+                            <button
+                                @click="window.Livewire.dispatch('refresh-chat-list')"
+                                class="h-10 w-10 bg-gray-200 rounded-full flex items-center justify-center relative"
+                            >
+                                <x-icons.messenger />
+                        
+                                <!-- 🔴 Badge -->
+                                <template x-if="unreadCount > 0">
+                                    <span
+                                        x-text="unreadCount"
+                                        class="absolute -top-1 -right-1 bg-red-600 text-white text-xs font-semibold w-5 h-5 flex items-center justify-center rounded-full"
+                                    ></span>
+                                </template>
+                            </button>
+                        </div>
                     </x-slot>
                     <x-slot name="content">
                         <livewire:chat-list />
