@@ -1,7 +1,7 @@
 <div class="p-2 space-y-1">
     <h2 class="px-2 text-lg font-bold dark:text-white">Chats</h2>
 
-    @foreach ($friendsWithLastMessage as $friend)
+    @forelse ($friendsWithLastMessage as $friend)
         <button 
             x-data 
             @click="
@@ -35,5 +35,9 @@
                 @endif
             </div>
         </button>
-    @endforeach
+    @empty
+        <div class="p-2 text-sm text-gray-500">
+            Chatbox is empty
+        </div>
+    @endforelse
 </div>

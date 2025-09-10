@@ -25,16 +25,16 @@ class UserController extends Controller
 
     public function index(string $username)
     {
-        $profile = $this->resolveProfile($username, 'posts');
-        $user = $profile['user'];
+        $user = User::where('username', $username)->firstOrFail();
 
-        $photos = $user->media()
-            ->where('post_media.type', 'image')
-            ->latest()
-            ->take(9)
-            ->get();
+        return view('profile.index', ['user' => $user]);
+    }
 
-        return view('profile.index', array_merge($profile, ['photos' => $photos]));
+    public function requests(string $username)
+    {
+        $user = User::where('username', $username)->firstOrFail();
+
+        return view('friends.requests.show', ['user' => $user]);
     }
     
     public function about(string $username)

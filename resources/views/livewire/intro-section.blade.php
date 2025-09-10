@@ -1,7 +1,7 @@
 <div class="bg-white dark:bg-gray-800 p-4 rounded shadow">
     <h2 class="text-lg font-semibold mb-4 dark:text-white">Intro</h2>
 
-    <ul class="space-y-3 text-sm text-gray-700 dark:text-gray-300">
+    <ul class="space-y-4 text-sm text-gray-700 dark:text-gray-300">
         {{-- Current Job --}}
         @if ($user->currentJob && $user->currentJob->visibility === 'public')
             <li>
