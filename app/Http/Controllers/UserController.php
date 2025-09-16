@@ -34,6 +34,16 @@ class UserController extends Controller
     {
         $user = User::where('username', $username)->firstOrFail();
 
+        $hasRequest = Auth::user()
+            ->friendOf()
+            ->wherePivot('status', 'pending')
+            ->where('users.id', $user->id)
+            ->exists();
+    
+        if (! $hasRequest) {
+            return redirect()->route('profile.index', ['username' => $user->username]);
+        }
+    
         return view('friends.requests.show', ['user' => $user]);
     }
     
