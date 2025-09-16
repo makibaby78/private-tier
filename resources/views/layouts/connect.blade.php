@@ -19,14 +19,8 @@
         @livewireStyles
     </head>
     <body class="font-sans antialiased">
-        <div class="min-h-screen bg-gray-100 dark:bg-gray-900 relative">
-            <x-flash-message />
-            <main>
-                <div>
-                    {{ $slot }}
-                </div>
-            </main>
-        </div>
+        <x-flash-message />
+            {{ $slot }}
         @livewireScripts
     </body>
 </html>
