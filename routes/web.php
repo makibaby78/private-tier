@@ -29,6 +29,12 @@ Route::middleware('auth')->group(function () {
 
     Route::get('/search', [SearchController::class, 'index'])->name('search.results');
 
+    Route::prefix('connect')->name('connect.')->group(function () {
+        Route::get('/', function () {
+            return view('connect.index');
+        })->name('index');
+    });
+
     Route::prefix('friends')->name('friends.')->group(function () {
         Route::get('/', function () {
             return view('friends.index');
