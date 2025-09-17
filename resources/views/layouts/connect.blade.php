@@ -22,5 +22,10 @@
         <x-flash-message />
             {{ $slot }}
         @livewireScripts
+        <script>
+            window.addEventListener('connect-selected', e => {
+                console.log(`test ${e.detail.userId}`);
+            });
+        </script>
     </body>
 </html>
