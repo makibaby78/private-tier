@@ -112,6 +112,7 @@ class DatabaseSeeder extends Seeder
             UserPlaceSeeder::class,
             UserContactSeeder::class,
             UserRelationshipSeeder::class,
+            CountrySeeder::class,
         ]);
     }
 }
