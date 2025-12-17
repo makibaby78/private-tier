@@ -1,6 +1,6 @@
 @props(['post', 'back' => null])
 
-<div class="bg-white dark:bg-gray-800 sm:rounded-lg overflow-hidden space-y-4">
+<div class="bg-white dark:bg-gray-800 sm:rounded-lg space-y-4">
     <div class="px-4 pt-4">
         <div class="flex items-center justify-between">
             <div class="flex gap-2 items-center">
@@ -89,7 +89,7 @@
                 <div class="relative w-full">
                     @if ($item['type'] === 'image')
                         <a href="{{ route('profile.media.index', [$post->user->username, $item->id]) }}?from=posts&back={{ $back }}">
-                            <img src="{{ $item['url'] }}" class="object-contain w-full h-auto">
+                            <img src="{{ $item['url'] }}" class="object-contain w-full h-auto sm:max-h-96" style="max-height: 500px">
                         </a>
                     @elseif ($item['type'] === 'video')
                         <a href="{{ route('profile.media.index', [$post->user->username, $item->id]) }}?from=posts&back={{ $back }}">

@@ -89,24 +89,38 @@
     @endforeach
 
     <x-modal name="delete-place" focusable>
-                    
+        <div class="p-6">
+            <h2 class="text-lg font-semibold text-gray-900 dark:text-white">
+                Delete Place
+            </h2>
 
-        <h3>Are you sure you want to delete this?</h3>
+            <p class="mt-2 text-sm text-gray-600 dark:text-gray-400">
+                Are you sure you want to delete this place? This action cannot be undone.
+            </p>
 
-        <div class="flex gap-x-2">
-            <button x-on:click="$dispatch('close')" wire:click="deletePlace({{ $place->id }})" class="text-red-500 hover:underline">
-                Yes
-            </button>
+            <div class="mt-6 flex justify-end gap-3">
 
-            <button
-                x-on:click="$dispatch('close')"
-                class=" text-white hover:underline"
-            >
-                {{ __('Cancel') }}
-            </button>
+                <button
+                    x-on:click="$dispatch('close')"
+                    class="px-4 py-2 text-sm rounded-md border border-gray-300
+                        text-gray-700 hover:bg-gray-100
+                        dark:border-gray-700 dark:text-gray-300 dark:hover:bg-gray-800"
+                >
+                    Cancel
+                </button>
 
+                <button
+                    x-on:click="$dispatch('close')"
+                    wire:click="deletePlace()"
+                    class="px-4 py-2 text-sm rounded-md
+                        bg-red-600 text-white hover:bg-red-700
+                        focus:outline-none focus:ring-2 focus:ring-red-500"
+                >
+                    Delete
+                </button>
+
+            </div>
         </div>
-
     </x-modal>
 </div>
 
