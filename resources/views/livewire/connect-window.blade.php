@@ -54,11 +54,11 @@
             </div>
 
             {{-- Input --}}
-            <form wire:submit.prevent="sendMessage" class="bg-white p-3 border-t">
+            <form wire:submit.prevent="connectSend({{$partnerId}})" class="bg-white p-3 border-t">
                 <div class="flex gap-3">
                     <input
                         type="text"
-                        wire:model.defer="messageText"
+                        wire:model.defer="messageInputs.{{ $partnerId }}"
                         placeholder="Type a message..."
                         class="flex-1 rounded-full px-4 py-2 border focus:outline-none"
                     />

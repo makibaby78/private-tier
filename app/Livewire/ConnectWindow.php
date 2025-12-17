@@ -4,16 +4,72 @@ namespace App\Livewire;
 
 use Livewire\Component;
 use Livewire\Attributes\On;
+use App\Models\Message;
+use App\Models\Conversation;
+use Illuminate\Support\Facades\Auth;
 
 class ConnectWindow extends Component
 {
     public ?int $partnerId = null;
     public \Illuminate\Support\Collection $messages;
     public int $perPage = 30;
+
+    public array $messageInputs = [];
     
     public function mount()
     {
         $this->messages = collect();
+    }    
+
+    public function connectSend(int $userId): void
+    {
+        $text = trim($this->messageInputs[$userId] ?? '');
+    
+        if ($text === '' && empty($this->media)) {
+            return;
+        }
+    
+        $authUser = auth()->user();
+    
+        // ❌ Prevent chatting with yourself
+        if ($authUser->id === $userId) {
+            return;
+        }
+    
+        // Normalize conversation user IDs
+        $userOne = min($authUser->id, $userId);
+        $userTwo = max($authUser->id, $userId);
+    
+        // 1️⃣ Get or create conversation
+        $conversation = Conversation::firstOrCreate(
+            [
+                'user_one_id' => $userOne,
+                'user_two_id' => $userTwo,
+            ],
+            [
+                'last_message_at' => now(),
+            ]
+        );
+    
+        // 2️⃣ Create message
+        if ($text !== '') {
+            $message = Message::create([
+                'conversation_id' => $conversation->id,
+                'sender_id'       => $authUser->id,
+                'receiver_id'     => $userId,
+                'message'         => $text,
+                'type'            => 'text',
+            ]);
+    
+            // 3️⃣ Update conversation metadata
+            $conversation->update([
+                'last_message_at' => $message->created_at,
+                'last_message_id' => $message->id, // optional but recommended
+            ]);
+        }
+    
+        // 4️⃣ Clear input
+        unset($this->messageInputs[$userId]);
     }    
 
     #[On('connect-selected')]
