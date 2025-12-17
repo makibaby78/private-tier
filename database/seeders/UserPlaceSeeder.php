@@ -16,9 +16,9 @@ class UserPlaceSeeder extends Seeder
         UserPlace::create([
             'user_id' => 1,
             'type' => 'current_city',
-            'city' => 'Consolacion City',
+            'city_id' => 1,
             'region' => 'Central Visayas',
-            'country' => 'Philippines',
+            'country_id' => 178,
             'visibility' => 'public',
         ]);
     }

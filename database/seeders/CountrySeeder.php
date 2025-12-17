@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
 use App\Models\Country;
+use App\Models\City;
 
 class CountrySeeder extends Seeder
 {
@@ -26,5 +27,23 @@ class CountrySeeder extends Seeder
                 ]
             );
         }
+
+        City::insert([
+            [
+                'country_id' => 178,
+                'name' => 'Consolacion, Cebu',
+                'is_active' => true,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+            [
+                'country_id' => 3,
+                'name' => 'Herat',
+                'is_active' => true,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+        ]);        
+
     }
 }

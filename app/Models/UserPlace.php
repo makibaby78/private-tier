@@ -12,14 +12,24 @@ class UserPlace extends Model
     protected $fillable = [
         'user_id',
         'type',
-        'city',
+        'city_id',
         'region',
-        'country',
+        'country_id',
         'visibility',
     ];
 
     public function user()
     {
         return $this->belongsTo(User::class);
+    }
+
+    public function country()
+    {
+        return $this->belongsTo(Country::class);
+    }
+
+    public function city()
+    {
+        return $this->belongsTo(City::class);
     }
 }

@@ -15,9 +15,9 @@ return new class extends Migration
             $table->id();
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
             $table->enum('type', ['current_city', 'hometown']);
-            $table->string('city');
+            $table->foreignId('city_id')->nullable()->constrained('cities')->nullOnDelete();
+            $table->foreignId('country_id')->nullable()->constrained('countries')->nullOnDelete();
             $table->string('region')->nullable();
-            $table->string('country')->nullable();
             $table->enum('visibility', ['public', 'friends', 'only_me'])->default('public');
             $table->timestamps();
         });        

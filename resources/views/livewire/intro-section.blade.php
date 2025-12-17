@@ -29,11 +29,11 @@
 
         {{-- Places --}}
         @if ($user->currentCity && $user->currentCity->visibility === 'public')
-            <li>Lives in <strong>{{ $user->currentCity->city }}</strong></li>
+            <li>Lives in <strong>{{ $user->currentCity->city->name }}</strong></li>
         @endif
 
         @if ($user->hometown && $user->hometown->visibility === 'public')
-            <li>From <strong>{{ $user->hometown->value }}</strong></li>
+            <li>From <strong>{{ $user->hometown->city->name }}</strong></li>
         @endif
 
         @if ($canViewRelationship && $relationship)

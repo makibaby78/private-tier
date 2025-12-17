@@ -105,6 +105,7 @@ class DatabaseSeeder extends Seeder
         ]);
 
         $this->call([
+            CountrySeeder::class,
             FriendshipSeeder::class,
             PostSeeder::class,
             UserWorkExperienceSeeder::class,
@@ -112,7 +113,6 @@ class DatabaseSeeder extends Seeder
             UserPlaceSeeder::class,
             UserContactSeeder::class,
             UserRelationshipSeeder::class,
-            CountrySeeder::class,
         ]);
     }
 }
