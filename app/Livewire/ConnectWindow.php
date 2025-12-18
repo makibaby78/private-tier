@@ -7,11 +7,12 @@ use Livewire\Attributes\On;
 use App\Models\Message;
 use App\Models\Conversation;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Collection;
 
 class ConnectWindow extends Component
 {
     public ?int $partnerId = null;
-    public \Illuminate\Support\Collection $messages;
+    public Collection $messages;
     public int $perPage = 30;
 
     public array $messageInputs = [];
@@ -66,6 +67,20 @@ class ConnectWindow extends Component
                 'last_message_at' => $message->created_at,
                 'last_message_id' => $message->id, // optional but recommended
             ]);
+
+            // 4️⃣ Push message into Livewire state for instant UI
+            $this->messages->push([
+                'id'         => $message->id,
+                'message'    => $message->message,
+                'type'       => $message->type,
+                'sender_id'  => $message->sender_id,
+                'receiver_id'=> $message->receiver_id,
+                'created_at' => $message->created_at,
+                'sender' => [
+                    'id'   => $authUser->id,
+                    'name' => $authUser->name,
+                ],
+            ]);
         }
 
         broadcast(new \App\Events\MessageSent($message))->toOthers();
@@ -94,7 +109,7 @@ class ConnectWindow extends Component
         $partner = $this->partnerId;
     
         // fetch the latest N messages between me <-> partner, then reverse so oldest is first
-        $msgs = \App\Models\Message::where(function ($q) use ($me, $partner) {
+        $msgs = Message::where(function ($q) use ($me, $partner) {
                 $q->where('sender_id', $me)->where('receiver_id', $partner);
             })->orWhere(function ($q) use ($me, $partner) {
                 $q->where('sender_id', $partner)->where('receiver_id', $me);
@@ -107,13 +122,24 @@ class ConnectWindow extends Component
             ->values();
     
         // mark partner->me messages as read (only those not already read)
-        \App\Models\Message::where('sender_id', $partner)
+        Message::where('sender_id', $partner)
             ->where('receiver_id', $me)
             ->whereNull('read_at')
             ->update(['read_at' => now()]);
     
         // set messages for the view
-        $this->messages = $msgs;
+        $this->messages = $msgs->map(fn ($msg) => [
+            'id'         => $msg->id,
+            'message'    => $msg->message,
+            'type'       => $msg->type,
+            'sender_id'  => $msg->sender_id,
+            'receiver_id'=> $msg->receiver_id,
+            'created_at' => $msg->created_at,
+            'sender' => [
+                'id'   => $msg->sender->id,
+                'name' => $msg->sender->name,
+            ],
+        ]);
     
         // optionally notify sidebar (if you have a ChatSidebar Livewire component that should refresh)
         // remove this line if you don't use it:
@@ -121,20 +147,42 @@ class ConnectWindow extends Component
     }
 
     #[On('message-received')]
-    public function connectIncomingMessage(string $message, int $sender_id, string $sender_name, string $type)
-    {
+    public function connectIncomingMessage(
+        int $id,
+        string $message,
+        int $sender_id,
+        string $sender_name,
+        string $type
+    ): void {
 
-        if (!isset($this->messages[$sender_id])) {
-            $this->messages[$sender_id] = [];
+        if ($this->messages->contains('id', $id)) {
+            return;
         }
 
-        $this->messages[$sender_id][] = [
-            'message' => $message,
-            'type' => $type,
-            'sender_id' => $sender_id,
-            'sender_name' => $sender_name,
-            'created_at' => now()->toDateTimeString(),
-        ];
+        if ($sender_id !== $this->partnerId) {
+            return;
+        }
+
+        $this->messages->push([
+            'id'         => $id,
+            'message'    => $message,
+            'type'       => $type,
+            'sender_id'  => $sender_id,
+            'receiver_id'=> auth()->id(),
+            'created_at' => now(),
+            'sender' => [
+                'id'   => $sender_id,
+                'name' => $sender_name,
+            ],
+        ]);
+
+        $this->messages = $this->messages->sortBy('created_at')->values();
+
+        Message::where('sender_id', $sender_id)
+            ->where('receiver_id', auth()->id())
+            ->whereNull('read_at')
+            ->update(['read_at' => now()]);
+
     }
 
     public function render()

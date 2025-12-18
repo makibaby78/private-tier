@@ -38,15 +38,22 @@
                 <div class="space-y-3">
                     @foreach ($messages as $m)
                         @php
-                            $isMe = (data_get($m, 'sender_id') ?? $m->sender_id) === auth()->id();
-                            $body = data_get($m, 'message') ?? $m->message;
-                            $created = data_get($m, 'created_at') ?? $m->created_at;
+                            $isMe    = $m['sender_id'] === auth()->id();
+                            $body    = $m['message'];
+                            $created = $m['created_at'];
                         @endphp
 
                         <div class="flex {{ $isMe ? 'justify-end' : 'justify-start' }}">
-                            <div class="max-w-[70%] px-4 py-2 rounded-2xl {{ $isMe ? 'bg-blue-600 text-white' : 'bg-white border' }}">
-                                <div class="text-sm break-words">{{ $body }}</div>
-                                <div class="text-[10px] text-gray-400 mt-1 text-right">{{ \Carbon\Carbon::parse($created)->format('H:i') }}</div>
+                            <div class="max-w-[70%] px-4 py-2 rounded-2xl
+                                {{ $isMe ? 'bg-blue-600 text-white' : 'bg-white border' }}">
+                                
+                                <div class="text-sm break-words">
+                                    {{ $body }}
+                                </div>
+
+                                <div class="text-[10px] text-gray-400 mt-1 text-right">
+                                    {{ \Carbon\Carbon::parse($created)->format('H:i') }}
+                                </div>
                             </div>
                         </div>
                     @endforeach
