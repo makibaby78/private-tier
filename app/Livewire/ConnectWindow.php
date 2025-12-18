@@ -67,6 +67,8 @@ class ConnectWindow extends Component
                 'last_message_id' => $message->id, // optional but recommended
             ]);
         }
+
+        broadcast(new \App\Events\MessageSent($message))->toOthers();
     
         // 4️⃣ Clear input
         unset($this->messageInputs[$userId]);
@@ -83,11 +85,6 @@ class ConnectWindow extends Component
         if (! $this->partnerId || $this->partnerId === $me) {
             // clear messages if bad partner or self
             $this->messages = collect();
-            // optional: notify front-end (you can remove if you don't want a notification)
-            $this->dispatchBrowserEvent('notify', [
-                'type' => 'error',
-                'message' => $this->partnerId === $me ? 'Cannot open chat with yourself.' : 'Invalid chat partner.'
-            ]);
             return;
         }
     
@@ -121,6 +118,23 @@ class ConnectWindow extends Component
         // optionally notify sidebar (if you have a ChatSidebar Livewire component that should refresh)
         // remove this line if you don't use it:
         $this->dispatch('chat-loaded', userId: $partner)->to(\App\Livewire\ConnectSidebar::class);
+    }
+
+    #[On('message-received')]
+    public function connectIncomingMessage(string $message, int $sender_id, string $sender_name, string $type)
+    {
+
+        if (!isset($this->messages[$sender_id])) {
+            $this->messages[$sender_id] = [];
+        }
+
+        $this->messages[$sender_id][] = [
+            'message' => $message,
+            'type' => $type,
+            'sender_id' => $sender_id,
+            'sender_name' => $sender_name,
+            'created_at' => now()->toDateTimeString(),
+        ];
     }
 
     public function render()

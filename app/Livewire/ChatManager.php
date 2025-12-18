@@ -8,6 +8,7 @@ use Livewire\Attributes\On;
 use App\Models\User;
 use Livewire\WithFileUploads;
 use Illuminate\Support\Facades\Storage;
+use App\Models\Conversation;
 
 class ChatManager extends Component
 {
@@ -112,6 +113,28 @@ class ChatManager extends Component
             return;
         }
 
+        $authUser = auth()->user();
+    
+        // ❌ Prevent chatting with yourself
+        if ($authUser->id === $userId) {
+            return;
+        }
+    
+        // Normalize conversation user IDs
+        $userOne = min($authUser->id, $userId);
+        $userTwo = max($authUser->id, $userId);
+
+        // 1️⃣ Get or create conversation
+        $conversation = Conversation::firstOrCreate(
+            [
+                'user_one_id' => $userOne,
+                'user_two_id' => $userTwo,
+            ],
+            [
+                'last_message_at' => now(),
+            ]
+        );
+
         if (!empty($this->media)) {
             foreach ($this->media as $file) {
                 $type = str($file->getMimeType())->startsWith('image') ? 'image' : 'video';
@@ -121,6 +144,7 @@ class ChatManager extends Component
                 $publicId = pathinfo($path, PATHINFO_FILENAME);
 
                 $message = Message::create([
+                    'conversation_id' => $conversation->id,
                     'sender_id' => auth()->id(),
                     'receiver_id' => $userId,
                     'message' => $path,
@@ -132,6 +156,7 @@ class ChatManager extends Component
 
         if ($text != '') {
             $message = Message::create([
+                'conversation_id' => $conversation->id,
                 'sender_id' => auth()->id(),
                 'receiver_id' => $userId,
                 'message' => $text,
