@@ -41,28 +41,75 @@
                             $isMe    = $m['sender_id'] === auth()->id();
                             $body    = $m['message'];
                             $created = $m['created_at'];
+                            $isMedia = $m['type'] === 'media_group';
+                            $count   = count($m['media'] ?? []);
                         @endphp
 
-                        <div class="flex {{ $isMe ? 'justify-end' : 'justify-start' }}">
-                            <div class="max-w-[70%] px-4 py-2 rounded-2xl
-                                {{ $isMe ? 'bg-blue-600 text-white' : 'bg-white border' }}">
-                                
-                                <div class="text-sm break-words">
-                                    {{ $body }}
-                                </div>
+                        <div class="flex {{ $isMe ? 'justify-end' : 'justify-start' }} mb-2">
+                            <div class="max-w-[72%]
+                                {{ $isMe ? 'bg-blue-600 text-white' : 'bg-white border' }}
+                                rounded-2xl overflow-hidden shadow-sm">
 
-                                <div class="text-[10px] text-gray-400 mt-1 text-right">
+                                {{-- 🖼️ MEDIA GROUP --}}
+                                @if ($isMedia)
+                                    <div class="
+                                        grid gap-[2px]
+                                        {{ $count === 1 ? 'grid-cols-1' : 'grid-cols-2' }}
+                                    ">
+                                        @foreach ($m['media'] as $media)
+                                            @if ($media['type'] === 'image')
+                                                <img
+                                                    src="{{ asset($media['url']) }}"
+                                                    class="w-full h-full object-cover max-h-[280px]"
+                                                    loading="lazy"
+                                                />
+                                            @elseif ($media['type'] === 'video')
+                                                <video controls class="w-full max-h-[280px] object-cover">
+                                                    <source src="{{ asset($media['url']) }}">
+                                                </video>
+                                            @elseif ($media['type'] === 'audio')
+                                                <div class="p-3">
+                                                    <audio controls class="w-full">
+                                                        <source src="{{ asset($media['url']) }}">
+                                                    </audio>
+                                                </div>
+                                            @endif
+                                        @endforeach
+                                    </div>
+
+                                    {{-- Caption --}}
+                                    @if (!empty($body))
+                                        <div class="px-3 py-2 text-sm break-words">
+                                            {{ $body }}
+                                        </div>
+                                    @endif
+                                @else
+                                    {{-- 💬 TEXT MESSAGE --}}
+                                    <div class="px-4 py-2 text-sm break-words">
+                                        {{ $body }}
+                                    </div>
+                                @endif
+
+                                {{-- ⏱ Timestamp --}}
+                                <div class="px-2 pb-1 text-[10px] text-right opacity-70">
                                     {{ \Carbon\Carbon::parse($created)->format('H:i') }}
                                 </div>
                             </div>
                         </div>
                     @endforeach
+
                 </div>
             </div>
 
             {{-- Input --}}
             <form wire:submit.prevent="connectSend({{$partnerId}})" class="bg-white p-3 border-t">
-                <div class="flex gap-3">
+                <div class="flex items-center gap-2">
+
+                    <label class="flex items-center justify-center cursor-pointer p-2 hover:bg-gray-100 rounded-full transition">
+                        <x-icons.paperclip class="w-6 h-6 text-gray-500"/>
+                        <input type="file" accept="image/*,video/*" class="hidden" multiple wire:model="media">
+                    </label>
+
                     <input
                         type="text"
                         wire:model.defer="messageInputs.{{ $partnerId }}"

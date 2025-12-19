@@ -3,17 +3,22 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Message extends Model
 {
     protected $fillable = [
-        'message',
         'sender_id',
         'receiver_id',
         'conversation_id',
-        'url',
+        'message',
         'type',
     ];
+
+    public function media(): HasMany
+    {
+        return $this->hasMany(MessageMedia::class);
+    }
     
     public function user()
     {
