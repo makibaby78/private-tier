@@ -18,15 +18,26 @@
             <div
                 x-data
                 x-init="
-                    // Listen to custom event from Livewire to scroll to bottom
                     window.addEventListener('scroll-chat-to-bottom', () => {
-                        const el = $refs.scroll;
-                        if (!el) return;
-                        el.scrollTop = el.scrollHeight;
+                        $nextTick(() => {
+                            const el = $refs.scroll;
+                            if (!el) return;
+
+                            // small delay so media/images finish layout
+                            setTimeout(() => {
+                                el.scrollTo({
+                                    top: el.scrollHeight,
+                                    behavior: 'smooth'
+                                });
+                            }, 50);
+                        });
                     });
 
-                    // If you want auto-scroll to bottom on initial load
-                    setTimeout(() => { const el = $refs.scroll; if (el) el.scrollTop = el.scrollHeight; }, 50);
+                    // initial scroll
+                    $nextTick(() => {
+                        const el = $refs.scroll;
+                        if (el) el.scrollTop = el.scrollHeight;
+                    });
                 "
                 class="flex-1 overflow-auto p-4"
                 x-ref="scroll"

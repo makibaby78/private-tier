@@ -19,7 +19,7 @@ class ConnectWindow extends Component
     
     public ?int $partnerId = null;
     public Collection $messages;
-    public int $perPage = 30;
+    public int $perPage = 15;
     public array $media = [];
     public array $messageInputs = [];
     
@@ -115,6 +115,8 @@ class ConnectWindow extends Component
                 'caption' => $media->caption,
             ])->values(),
         ]);
+
+        $this->dispatch('scroll-chat-to-bottom');
 
         broadcast(new \App\Events\MessageSent($message))->toOthers();
 
@@ -221,6 +223,7 @@ class ConnectWindow extends Component
             ->whereNull('read_at')
             ->update(['read_at' => now()]);
 
+        $this->dispatch('scroll-chat-to-bottom');
     }
 
     public function render()
