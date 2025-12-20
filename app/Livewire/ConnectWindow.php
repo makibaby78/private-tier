@@ -190,7 +190,8 @@ class ConnectWindow extends Component
         string $message,
         int $sender_id,
         string $sender_name,
-        string $type
+        string $type,
+        array $media = [],
     ): void {
 
         if ($this->messages->contains('id', $id)) {
@@ -212,9 +213,8 @@ class ConnectWindow extends Component
                 'id'   => $sender_id,
                 'name' => $sender_name,
             ],
+            'media' => $media,
         ]);
-
-        $this->messages = $this->messages->sortBy('created_at')->values();
 
         Message::where('sender_id', $sender_id)
             ->where('receiver_id', auth()->id())

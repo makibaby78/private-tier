@@ -27,6 +27,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     type: e.type,
                     sender_id: e.sender_id,
                     sender_name: e.sender_name,
+                    media: e.media,
                 });
 
                 // Optional scroll
