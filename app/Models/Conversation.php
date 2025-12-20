@@ -12,4 +12,24 @@ class Conversation extends Model
         'last_message_at',
         'last_message_id',
     ];
+
+    public function lastMessage()
+    {
+        return $this->belongsTo(Message::class, 'last_message_id');
+    }
+
+    public function userOne()
+    {
+        return $this->belongsTo(User::class, 'user_one_id');
+    }
+
+    public function userTwo()
+    {
+        return $this->belongsTo(User::class, 'user_two_id');
+    }
+
+    public function partner(int $myId)
+    {
+        return $this->user_one_id === $myId ? $this->userTwo : $this->userOne;
+    }
 }

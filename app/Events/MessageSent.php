@@ -31,6 +31,7 @@ class MessageSent implements ShouldBroadcastNow
             'type' => $this->message->type,
             'sender_id' => $this->message->sender_id,
             'receiver_id' => $this->message->receiver_id,
+            'conversation_id' => $this->message->conversation_id,
             'sender_name' => $this->message->sender->name,
             'created_at' => $this->message->created_at->toDateTimeString(),
             'media'       => $this->message->media->map(fn ($media) => [

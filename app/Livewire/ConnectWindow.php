@@ -120,6 +120,17 @@ class ConnectWindow extends Component
 
         broadcast(new \App\Events\MessageSent($message))->toOthers();
 
+        $this->dispatch(
+            'sidebar-message-updated',
+            conversationId: $conversation->id,
+            message: [
+                'id'         => $message->id,
+                'text'       => $message->message,
+                'sender_id'  => $message->sender_id,
+                'created_at' => $message->created_at->toISOString(),
+            ]
+        )->to(ConnectSidebar::class);
+
         $this->media = [];
         unset($this->messageInputs[$userId]);
     }

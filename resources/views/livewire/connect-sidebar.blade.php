@@ -14,7 +14,7 @@
         @forelse ($chats as $chat)
             @php
                 $userId = auth()->id();
-                $partner = $chat->sender_id === $userId ? $chat->receiver : $chat->sender;
+                $partner = $chat->partner($userId);
             @endphp
 
             <div wire:click="openConnect({{ $partner->id }})"
@@ -26,7 +26,7 @@
                         <span class="text-xs text-gray-500">{{ $chat->created_at->diffForHumans() }}</span>
                     </div>
                     <p class="text-xs text-gray-600 truncate">
-                        {{ $chat->message }}
+                        {{ $chat->lastMessage->message }}
                     </p>
                 </div>
             </div>

@@ -30,6 +30,18 @@ document.addEventListener('DOMContentLoaded', () => {
                     media: e.media,
                 });
 
+                Livewire.dispatch('sidebar-received-updated', {
+                    conversationId: e.conversation_id,
+                    message: {
+                        id: e.id,
+                        text: e.message,
+                        type: e.type,
+                        sender_id: e.sender_id,
+                        created_at: e.created_at,
+                        media: e.media
+                    }
+                }).to('connect-sidebar');
+
                 // Optional scroll
                 window.dispatchEvent(new CustomEvent('scroll-chat', {
                     detail: { userId: e.sender_id }
