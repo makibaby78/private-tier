@@ -26,24 +26,47 @@ class ConnectSidebar extends Component
 
         $this->chats = Conversation::where(function ($q) use ($userId) {
                 $q->where('user_one_id', $userId)
-                  ->orWhere('user_two_id', $userId);
+                ->orWhere('user_two_id', $userId);
             })
-            ->with(['lastMessage.sender'])
+            ->with([
+                'lastMessage' => fn ($q) => $q->select(
+                    'id',
+                    'conversation_id',
+                    'sender_id',
+                    'receiver_id',
+                    'message',
+                    'read_at',
+                    'created_at'
+                ),
+                'lastMessage.sender',
+            ])
             ->orderByDesc('last_message_at')
-            ->get();
+            ->get()
+            ->map(function ($chat) use ($userId) {
+                $last = $chat->lastMessage;
+
+                // 🔥 compute unread highlight flag
+                $chat->highlight = $last
+                    && $last->receiver_id === $userId
+                    && is_null($last->read_at);
+
+                return $chat;
+            });
     }
+
 
     #[On('sidebar-message-updated')]
     #[On('sidebar-received-updated')]
     public function updateReceived(int $conversationId, array $message): void
     {
         $chat = $this->chats->firstWhere('id', $conversationId);
+        $userId = auth()->id();
 
         if ($chat) {
             // update existing
             $chat->last_message_at = $message['created_at'];
             $chat->lastMessage->message = $message['text'];
-
+            if ($message['sender_id'] != $userId) $chat->highlight = true;
             // move to top
             $this->chats = $this->chats
                 ->reject(fn ($c) => $c->id === $conversationId)

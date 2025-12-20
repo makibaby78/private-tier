@@ -7,9 +7,17 @@
     @else
         <div class="flex flex-col h-full">
             <div class="px-4 py-3 border-b bg-white flex items-center gap-3">
-                <img src="https://ui-avatars.com/api/?name={{ urlencode(optional(\App\Models\User::find($partnerId))->name ?? 'User') }}" class="w-10 h-10 rounded-full">
+
+                <x-profile-photo 
+                    :path="$partner->profile_public_id" 
+                    :alt="$partner->name" 
+                    class="rounded-full object-cover w-10 h-10" 
+                    width="50" 
+                    height="50" 
+                />
+
                 <div>
-                    <div class="font-semibold">{{ optional(\App\Models\User::find($partnerId))->name ?? 'User' }}</div>
+                    <div class="font-semibold">{{ $partner->name }}</div>
                     <div class="text-xs text-gray-500">Online</div>
                 </div>
             </div>
@@ -126,6 +134,7 @@
                         wire:model.defer="messageInputs.{{ $partnerId }}"
                         placeholder="Type a message..."
                         class="flex-1 rounded-full px-4 py-2 border focus:outline-none"
+                        id="connect-send"
                     />
                     <button type="submit" class="px-4 py-2 rounded-full bg-blue-600 text-white">Send</button>
                 </div>

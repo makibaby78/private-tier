@@ -4,11 +4,13 @@ namespace App\Livewire;
 
 use Livewire\Component;
 use Livewire\Attributes\On;
+use Livewire\WithFileUploads;
 use App\Models\Message;
 use App\Models\Conversation;
 use App\Livewire\ConnectSidebar;
+use App\Events\MessageSent;
+use App\Models\User;
 use Illuminate\Support\Collection;
-use Livewire\WithFileUploads;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\DB;
 
@@ -18,6 +20,7 @@ class ConnectWindow extends Component
     use WithFileUploads;
     
     public ?int $partnerId = null;
+    public ?User $partner = null;
     public Collection $messages;
     public int $perPage = 15;
     public array $media = [];
@@ -30,6 +33,16 @@ class ConnectWindow extends Component
 
     public function connectSend(int $userId): void
     {
+        if (! User::whereKey($userId)->exists()) {
+            return;
+        }
+
+        if (! empty($this->media)) {
+            $this->validate([
+                'media.*' => 'file|max:10240|mimetypes:image/*,video/*,audio/*',
+            ]);
+        }
+
         $text = trim($this->messageInputs[$userId] ?? '');
 
         if ($text === '' && empty($this->media)) {
@@ -54,6 +67,8 @@ class ConnectWindow extends Component
                 'last_message_at' => now(),
             ]
         );
+
+        $message = null;
 
         DB::transaction(function () use ($conversation, $authUser, $userId, $text, &$message) {
 
@@ -95,6 +110,10 @@ class ConnectWindow extends Component
             ]);
         });
 
+        if (! $message) {
+            return;
+        }
+
         $message->load('media');
 
         $this->messages->push([
@@ -118,7 +137,7 @@ class ConnectWindow extends Component
 
         $this->dispatch('scroll-chat-to-bottom');
 
-        broadcast(new \App\Events\MessageSent($message))->toOthers();
+        broadcast(new MessageSent($message))->toOthers();
 
         $this->dispatch(
             'sidebar-message-updated',
@@ -140,7 +159,14 @@ class ConnectWindow extends Component
     {
         // set partner id
         $this->partnerId = (int) $userId;
-    
+
+        $this->partner = User::find($this->partnerId);
+
+        if (! $this->partner) {
+            $this->messages = collect();
+            return;
+        }
+
         // defensive: ensure partnerId present and not the same as the authenticated user
         $me = auth()->id();
         if (! $this->partnerId || $this->partnerId === $me) {
@@ -155,11 +181,8 @@ class ConnectWindow extends Component
         $partner = $this->partnerId;
     
         // fetch the latest N messages between me <-> partner, then reverse so oldest is first
-        $msgs = Message::where(function ($q) use ($me, $partner) {
-                $q->where('sender_id', $me)->where('receiver_id', $partner);
-            })->orWhere(function ($q) use ($me, $partner) {
-                $q->where('sender_id', $partner)->where('receiver_id', $me);
-            })
+        $msgs = $msgs = Message::whereIn('sender_id', [$me, $partner])
+            ->whereIn('receiver_id', [$me, $partner])
             ->with(['sender','media:id,message_id,type,url,caption',])
             ->latest('created_at')         // newest first
             ->take($this->perPage)
@@ -221,7 +244,7 @@ class ConnectWindow extends Component
             'type'       => $type,
             'sender_id'  => $sender_id,
             'receiver_id'=> auth()->id(),
-            'created_at' => now(),
+            'created_at' => now()->toISOString(),
             'sender' => [
                 'id'   => $sender_id,
                 'name' => $sender_name,

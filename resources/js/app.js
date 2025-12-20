@@ -40,7 +40,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         created_at: e.created_at,
                         media: e.media
                     }
-                }).to('connect-sidebar');
+                });
 
                 // Optional scroll
                 window.dispatchEvent(new CustomEvent('scroll-chat', {
