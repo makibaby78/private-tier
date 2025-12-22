@@ -20,6 +20,20 @@ class ConnectSidebar extends Component
         $this->loadChats();
     }
 
+    #[On('chat-loaded')]
+    public function refreshChats($userId)
+    {
+        $this->chats = $this->chats->map(function ($chat) use ($userId) {
+            if ($chat->partner_id === $userId) {
+                // refresh lastMessage from DB
+                $chat->lastMessage = $chat->messages()
+                    ->latest('created_at')
+                    ->first();
+            }
+            return $chat;
+        });        
+    }
+
     public function loadChats()
     {
         $userId = auth()->id();

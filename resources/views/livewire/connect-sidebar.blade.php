@@ -18,8 +18,11 @@
             @php
                 $userId = auth()->id();
                 $partner = $chat->partner($userId);
-                $weightClass = $chat->highlight ? 'font-extrabold' : 'font-normal';
-                $colorClass = $chat->highlight ? 'text-black' : 'text-gray-600';
+
+                $last = $chat->lastMessage;
+                $hasUnread = $last && $last->sender_id !== auth()->id() && is_null($last->read_at);
+                $weightClass = $hasUnread ? 'font-extrabold' : 'font-normal';
+                $colorClass  = $hasUnread ? 'text-black' : 'text-gray-600';
             @endphp
 
             <div wire:click="openConnect({{ $partner->id }})"
@@ -39,8 +42,10 @@
                         <span class="text-xs text-gray-500">{{ $chat->created_at->diffForHumans() }}</span>
                     </div>
                     <p class="text-xs {{ $colorClass }} truncate {{ $weightClass }}">
-                        {{ str($chat->lastMessage->message)->limit(30) }}
-                    </p>
+                        {{ $chat->lastMessage?->message
+                            ? str($chat->lastMessage->message)->limit(30)
+                            : 'No messages yet' }}
+                    </p>                    
                 </div>
             </div>
         @empty
