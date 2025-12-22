@@ -50,9 +50,17 @@
                 class="flex-1 overflow-auto p-4"
                 x-ref="scroll"
             >
-                <div class="flex justify-center mb-3">
-                    <button wire:click="loadMore" class="text-xs text-blue-600 hover:underline">Load more</button>
-                </div>
+                @if($hasMoreMessages)
+                    <div class="text-center py-2">
+                        <button
+                            wire:click="loadMore"
+                            wire:loading.attr="disabled"
+                            class="text-sm text-gray-500 hover:underline"
+                        >
+                            Load more messages
+                        </button>
+                    </div>
+                @endif
 
                 <div class="space-y-3">
                     @foreach ($messages as $m)

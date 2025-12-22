@@ -25,6 +25,8 @@ class ConnectWindow extends Component
     public int $perPage = 15;
     public array $media = [];
     public array $messageInputs = [];
+    public ?int $oldestMessageId = null;
+    public bool $hasMoreMessages = true;
     
     public function mount()
     {
@@ -217,6 +219,13 @@ class ConnectWindow extends Component
             ])->values(),
         ]);
 
+        $this->oldestMessageId = $this->messages->first()['id'] ?? null;
+
+        // check if more messages exist
+        $this->hasMoreMessages = Message::whereIn('sender_id', [$me, $partner])
+            ->whereIn('receiver_id', [$me, $partner])
+            ->count() > $this->messages->count();
+
         $this->dispatch('chat-loaded', userId: $partner)->to(ConnectSidebar::class);
     }
 
@@ -259,6 +268,65 @@ class ConnectWindow extends Component
 
         $this->dispatch('scroll-chat-to-bottom');
     }
+
+    public function loadMore(): void
+    {
+        if (! $this->partnerId || ! $this->oldestMessageId || ! $this->hasMoreMessages) {
+            return;
+        }
+    
+        $me      = auth()->id();
+        $partner = $this->partnerId;
+    
+        $olderMessages = Message::whereIn('sender_id', [$me, $partner])
+            ->whereIn('receiver_id', [$me, $partner])
+            ->where('id', '<', $this->oldestMessageId) // 👈 older than current oldest
+            ->with(['sender', 'media:id,message_id,type,url,caption'])
+            ->latest('created_at')
+            ->take($this->perPage)
+            ->get()
+            ->reverse()
+            ->values();
+    
+        if ($olderMessages->isEmpty()) {
+            $this->hasMoreMessages = false;
+            return;
+        }
+    
+        $mapped = $olderMessages->map(fn ($msg) => [
+            'id'         => $msg->id,
+            'message'    => $msg->message,
+            'type'       => $msg->type,
+            'sender_id'  => $msg->sender_id,
+            'receiver_id'=> $msg->receiver_id,
+            'created_at' => $msg->created_at->toISOString(),
+            'sender' => [
+                'id'   => $msg->sender->id,
+                'name' => $msg->sender->name,
+            ],
+            'media' => $msg->media->map(fn ($media) => [
+                'id'      => $media->id,
+                'type'    => $media->type,
+                'url'     => $media->url,
+                'caption' => $media->caption,
+            ])->values(),
+        ]);
+    
+        // prepend older messages
+        $this->messages = $mapped->merge($this->messages);
+    
+        // update cursor
+        $this->oldestMessageId = $this->messages->first()['id'];
+    
+        // check again if more exist
+        $this->hasMoreMessages = Message::whereIn('sender_id', [$me, $partner])
+            ->whereIn('receiver_id', [$me, $partner])
+            ->where('id', '<', $this->oldestMessageId)
+            ->exists();
+    
+        // preserve scroll position (handled in JS)
+        $this->dispatch('chat-prepended');
+    }    
 
     public function render()
     {
