@@ -10,7 +10,6 @@ use App\Models\Conversation;
 use App\Livewire\ConnectSidebar;
 use App\Events\MessageSent;
 use App\Models\User;
-use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\DB;
 
@@ -21,7 +20,7 @@ class ConnectWindow extends Component
     
     public ?int $partnerId = null;
     public ?User $partner = null;
-    public Collection $messages;
+    public array $messages = [];
     public int $perPage = 15;
     public array $media = [];
     public array $messageInputs = [];
@@ -30,19 +29,20 @@ class ConnectWindow extends Component
     
     public function mount()
     {
-        $this->messages = collect();
+        $this->messages = [];
     }    
+
+    public function updatedMedia()
+    {
+        $this->validate([
+            'media.*' => 'file|max:10240|mimetypes:image/*,video/*,audio/*',
+        ]);
+    }
 
     public function connectSend(int $userId): void
     {
         if (! User::whereKey($userId)->exists()) {
             return;
-        }
-
-        if (! empty($this->media)) {
-            $this->validate([
-                'media.*' => 'file|max:10240|mimetypes:image/*,video/*,audio/*',
-            ]);
         }
 
         $text = trim($this->messageInputs[$userId] ?? '');
@@ -118,7 +118,7 @@ class ConnectWindow extends Component
 
         $message->load('media');
 
-        $this->messages->push([
+        $this->messages[] = [
             'id'          => $message->id,
             'message'     => $message->message,
             'type'        => $message->type,
@@ -135,7 +135,7 @@ class ConnectWindow extends Component
                 'url'     => $media->url,
                 'caption' => $media->caption,
             ])->values(),
-        ]);
+        ];
 
         $this->dispatch('scroll-chat-to-bottom');
 
@@ -165,7 +165,7 @@ class ConnectWindow extends Component
         $this->partner = User::find($this->partnerId);
 
         if (! $this->partner) {
-            $this->messages = collect();
+            $this->messages = [];
             return;
         }
 
@@ -173,7 +173,7 @@ class ConnectWindow extends Component
         $me = auth()->id();
         if (! $this->partnerId || $this->partnerId === $me) {
             // clear messages if bad partner or self
-            $this->messages = collect();
+            $this->messages = [];
             return;
         }
     
@@ -183,7 +183,7 @@ class ConnectWindow extends Component
         $partner = $this->partnerId;
     
         // fetch the latest N messages between me <-> partner, then reverse so oldest is first
-        $msgs = $msgs = Message::whereIn('sender_id', [$me, $partner])
+        $msgs = Message::whereIn('sender_id', [$me, $partner])
             ->whereIn('receiver_id', [$me, $partner])
             ->with(['sender','media:id,message_id,type,url,caption',])
             ->latest('created_at')         // newest first
@@ -217,14 +217,14 @@ class ConnectWindow extends Component
                 'url'     => $media->url,
                 'caption' => $media->caption,
             ])->values(),
-        ]);
+        ])->toArray();
 
-        $this->oldestMessageId = $this->messages->first()['id'] ?? null;
+        $this->oldestMessageId = $this->messages[0]['id'] ?? null;
 
         // check if more messages exist
         $this->hasMoreMessages = Message::whereIn('sender_id', [$me, $partner])
             ->whereIn('receiver_id', [$me, $partner])
-            ->count() > $this->messages->count();
+            ->count() > count($this->messages);
 
         $this->dispatch('chat-loaded', userId: $partner)->to(ConnectSidebar::class);
     }
@@ -239,7 +239,7 @@ class ConnectWindow extends Component
         array $media = [],
     ): void {
 
-        if ($this->messages->contains('id', $id)) {
+        if (in_array($id, array_column($this->messages, 'id'))) {
             return;
         }
 
@@ -247,7 +247,7 @@ class ConnectWindow extends Component
             return;
         }
 
-        $this->messages->push([
+        $this->messages[] = [
             'id'         => $id,
             'message'    => $message,
             'type'       => $type,
@@ -259,7 +259,7 @@ class ConnectWindow extends Component
                 'name' => $sender_name,
             ],
             'media' => $media,
-        ]);
+        ];
 
         Message::where('sender_id', $sender_id)
             ->where('receiver_id', auth()->id())
@@ -313,10 +313,10 @@ class ConnectWindow extends Component
         ]);
     
         // prepend older messages
-        $this->messages = $mapped->merge($this->messages);
+        $this->messages = $mapped->merge($this->messages)->toArray();
     
         // update cursor
-        $this->oldestMessageId = $this->messages->first()['id'];
+        $this->oldestMessageId = $this->messages[0]['id'] ?? null;
     
         // check again if more exist
         $this->hasMoreMessages = Message::whereIn('sender_id', [$me, $partner])
